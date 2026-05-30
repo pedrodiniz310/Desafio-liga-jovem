@@ -26,3 +26,33 @@ export const colors = {
 } as const;
 
 export type AppColor = keyof typeof colors;
+
+/** Conjunto de cores do tema (mesmas chaves da paleta base). */
+export type Cores = Record<AppColor, string>;
+
+/**
+ * Variante de alto contraste: texto mais escuro, bordas reforçadas e verdes
+ * mais profundos para legibilidade. Mantém a identidade da marca.
+ */
+export const coresAltoContraste: Cores = {
+  paper: "#ffffff",
+  paperSoft: "#ffffff",
+  card: "#ffffff",
+  line: "#1c1c1c",
+
+  ink: "#000000",
+  inkSoft: "#1a1a1a",
+  inkFaint: "#333333",
+
+  verde: "#0a4f3c",
+  verdeDeep: "#062a20",
+  verdeBright: "#0d6a51",
+  verdeWash: "#d4e7df",
+
+  coral: "#a83a1a",
+  coralBright: "#c24a28",
+  coralWash: "#f1d6ca",
+
+  amber: "#8a5e12",
+};
+

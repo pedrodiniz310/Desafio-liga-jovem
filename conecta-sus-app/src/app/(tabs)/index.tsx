@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
@@ -16,15 +15,20 @@ import * as Location from "expo-location";
 import { Screen } from "@/components/screen";
 import { NeedChip } from "@/components/need-chip";
 import { ServiceCard } from "@/components/service-card";
+import { Texto } from "@/components/texto";
 import { NECESSIDADES_COMUNS } from "@/lib/queries/necessidades-comuns";
 import { useBuscaServicos } from "@/lib/queries/use-busca-servicos";
 import { JOACABA, useLocalizacao } from "@/stores/use-localizacao";
-import { colors } from "@/theme/colors";
+import { useTema } from "@/theme/tema";
+import type { Cores } from "@/theme/colors";
 
 export default function BuscaScreen() {
   const router = useRouter();
   const [texto, setTexto] = useState("");
   const [termo, setTermo] = useState("");
+
+  const { cores, escala } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
 
   const { coordenada, municipioNome, setCoordenada, setPermissaoNegada } =
     useLocalizacao();
@@ -59,24 +63,24 @@ export default function BuscaScreen() {
     <Screen>
       {/* cabeçalho */}
       <View style={styles.header}>
-        <Text style={styles.titulo}>O que você precisa?</Text>
+        <Texto style={styles.titulo}>O que você precisa?</Texto>
         <View style={styles.localRow}>
-          <Ionicons name="location" size={14} color={colors.verde} />
-          <Text style={styles.local}>{municipioNome}</Text>
+          <Ionicons name="location" size={14} color={cores.verde} />
+          <Texto style={styles.local}>{municipioNome}</Texto>
         </View>
       </View>
 
       {/* campo de busca */}
       <View style={styles.searchBox}>
-        <Ionicons name="search" size={20} color={colors.verde} />
+        <Ionicons name="search" size={20} color={cores.verde} />
         <TextInput
           value={texto}
           onChangeText={setTexto}
           onSubmitEditing={(e) => setTermo(e.nativeEvent.text)}
           placeholder="Ex.: preciso de psicólogo"
-          placeholderTextColor={colors.inkFaint}
+          placeholderTextColor={cores.inkFaint}
           returnKeyType="search"
-          style={styles.input}
+          style={[styles.input, { fontSize: 16 * escala }]}
           accessibilityLabel="Buscar serviço de saúde"
         />
         {texto.length > 0 && (
@@ -85,7 +89,7 @@ export default function BuscaScreen() {
             accessibilityLabel="Limpar busca"
             hitSlop={8}
           >
-            <Ionicons name="close-circle" size={20} color={colors.inkFaint} />
+            <Ionicons name="close-circle" size={20} color={cores.inkFaint} />
           </Pressable>
         )}
       </View>
@@ -104,7 +108,7 @@ export default function BuscaScreen() {
         />
       ) : (
         <ScrollView contentContainerStyle={styles.scroll}>
-          <Text style={styles.secao}>Buscas mais comuns</Text>
+          <Texto style={styles.secao}>Buscas mais comuns</Texto>
           <View style={styles.chips}>
             {NECESSIDADES_COMUNS.map((n) => (
               <NeedChip
@@ -115,9 +119,9 @@ export default function BuscaScreen() {
               />
             ))}
           </View>
-          <Text style={styles.dica}>
+          <Texto style={styles.dica}>
             Tudo o que aparece aqui é gratuito pelo SUS.
-          </Text>
+          </Texto>
         </ScrollView>
       )}
     </Screen>
@@ -135,31 +139,34 @@ function Resultados({
   dados: import("@/types/models").ResultadoBusca[];
   onAbrir: (id: number) => void;
 }) {
+  const { cores } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
+
   if (loading) {
     return (
       <View style={styles.estado}>
-        <ActivityIndicator color={colors.verde} />
-        <Text style={styles.estadoTexto}>Procurando perto de você…</Text>
+        <ActivityIndicator color={cores.verde} />
+        <Texto style={styles.estadoTexto}>Procurando perto de você…</Texto>
       </View>
     );
   }
   if (error) {
     return (
       <View style={styles.estado}>
-        <Ionicons name="cloud-offline-outline" size={36} color={colors.inkFaint} />
-        <Text style={styles.estadoTexto}>
+        <Ionicons name="cloud-offline-outline" size={36} color={cores.inkFaint} />
+        <Texto style={styles.estadoTexto}>
           Não foi possível buscar agora. Verifique a conexão.
-        </Text>
+        </Texto>
       </View>
     );
   }
   if (dados.length === 0) {
     return (
       <View style={styles.estado}>
-        <Ionicons name="search-outline" size={36} color={colors.inkFaint} />
-        <Text style={styles.estadoTexto}>
+        <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
+        <Texto style={styles.estadoTexto}>
           Nenhum serviço encontrado por perto. Tente outras palavras.
-        </Text>
+        </Texto>
       </View>
     );
   }
@@ -178,41 +185,42 @@ function Resultados({
   );
 }
 
-const styles = StyleSheet.create({
-  header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
-  titulo: { fontSize: 26, fontWeight: "800", color: colors.ink },
-  localRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },
-  local: { fontSize: 13, color: colors.inkSoft, fontWeight: "500" },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    marginHorizontal: 20,
-    marginTop: 8,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  input: { flex: 1, fontSize: 16, color: colors.ink },
-  scroll: { padding: 20, gap: 14 },
-  secao: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.inkSoft,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  chips: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
-    justifyContent: "space-between",
-  },
-  dica: { fontSize: 13, color: colors.inkFaint, marginTop: 4 },
-  lista: { padding: 20, gap: 12 },
-  estado: { alignItems: "center", justifyContent: "center", padding: 40, gap: 12, flex: 1 },
-  estadoTexto: { fontSize: 15, color: colors.inkSoft, textAlign: "center" },
-});
+const makeStyles = (cores: Cores) =>
+  StyleSheet.create({
+    header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
+    titulo: { fontSize: 26, fontWeight: "800", color: cores.ink },
+    localRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },
+    local: { fontSize: 13, color: cores.inkSoft, fontWeight: "500" },
+    searchBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      marginHorizontal: 20,
+      marginTop: 8,
+      backgroundColor: cores.card,
+      borderWidth: 1,
+      borderColor: cores.line,
+      borderRadius: 16,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+    },
+    input: { flex: 1, fontSize: 16, color: cores.ink },
+    scroll: { padding: 20, gap: 14 },
+    secao: {
+      fontSize: 13,
+      fontWeight: "700",
+      color: cores.inkSoft,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+    },
+    chips: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 12,
+      justifyContent: "space-between",
+    },
+    dica: { fontSize: 13, color: cores.inkFaint, marginTop: 4 },
+    lista: { padding: 20, gap: 12 },
+    estado: { alignItems: "center", justifyContent: "center", padding: 40, gap: 12, flex: 1 },
+    estadoTexto: { fontSize: 15, color: cores.inkSoft, textAlign: "center" },
+  });
