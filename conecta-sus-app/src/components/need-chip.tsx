@@ -1,10 +1,26 @@
 import { useRef, useMemo } from "react";
 import { Animated, Pressable, StyleSheet } from "react-native";
-import * as LucideIcons from "lucide-react-native";
+import {
+  Brain,
+  Smile,
+  Pill,
+  Mic,
+  Syringe,
+  Baby,
+  HandHeart,
+  Activity,
+  TestTube,
+  Apple,
+} from "lucide-react-native";
+import type { LucideIcon } from "lucide-react-native";
 
 import { Texto } from "@/components/texto";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Brain, Smile, Pill, Mic, Syringe, Baby, HandHeart, Activity, TestTube, Apple,
+};
 
 type NeedChipProps = {
   rotulo: string;
@@ -22,7 +38,7 @@ export function NeedChip({ rotulo, icone, onPress }: NeedChipProps) {
   const onPressOut = () =>
     Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 18, bounciness: 10 }).start();
 
-  const Icon = (LucideIcons as Record<string, React.ComponentType<{ size: number; color: string; strokeWidth: number }>>)[icone];
+  const Icon = ICON_MAP[icone];
 
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
