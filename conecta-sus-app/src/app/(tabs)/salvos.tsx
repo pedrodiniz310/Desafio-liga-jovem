@@ -1,41 +1,76 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useMemo } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Screen } from "@/components/screen";
-import { colors } from "@/theme/colors";
+import { SavedCard } from "@/components/saved-card";
+import { Texto } from "@/components/texto";
+import { useFavoritos } from "@/stores/use-favoritos";
+import { useTema } from "@/theme/tema";
+import type { Cores } from "@/theme/colors";
 
 export default function SalvosScreen() {
+  const router = useRouter();
+  const itens = useFavoritos((s) => s.itens);
+  const remover = useFavoritos((s) => s.remover);
+  const { cores } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
+
   return (
     <Screen>
       <View style={styles.header}>
-        <Text style={styles.titulo}>Salvos</Text>
+        <Texto style={styles.titulo}>Salvos</Texto>
       </View>
-      <View style={styles.empty}>
-        <View style={styles.iconWrap}>
-          <Ionicons name="bookmark-outline" size={32} color={colors.verde} />
+
+      {itens.length === 0 ? (
+        <View style={styles.empty}>
+          <View style={styles.iconWrap}>
+            <Ionicons name="bookmark-outline" size={32} color={cores.verde} />
+          </View>
+          <Texto style={styles.emptyTitulo}>Nada salvo ainda</Texto>
+          <Texto style={styles.emptyTexto}>
+            Toque no marcador de um serviço para guardá-lo aqui e encontrar
+            rápido depois.
+          </Texto>
         </View>
-        <Text style={styles.emptyTitulo}>Nada salvo ainda</Text>
-        <Text style={styles.emptyTexto}>
-          Toque no marcador de um serviço para guardá-lo aqui e encontrar rápido
-          depois.
-        </Text>
-      </View>
+      ) : (
+        <FlatList
+          data={itens}
+          keyExtractor={(item) => String(item.id)}
+          contentContainerStyle={styles.lista}
+          renderItem={({ item }) => (
+            <SavedCard
+              servico={item}
+              onPress={() =>
+                router.push({
+                  pathname: "/servico/[id]",
+                  params: { id: String(item.id) },
+                })
+              }
+              onRemover={() => remover(item.id)}
+            />
+          )}
+        />
+      )}
     </Screen>
   );
 }
 
-const styles = StyleSheet.create({
-  header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
-  titulo: { fontSize: 26, fontWeight: "800", color: colors.ink },
-  empty: { flex: 1, alignItems: "center", justifyContent: "center", padding: 40, gap: 12 },
-  iconWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.verdeWash,
-  },
-  emptyTitulo: { fontSize: 18, fontWeight: "700", color: colors.ink },
-  emptyTexto: { fontSize: 15, color: colors.inkSoft, textAlign: "center", lineHeight: 22 },
-});
+const makeStyles = (cores: Cores) =>
+  StyleSheet.create({
+    header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
+    titulo: { fontSize: 26, fontWeight: "800", color: cores.ink },
+    lista: { padding: 20, gap: 12 },
+    empty: { flex: 1, alignItems: "center", justifyContent: "center", padding: 40, gap: 12 },
+    iconWrap: {
+      width: 72,
+      height: 72,
+      borderRadius: 24,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: cores.verdeWash,
+    },
+    emptyTitulo: { fontSize: 18, fontWeight: "700", color: cores.ink },
+    emptyTexto: { fontSize: 15, color: cores.inkSoft, textAlign: "center", lineHeight: 22 },
+  });

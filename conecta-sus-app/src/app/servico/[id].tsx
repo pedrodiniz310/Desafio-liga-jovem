@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -5,14 +6,17 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import { colors } from "@/theme/colors";
+import { Texto } from "@/components/texto";
+import { useTema } from "@/theme/tema";
+import type { Cores } from "@/theme/colors";
 import { useServico } from "@/lib/queries/use-servico";
+import { useConfirmar } from "@/lib/queries/use-confirmar";
+import { useFavoritos } from "@/stores/use-favoritos";
 import { telParaLink } from "@/utils/format";
 import type { StatusConfirmacao } from "@/types/models";
 
@@ -21,10 +25,19 @@ export default function ServicoDetalhe() {
   const servicoId = Number(id);
   const { data: servico, isLoading, isError } = useServico(servicoId);
 
+  const itensSalvos = useFavoritos((s) => s.itens);
+  const alternarSalvo = useFavoritos((s) => s.alternar);
+  const salvo = itensSalvos.some((i) => i.id === servicoId);
+
+  const confirmarMutation = useConfirmar();
+
+  const { cores } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
+
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator color={colors.verde} />
+        <ActivityIndicator color={cores.verde} />
       </View>
     );
   }
@@ -32,8 +45,10 @@ export default function ServicoDetalhe() {
   if (isError || !servico) {
     return (
       <View style={styles.center}>
-        <Ionicons name="alert-circle-outline" size={36} color={colors.inkFaint} />
-        <Text style={styles.estadoTexto}>Não foi possível carregar o serviço.</Text>
+        <Ionicons name="alert-circle-outline" size={36} color={cores.inkFaint} />
+        <Texto style={styles.estadoTexto}>
+          Não foi possível carregar o serviço.
+        </Texto>
       </View>
     );
   }
@@ -56,22 +71,54 @@ export default function ServicoDetalhe() {
   }
 
   function confirmar(status: StatusConfirmacao) {
-    // TODO: gravar em `confirmacoes` (Edge Function) — fase de validação
+    if (confirmarMutation.isPending) return;
     const msg: Record<StatusConfirmacao, string> = {
       funciona: "Obrigado! Você ajudou a próxima pessoa.",
       fechou: "Valeu pelo aviso. Vamos revisar este serviço.",
       mudou: "Obrigado! Vamos atualizar as informações.",
     };
-    Alert.alert("Conecta SUS", msg[status]);
+    confirmarMutation.mutate(
+      { estabelecimentoId: servicoId, status },
+      {
+        onSuccess: () => Alert.alert("Conecta SUS", msg[status]),
+        onError: () =>
+          Alert.alert(
+            "Conecta SUS",
+            "Não foi possível registrar agora. Verifique a conexão e tente de novo.",
+          ),
+      },
+    );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.scroll}>
-      <View style={styles.iconWrap}>
-        <Ionicons name="medkit" size={28} color={colors.verde} />
+      <View style={styles.topo}>
+        <View style={styles.iconWrap}>
+          <Ionicons name="medkit" size={28} color={cores.verde} />
+        </View>
+        <Pressable
+          onPress={() =>
+            alternarSalvo({
+              id: servicoId,
+              nome: servico.nome,
+              endereco: servico.endereco,
+              horario: servico.horario,
+            })
+          }
+          accessibilityRole="button"
+          accessibilityLabel={salvo ? "Remover dos salvos" : "Salvar serviço"}
+          hitSlop={10}
+          style={({ pressed }) => [styles.bookmark, pressed && { opacity: 0.7 }]}
+        >
+          <Ionicons
+            name={salvo ? "bookmark" : "bookmark-outline"}
+            size={26}
+            color={cores.verde}
+          />
+        </Pressable>
       </View>
-      <Text style={styles.nome}>{servico.nome}</Text>
-      {servico.tipo ? <Text style={styles.tipo}>{servico.tipo}</Text> : null}
+      <Texto style={styles.nome}>{servico.nome}</Texto>
+      {servico.tipo ? <Texto style={styles.tipo}>{servico.tipo}</Texto> : null}
 
       {/* ações principais */}
       <View style={styles.acoes}>
@@ -100,24 +147,24 @@ export default function ServicoDetalhe() {
       </View>
 
       {/* validação comunitária */}
-      <Text style={styles.secao}>Este serviço ainda funciona?</Text>
+      <Texto style={styles.secao}>Este serviço ainda funciona?</Texto>
       <View style={styles.validacao}>
         <ValidaBotao
           icone="checkmark-circle-outline"
           rotulo="Funciona"
-          cor={colors.verde}
+          cor={cores.verde}
           onPress={() => confirmar("funciona")}
         />
         <ValidaBotao
           icone="close-circle-outline"
           rotulo="Fechou"
-          cor={colors.coral}
+          cor={cores.coral}
           onPress={() => confirmar("fechou")}
         />
         <ValidaBotao
           icone="swap-horizontal-outline"
           rotulo="Mudou"
-          cor={colors.amber}
+          cor={cores.amber}
           onPress={() => confirmar("mudou")}
         />
       </View>
@@ -136,6 +183,8 @@ function AcaoBotao({
   onPress: () => void;
   destaque?: boolean;
 }) {
+  const { cores } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
   return (
     <Pressable
       onPress={onPress}
@@ -150,20 +199,22 @@ function AcaoBotao({
       <Ionicons
         name={icone as never}
         size={20}
-        color={destaque ? colors.paperSoft : colors.verde}
+        color={destaque ? cores.paperSoft : cores.verde}
       />
-      <Text style={[styles.acaoTexto, destaque && { color: colors.paperSoft }]}>
+      <Texto style={[styles.acaoTexto, destaque && { color: cores.paperSoft }]}>
         {rotulo}
-      </Text>
+      </Texto>
     </Pressable>
   );
 }
 
 function LinhaInfo({ icone, rotulo }: { icone: string; rotulo: string }) {
+  const { cores } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
   return (
     <View style={styles.linha}>
-      <Ionicons name={icone as never} size={20} color={colors.verde} />
-      <Text style={styles.linhaTexto}>{rotulo}</Text>
+      <Ionicons name={icone as never} size={20} color={cores.verde} />
+      <Texto style={styles.linhaTexto}>{rotulo}</Texto>
     </View>
   );
 }
@@ -179,6 +230,8 @@ function ValidaBotao({
   cor: string;
   onPress: () => void;
 }) {
+  const { cores } = useTema();
+  const styles = useMemo(() => makeStyles(cores), [cores]);
   return (
     <Pressable
       onPress={onPress}
@@ -187,77 +240,93 @@ function ValidaBotao({
       style={({ pressed }) => [styles.valida, pressed && { opacity: 0.8 }]}
     >
       <Ionicons name={icone as never} size={22} color={cor} />
-      <Text style={styles.validaTexto}>{rotulo}</Text>
+      <Texto style={styles.validaTexto}>{rotulo}</Texto>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, padding: 40 },
-  estadoTexto: { fontSize: 15, color: colors.inkSoft, textAlign: "center" },
-  scroll: { padding: 20, gap: 16 },
-  iconWrap: {
-    width: 60,
-    height: 60,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.verdeWash,
-  },
-  nome: { fontSize: 24, fontWeight: "800", color: colors.ink },
-  tipo: { fontSize: 15, color: colors.inkSoft, marginTop: -8 },
-  acoes: { flexDirection: "row", gap: 12 },
-  acao: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    borderRadius: 16,
-    paddingVertical: 14,
-  },
-  acaoDestaque: { backgroundColor: colors.verde },
-  acaoSecundaria: {
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.line,
-  },
-  acaoTexto: { fontSize: 15, fontWeight: "700", color: colors.verde },
-  bloco: {
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 18,
-    overflow: "hidden",
-  },
-  linha: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.line,
-  },
-  linhaTexto: { flex: 1, fontSize: 15, color: colors.ink },
-  secao: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.inkSoft,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginTop: 8,
-  },
-  validacao: { flexDirection: "row", gap: 10 },
-  valida: {
-    flex: 1,
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 16,
-    paddingVertical: 16,
-  },
-  validaTexto: { fontSize: 13, fontWeight: "600", color: colors.ink },
-});
+const makeStyles = (cores: Cores) =>
+  StyleSheet.create({
+    center: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, padding: 40 },
+    estadoTexto: { fontSize: 15, color: cores.inkSoft, textAlign: "center" },
+    scroll: { padding: 20, gap: 16 },
+    topo: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    iconWrap: {
+      width: 60,
+      height: 60,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: cores.verdeWash,
+    },
+    bookmark: {
+      width: 44,
+      height: 44,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: cores.card,
+      borderWidth: 1,
+      borderColor: cores.line,
+    },
+    nome: { fontSize: 24, fontWeight: "800", color: cores.ink },
+    tipo: { fontSize: 15, color: cores.inkSoft, marginTop: -8 },
+    acoes: { flexDirection: "row", gap: 12 },
+    acao: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      borderRadius: 16,
+      paddingVertical: 14,
+    },
+    acaoDestaque: { backgroundColor: cores.verde },
+    acaoSecundaria: {
+      backgroundColor: cores.card,
+      borderWidth: 1,
+      borderColor: cores.line,
+    },
+    acaoTexto: { fontSize: 15, fontWeight: "700", color: cores.verde },
+    bloco: {
+      backgroundColor: cores.card,
+      borderWidth: 1,
+      borderColor: cores.line,
+      borderRadius: 18,
+      overflow: "hidden",
+    },
+    linha: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 14,
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: cores.line,
+    },
+    linhaTexto: { flex: 1, fontSize: 15, color: cores.ink },
+    secao: {
+      fontSize: 13,
+      fontWeight: "700",
+      color: cores.inkSoft,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      marginTop: 8,
+    },
+    validacao: { flexDirection: "row", gap: 10 },
+    valida: {
+      flex: 1,
+      alignItems: "center",
+      gap: 6,
+      backgroundColor: cores.card,
+      borderWidth: 1,
+      borderColor: cores.line,
+      borderRadius: 16,
+      paddingVertical: 16,
+    },
+    validaTexto: { fontSize: 13, fontWeight: "600", color: cores.ink },
+  });
