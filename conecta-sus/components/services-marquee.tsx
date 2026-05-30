@@ -44,8 +44,8 @@ export function ServicesMarquee() {
     >
       <p className="mx-auto mb-9 max-w-xl px-5 text-center text-lg text-ink-soft">
         Tudo isto já existe no SUS — e é{" "}
-        <span className="font-semibold text-verde">de graça</span>. O Conecta SUS
-        só te mostra onde.
+        <span className="font-semibold text-verde">de graça</span>. O problema
+        nunca foi a falta de serviço. É achar.
       </p>
 
       <div className="relative">

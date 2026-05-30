@@ -20,8 +20,8 @@ export function FinalCta() {
               O SUS que você não sabia que tinha.
             </h2>
             <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-paper-soft/80">
-              Encontre, em menos de um minuto, o serviço gratuito que já é seu
-              por direito. Sem cadastro complicado, sem sigla, sem custo.
+              Encontre, em menos de um minuto, o serviço gratuito que você
+              procura. Sem cadastro complicado, sem sigla, sem custo.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">

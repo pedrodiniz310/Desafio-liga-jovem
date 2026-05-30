@@ -3,6 +3,15 @@
 import { motion } from "motion/react";
 import { ArrowDown, HeartPulse, ShieldCheck } from "lucide-react";
 import { SearchDemo } from "./search-demo";
+import { MorphingText } from "./ui/liquid-text";
+
+const NEEDS = [
+  "psicólogo",
+  "dentista",
+  "remédio de graça",
+  "fono",
+  "reabilitação",
+] as const;
 
 const CHIPS = [
   { label: "CAPS · saúde mental", top: "6%", left: "-7%", delay: 0 },
@@ -53,16 +62,25 @@ export function Hero() {
             Mais de 100 serviços gratuitos no SUS
           </motion.span>
 
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08 }}
+            role="heading"
+            aria-level={1}
             className="font-display mt-6 text-[2.7rem] leading-[1.05] font-semibold tracking-tight text-ink sm:text-6xl"
           >
-            Encontre os serviços{" "}
-            <span className="text-coral italic">gratuitos</span> do SUS perto de
-            você.
-          </motion.h1>
+            <span className="sr-only">
+              Encontre os serviços gratuitos do SUS perto de você.
+            </span>
+            <span aria-hidden="true" className="block">Encontre</span>
+            <MorphingText
+              texts={[...NEEDS]}
+              aria-hidden="true"
+              className="mx-0 h-[2.9rem] max-w-none text-left font-display text-[2.7rem] leading-[1.05] font-semibold tracking-tight text-coral italic sm:h-[4rem] sm:text-6xl md:h-[4rem] lg:text-6xl"
+            />
+            <span aria-hidden="true" className="block">perto de você.</span>
+          </motion.div>
 
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -70,9 +88,8 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.16 }}
             className="mt-9 max-w-md text-lg leading-relaxed text-ink-soft"
           >
-            Psicólogo, dentista especialista, remédio de graça — tudo já existe
-            perto de você. O Conecta SUS mostra onde fica, o horário e o que
-            levar. Em menos de um minuto.
+            Tudo isso já existe no SUS, de graça. O Conecta SUS mostra onde
+            fica, o horário e o que levar — em menos de um minuto.
           </motion.p>
 
           <motion.div

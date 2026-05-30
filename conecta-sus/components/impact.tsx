@@ -20,7 +20,7 @@ const METRICAS: Metrica[] = [
   {
     icon: MapPinned,
     value: 5570,
-    label: "municípios já mapeados na base do CNES",
+    label: "municípios cobertos pela base do CNES, nossa fonte de dados",
   },
   {
     icon: Languages,
@@ -36,15 +36,15 @@ export function Impact() {
         <Reveal>
           <div className="max-w-2xl">
             <p className="text-sm font-semibold tracking-[0.2em] text-verde uppercase">
-              Impacto e validação
+              Por que muda tudo
             </p>
             <h2 className="font-display mt-4 text-3xl leading-[1.1] font-semibold tracking-tight text-ink sm:text-5xl">
-              Testamos com gente de verdade. A diferença é gritante.
+              De uma maratona de ligações a 45 segundos na tela.
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-              Pedimos a 10 moradores para encontrar um serviço gratuito do SUS
-              no próprio município. Primeiro do jeito de hoje. Depois, com o
-              Conecta SUS.
+              Hoje, achar um serviço gratuito do SUS pode virar uma sequência de
+              ligações e becos sem saída. O Conecta SUS foi desenhado para
+              resolver logo na primeira busca.
             </p>
           </div>
         </Reveal>
@@ -65,8 +65,7 @@ export function Impact() {
                   &nbsp;min
                 </p>
                 <p className="mt-3 max-w-xs text-ink-soft">
-                  procurando — e <strong className="text-ink">7 em 10</strong>{" "}
-                  desistiram antes de achar.
+                  perdidos no telefone — e muita gente desiste antes de achar.
                 </p>
               </div>
             </div>
