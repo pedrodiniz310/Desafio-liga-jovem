@@ -1,16 +1,19 @@
-# Desafio Liga Jovem 4ª Edição — Banco de Ideias
+# Desafio Liga Jovem 4ª Edição — Banco de Ideias (Geração 3 + Geração 2)
+
+> **Geração 3** adicionada em 2026-05-29 — fórmula dos vencedores: produto físico como núcleo, resíduos regionais transformados, demonstrável em 5 minutos.
+> **Geração 2** brainstorm multi-AI realizado em 2026-05-29 — ideias completamente novas, sem repetir temas da geração anterior.
 
 ## Contexto Regional: Meio Oeste Catarinense
 
 - Economia forte em agroindústria (BRF, frigoríficos, laticínios), suinocultura, avicultura e pequenas propriedades rurais familiares
-- Universidade Alto Vale do Rio do Peixe (UNIARP) e UNOESC em Joaçaba — polo universitário
-- Rio do Peixe corta a região (questões ambientais relevantes — enchentes recorrentes, contaminação por dejetos suínos)
-- Cidades pequenas/médias com forte presença de descendentes italianos
-- Desafios típicos: mobilidade entre municípios, êxodo rural jovem, saúde mental no campo, gestão de resíduos da agroindústria
+- UNIARP e UNOESC em Joaçaba — polo universitário
+- Rio do Peixe corta a região
+- Descendentes italianos, cidades pequenas/médias (~300k pessoas)
+- Desafios explorados nesta rodada: lesão de trabalhadores, informalidade rural, risco climático, ofícios tácitos, certificação
 
 ---
 
-## Critérios de Avaliação do Desafio
+## Critérios de Avaliação
 
 | Critério | Peso |
 |---|---|
@@ -26,203 +29,142 @@
 
 | # | Ideia | Pontos fortes | Origem |
 |---|---|---|---|
-| ⭐⭐⭐⭐⭐ | Bio-School Loop | Protótipo físico+digital, contexto escolar, receita clara | 🟡 Gemini |
-| ⭐⭐⭐⭐⭐ | Memória de Enchente | Ultra-regional, simples, sustentável, narrativa poderosa | 🔵 Claude |
-| ⭐⭐⭐⭐⭐ | Cuida Sem Nome | Criatividade máxima, aborda o estigma real, escalável | 🔵 Claude |
-| ⭐⭐⭐⭐ | Contrato Justo | Impacto alto, modelo claro, politicamente ousado | 🔵 Claude |
-| ⭐⭐⭐⭐ | Alerta Enchente | Urgência real, protótipo IoT viável | Brainstorm inicial |
-| ⭐⭐⭐⭐ | DejetoZero | Dor regional enorme, modelo de negócio claro | Brainstorm inicial |
-| ⭐⭐⭐⭐ | Agro-Herança Match | Niche poderoso, conecta ecossistema universitário | 🟡 Gemini |
-| ⭐⭐⭐⭐ | Talian Vivo | Identidade regional como produto, escalável | 🔵 Claude |
-| ⭐⭐⭐ | CaronaMeioOeste | Uso diário, fácil de prototipar | Brainstorm inicial |
-| ⭐⭐⭐ | Saúde Mental no Campo | Alto impacto, mas rótulo afasta o público-alvo | Brainstorm inicial |
-| ⭐⭐ | Mapa Colaborativo | Já existe (Colab.re), baixa diferenciação | Brainstorm inicial |
-| ⭐⭐ | Recicla Aqui | Muitos concorrentes nacionais | Brainstorm inicial |
+| ⭐⭐⭐⭐⭐ | CicatriFrig | Paradoxo único, sindicato paga, app simples, protótipo real | 🔵 Claude |
+| ⭐⭐⭐⭐⭐ | OficioVivo | Resolve êxodo pela raiz, SEBRAE financia, conceito inédito | 🔵 Claude |
+| ⭐⭐⭐⭐⭐ | Cria Certa | Bem-estar animal como poder de barganha, universitários como auditores | 🟡 Gemini |
+| ⭐⭐⭐⭐ | SafraSeca | Risco climático invisível nomeado pela primeira vez, cooperativas pagam | 🔵 Claude |
+| ⭐⭐⭐⭐ | RaízCerta | Protocolo de confiança para artesanais premium, municipios co-financiam | 🔵 Claude |
+| ⭐⭐⭐⭐ | Diária Direita | LinkedIn rural, modelo simples, impacto imediato | 🟡 Gemini |
+| ⭐⭐⭐ | Ritmo Certo | Boa analogia (manutenção preditiva), mas empresa como pagante cria conflito | 🟡 Gemini |
+| ⭐⭐⭐ | Nossa Horta, Nossa Loja | Resolve dois problemas, mas matchmaking é difícil de sustentar | 🟡 Gemini |
 
 ---
 
-## Ideias — Brainstorm Multi-AI (🟡 Gemini + 🔵 Claude)
-
-### ⭐ Destaque: Bio-School Loop `🟡 Gemini`
-
-**O problema:** Desperdício orgânico nas escolas e falta de conexão prática com biotecnologia.
-
-**A ideia:** Sistema de gestão de resíduos escolares integrado a uma horta bio-inteligente.
-- App rastreia o desperdício de cada turma
-- Resíduo vira adubo via composteiras elétricas (protótipo físico construído pelos alunos)
-- Sensores de solo (pH, umidade, nitrogênio) alimentam as aulas de Biologia e Química
-- Excedente da horta é vendido via app para os pais dos alunos
-
-**Por que é forte:** É o único com protótipo físico + digital, está dentro do contexto escolar (perfeito para o desafio), tem modelo de receita real (venda de produtos) e conecta a identidade agroindustrial da região.
-
-**Sustentabilidade:** Venda de excedente + assinatura de outras escolas que queiram adotar o sistema.
+## Ideias Detalhadas
 
 ---
 
-### ⭐ Destaque: Memória de Enchente `🔵 Claude`
+### ⭐⭐⭐⭐⭐ CicatriFrig `🔵 Claude`
 
-**O problema:** Cada enchente do Rio do Peixe destrói e reconstrói, mas o conhecimento acumulado sobre como ela se comportou se perde. Não existe repositório de: quando o rio atingiu tal nível, quanto tempo levou para baixar, quais bairros alagaram primeiro.
+**O problema:** Trabalhadores de linha de abate — especialmente mulheres na evisceração e no corte de peito — desenvolvem LER/DORT em 3 a 7 anos, mas o processo de reconhecimento como doença ocupacional leva anos por falta de documentação longitudinal. O frigorífico tem os dados de produtividade; o trabalhador não tem nenhum dado sobre seu próprio corpo no trabalho. É uma assimetria de informação sobre saúde física.
 
-**A ideia:** App de registro comunitário de enchentes — moradores documentam em tempo real (foto + nível d'água + localização + relato de voz). O histórico acumulado vira modelo preditivo local: "quando o rio está nesse nível aqui, em 4h chega até tal rua".
+**A ideia:** App mobile (FlutterFlow + Supabase) onde o trabalhador registra, ao final do turno, sintomas em um "mapa corporal" (toque em silhueta humana), nível de dor 1–5, função exercida no dia e foto opcional de EPIs usados. Os dados ficam em custódia do trabalhador — não da empresa. Após 90 dias, gera um PDF cronológico assinado digitalmente para perícia do INSS ou ação trabalhista.
 
-**Paradoxo central:** Não usa sensores IoT caros. O sensor é o morador ribeirinho que observa o rio há 30 anos. O sistema fica mais preciso a cada enchente documentada.
+**Sustentabilidade:** Sindicatos dos trabalhadores (STIA) pagam R$8/trabalhador/mês como benefício aos filiados. Escritórios de advocacia trabalhista pagam R$200/mês por painel anonimizado de tendências de lesão. Receita projetada: R$4.000–R$12.000/mês com 500–1.500 usuários.
 
-**Sustentabilidade:** Defesa Civil Municipal paga por acesso ao dashboard. UNIARP/UNOESC cofinanciam como pesquisa. Pode escalar para outras bacias de SC.
+**Público-alvo:** Mulheres abatedoras de 30–55 anos na evisceração/corte, 3+ anos de empresa, filiadas ao sindicato, que já sentiram dor mas nunca formalizaram por medo de demissão.
 
----
-
-### ⭐ Destaque: Cuida Sem Nome `🔵 Claude`
-
-**O problema real (não óbvio):** "Saúde mental" como rótulo afasta exatamente quem mais precisa — homem rural de 40-60 anos, cultura italiana, que considera sentir fraqueza como vergonha. Um app chamado "Saúde Mental no Campo" não será baixado por esse perfil.
-
-**A ideia:** App de produtividade rural com câmara de escuta embutida.
-- Usuário entra para "registrar o dia na propriedade" (produção, clima, tarefas)
-- O app detecta padrões de linguagem que indicam isolamento ou exaustão
-- Introduz suporte de forma orgânica — nunca como rótulo de saúde mental
-
-**Paradoxo central:** O usuário nunca "abre um app de saúde mental". Abre um diário de fazenda. A entrada é gestão. A saída pode ser conexão humana e detecção precoce de crise.
-
-**Sustentabilidade:** Parceria com EMATER-SC, Secretaria de Saúde de SC, sindicatos rurais. Escalável para todo o Brasil rural.
+**Paradoxo central — "corpo como ativo invisível":** O trabalhador industrial usa o corpo como meio de produção mas não tem nenhum instrumento de contabilidade desse ativo. Toda a literatura de saúde do trabalhador foca em prevenção pela empresa; nenhuma ferramenta devolve a soberania do dado ao trabalhador. A dor é normalizada como "parte do serviço" — isso é o problema tão entranhado que ninguém o nomeia como problema de informação.
 
 ---
 
-### Contrato Justo `🔵 Claude`
+### ⭐⭐⭐⭐⭐ OficioVivo `🔵 Claude`
 
-**O problema:** O produtor integrado (suinicultor/avicultor contratado por BRF/JBS) não tem acesso aos dados que a integradora tem sobre ele. Ela sabe o custo de ração, índice de conversão, margem por lote. Ele não.
+**O problema:** Jovens de 18–28 anos no Meio Oeste aprenderam ofícios de altíssimo valor econômico com pais e avós — inseminação artificial de suínos, castração a laser de leitões, manutenção de sistemas de ventilação de aviários, análise visual de qualidade de leite — mas nunca formalizaram esse conhecimento, não sabem quanto cobrar, e prestam serviço para 2–5 vizinhos por valor muito abaixo do mercado. Migram para frigoríficos ou para Chapecó não por falta de oportunidade, mas por invisibilidade.
 
-**A ideia:** App que calcula a margem real do produtor integrado — incluindo depreciação de galpão, energia, água, mão de obra familiar — e compara com o que o contrato diz que deveria render. Gera relatório para renegociação ou associação de classe.
+**A ideia:** App (FlutterFlow + Supabase) com duas telas: para o jovem prestador — cadastro do ofício com vídeo de 60 segundos demonstrando a habilidade, área de atuação, disponibilidade, precificação sugerida pelo app baseada em tabela colaborativa. Para o produtor rural — busca por serviço + distância, visualiza o vídeo, contrata, avalia. O app gera "Ordem de Serviço Digital" que serve como comprovante para MEI e histórico de reputação. Módulo SEBRAE de abertura de MEI em 3 passos integrado ao app.
 
-**Por que é contraintuitivo:** Não é um app "para a agroindústria". É um app que dá poder de barganha ao elo mais fraco de uma cadeia bilionária.
+**Sustentabilidade:** SEBRAE-SC paga R$60.000–R$100.000 por projeto de formalização de jovens empreendedores rurais (linha existente). Sindicatos Rurais municipais pagam R$200/mês pelo banco de prestadores. Comissão de 3% sobre ordens de serviço acima de R$500 após escala.
 
-**Sustentabilidade:** Assinatura paga pela FETAESC (Federação dos Trabalhadores na Agricultura de SC) ou associações de produtores.
+**Público-alvo:** Jovens rurais de 18–28 anos, filhos de produtores integrados, sem universidade ou no primeiro ano de curso técnico, que prestam serviços informais e têm smartphone mas nunca pensaram em formalizar o que fazem.
 
----
-
-### Pig-to-Power `🟡 Gemini`
-
-**A ideia:** Plataforma de tokenização de biomassa. Pequeno produtor cadastra oferta de dejetos suínos. Cooperativas ou investidores (via app) financiam biodigestores modulares em regime de comodato. App rastreia produção de biogás via IoT.
-
-**Modelo:** Fintech Verde rural — transforma passivo ambiental em ativo financeiro.
-
-**Sustentabilidade:** Comissão sobre créditos de carbono gerados + economia de energia para o produtor.
+**Paradoxo central — "conhecimento invisível por familiaridade":** Inseminação de suínos vale R$150–R$300/visita no mercado formal, mas o jovem que faz isso desde os 14 anos não enxerga como habilidade porque "todo mundo aqui sabe isso". A ferramenta não ensina nada novo — torna legível para o jovem o valor econômico do que ele já sabe. O êxodo rural nesse caso não é fuga da pobreza, é fuga da invisibilidade.
 
 ---
 
-### Sentinelas do Peixe `🟡 Gemini`
+### ⭐⭐⭐⭐⭐ Cria Certa `🟡 Gemini`
 
-**A ideia:** Monitoramento hiper-local do Rio do Peixe. Sensores construídos pelos alunos com Arduino (Edge Computing de baixo custo) + moradores reportam micro-alterações via app. Sistema cria um "Gêmeo Digital" do rio. Moradores que contribuem ganham "Créditos de Resiliência" trocáveis em descontos no comércio local.
+**O problema:** Pequenos suinocultores e avicultores são "price takers" espremidos pelas integradoras, com pouca margem para negociar. Consumidores urbanos se interessam por consumo ético mas não há selo regional que traduza boas práticas de pequenos produtores em valor de mercado.
 
-**Diferencial vs. Alerta Enchente:** É *bottom-up* + gamificação + mapa de contaminação industrial, não apenas alertas.
+**A ideia:** Selo de certificação de bem-estar animal hiperlocal, desenvolvido com os cursos de Veterinária e Agronomia das universidades locais. O protocolo "Cria Certa" estabelece critérios auditáveis e alcançáveis para granjas familiares (m² por animal, ausência de antibióticos preventivos, enriquecimento ambiental). Produtores se cadastram e usam app para documentar conformidade. Estudantes universitários são treinados e remunerados para fazer auditorias periódicas. O produto final recebe QR Code que leva o consumidor ao perfil da fazenda com "score" de bem-estar.
 
----
+**Sustentabilidade:** Produtores certificados pagam anuidade de R$600/ano (cobre auditorias + plataforma). Retorno via acesso a açougues premium e restaurantes com preço superior. Universidades co-financiam como extensão remunerada.
 
-### Agro-Herança Match `🟡 Gemini`
+**Público-alvo:** Suinocultores e avicultores de base familiar + estudantes de ciências agrárias.
 
-**O problema:** Êxodo juvenil + propriedades sem sucessores. Jovens saem de Joaçaba para estudar em Joinville, deixando propriedades sem herdeiros interessados.
-
-**A ideia:** Plataforma que conecta estudantes de Agronomia/Vet da UNOESC/UNIARP (sem terra) com proprietários rurais idosos (sem herdeiros). Jovem traz tecnologia (drones, gestão digital); idoso entra com o capital fundiário em contrato de parceria por performance.
-
-**Diferencial:** Ataca a solidão do idoso rural e a falta de oportunidade do jovem técnico simultaneamente.
+**Por que é não-óbvio:** Transforma bem-estar animal de custo/barreira em ativo de marketing tangível — analogia com "Fair Trade" para café. Cria cadeia de valor paralela e premium, dando poder de barganha ao pequeno produtor e conectando a universidade ao principal setor econômico da região de forma prática e remunerada.
 
 ---
 
-### Logi-Social `🟡 Gemini`
+### ⭐⭐⭐⭐ SafraSeca `🔵 Claude`
 
-**A ideia:** Marketplace de frete colaborativo de última milha. Identifica espaços ociosos em veículos que já fazem rotas regulares (vans escolares, caminhões de ração, distribuidores locais) para o pequeno produtor artesanal escoar produção.
+**O problema:** Produtores integrados à BRF ou Aurora acreditam que o risco climático é da integradora. Na prática, eventos extremos (seca, enchentes, ondas de calor) geram perdas 100% com o produtor — custo de energia extra, mortalidade não coberta, antecipação de insumos. Nenhum produtor integrado da região tem qualquer ferramenta para quantificar esse risco antes que aconteça.
 
-**Diferencial:** Zero novos veículos. Otimiza malha logística da agroindústria para servir o pequeno empreendedor.
+**A ideia:** Web app (browser, sem app store — FlutterFlow Web + Supabase) onde o produtor entra com dados básicos (tipo de integração, número de animais, ciclos/ano, custo fixo mensal). O sistema cruza com dados históricos climáticos do CIRAM/Epagri para o município e simula 3 cenários (normal, seca moderada, evento extremo), mostrando em reais quanto perderia e qual reserva de emergência é recomendada. Gera relatório de 1 página para levar ao banco ou cooperativa de crédito.
 
----
+**Sustentabilidade:** Cooperativas de crédito rurais (Cresol, Sicredi) pagam R$500–R$1.500/mês por licença white-label — reduz inadimplência e gera demanda por produtos de seguro. Epagri/Estado paga projeto-piloto de R$40.000–R$80.000 para validação com 200 produtores.
 
-### Talian Vivo `🔵 Claude`
+**Público-alvo:** Produtores integrados de suínos, 35–55 anos, com financiamento ativo de estrutura (PRONAF), associados a cooperativa de crédito, que já tiveram perda não ressarcida e "engoliu o prejuízo" sem entender por quê.
 
-**O problema:** Dialeto talian e saberes culinários/artesanais morrem não por falta de valorização sentimental, mas por falta de mercado. Não tem transação econômica que sustente a transmissão.
-
-**A ideia:** Plataforma que conecta "mestres do saber local" (nonnas, cantineiros, falantes de talian) com turistas, chefs, pesquisadores e entusiastas que pagam por experiências. O mestre recebe por aula de macarrão, sessão de talian, visita à cantina. O jovem faz a curadoria digital.
-
-**Inversão:** O jovem não é quem sabe — é quem opera a interface. O velho é o professor.
-
-**Sustentabilidade:** Comissão de 15-20% por transação. Pode escalar para Serra Gaúcha, Vale do Itajaí.
+**Paradoxo central — "risco transferido mas não eliminado":** O modelo de integração vende ao produtor a narrativa de que a empresa assume o risco de mercado. O produtor acredita nisso e não desenvolve cultura de reserva. O risco climático — distinto do risco de mercado — permanece 100% com o produtor e nunca foi nomeado claramente.
 
 ---
 
-### Rede de Raiz `🔵 Claude`
+### ⭐⭐⭐⭐ RaízCerta `🔵 Claude`
 
-**A ideia:** Sistema operacional de comunidade. Prefeitura, sindicato rural, escola e UBS publicam necessidades e ofertas num painel unificado. Morador vê: "Biblioteca precisa de voluntário segunda-feira", "Dona Maria tem 50kg de mandioca sobrando", "Associação quer carona para Chapecó". Resposta em um clique.
+**O problema:** O Meio Oeste produz queijo colonial, salame artesanal, banha de porco, mel e vinho de uva bordô de altíssima qualidade gastronômica — mas tudo é vendido na informalidade sem identidade de origem. O turismo gastronômico de Florianópolis e Balneário Camboriú busca "autenticidade colonial" mas não consegue conectar com produtores reais por falta de verificação mínima de confiança.
 
-**Paradoxo:** Não é tecnologia nova. É infraestrutura de coordenação para capital social que já existe nos grupos de WhatsApp mas se perde na entropia.
+**A ideia:** Plataforma web + app leve onde produtores criam "perfil de fazenda" com geolocalização, fotos do processo, documentação sanitária e catálogo de produtos sazonais. Compradores (restaurantes, empórios gourmet, grupos de assinatura) fazem buscas por produto + distância + tipo de certificação. App gera QR Code de rastreio para a embalagem — consumidor escaneia e vê a fazenda de origem.
 
-**Sustentabilidade:** Assinatura da prefeitura municipal (R$200-500/mês). 50 prefeituras pequenas = receita recorrente real.
+**Sustentabilidade:** Produtores pagam R$39/mês (isenção nos 3 primeiros meses). Compradores pagam R$99/mês por acesso ilimitado. Municípios do Consórcio Intermunicipal pagam patrocínio anual de R$15.000–R$30.000 pelo logo "Origem Meio Oeste".
 
----
+**Público-alvo:** Produtores rurais familiares de 45–65 anos com produção artesanal consolidada mas sem canal de venda fora da cidade natal + filhos de 18–30 anos que fazem gestão digital da propriedade.
 
-## Ideias — Brainstorm Inicial (Claude + contexto regional)
-
-### 🌱 Agro familiar e sustentabilidade rural
-
-**a) AgroVizinho** — App/plataforma que conecta pequenos produtores rurais da região para compartilhar maquinário, caronas até feiras, compras coletivas de insumos e troca de excedente de produção.
-
-**b) Sensor de qualidade da água do Rio do Peixe** — Kit DIY com Arduino/ESP32 + app que monitora pH, turbidez e temperatura da água em propriedades ribeirinhas, com mapa colaborativo de contaminação.
-
-**c) DejetoZero** — Plataforma que conecta produtores de suínos com excesso de dejetos a propriedades que querem usar como biofertilizante, com cálculo automático de transporte e dosagem ideal.
-
-### 🏥 Saúde e bem-estar
-
-**d) Cuida+** — App de telemedicina comunitária focado no idoso rural, com botão de emergência, lembretes de remédio por voz, e ligação direta com o agente comunitário de saúde.
-
-**e) Saúde Mental no Campo** — Plataforma anônima de apoio psicológico para agricultores e jovens rurais, com voluntários treinados, conteúdo em áudio e mapa de psicólogos do SUS. *(Nota: rótulo pode afasta o público — ver "Cuida Sem Nome" como alternativa mais sofisticada)*
-
-### 🚌 Mobilidade e conectividade
-
-**f) CaronaMeioOeste** — App de caronas intermunicipais entre Joaçaba, Luzerna, Ibicaré, Herval d'Oeste, Capinzal.
-
-**g) Mapa Colaborativo de Problemas Urbanos** — Cidadão fotografa buraco, lixo, lâmpada queimada → painel da prefeitura com prazo de resolução. *(Já existe o Colab.re — baixa diferenciação)*
-
-### 🎓 Educação e juventude
-
-**h) Trampo Local** — Plataforma de microempregos e estágios para jovens da região com agroindústrias, comércio local e startups.
-
-**i) Memória Viva** — App que gamifica a coleta de histórias dos idosos da região, preservando dialeto talian, receitas, causos. *(Ver "Talian Vivo" como evolução com modelo de receita)*
-
-### ♻️ Meio ambiente e resíduos
-
-**j) Recicla Aqui** — App com ponto de coleta seletiva mais próximo e gamificação com pontos trocáveis em descontos no comércio local.
-
-**k) Alerta Enchente Rio do Peixe** — Sistema de sensores comunitários + app que avisa moradores ribeirinhos sobre subida do rio com antecedência. *(Ver "Memória de Enchente" como evolução com inteligência coletiva)*
+**Paradoxo central — "invisibilidade voluntária":** Produtores com produto superior ao industrial se mantêm invisíveis por falta de protocolo de confiança + cultura de humildade colonial. A solução não é marketing; é infraestrutura de confiança mínima que permite um comprador em Florianópolis confiar num desconhecido em Tangará sem visitar a fazenda.
 
 ---
 
-## Ideias Adicionais (Segunda Rodada)
+### ⭐⭐⭐⭐ Diária Direita `🟡 Gemini`
 
-**l) BiogásLocal** — App + guia técnico para instalação de biodigestores caseiros a partir de dejetos suínos. Calcula retorno em economia de botijão/energia.
+**O problema:** Trabalhadores rurais informais têm vasta experiência mas nenhuma forma de comprová-la. Sua reputação é "boca a boca" e restrita a um pequeno círculo — dificulta negociação por melhores diárias e expõe contratantes ao risco de contratar sem referências.
 
-**m) CarbonoCampo** — Plataforma que calcula créditos de carbono de práticas sustentáveis em pequenas propriedades e conecta produtores com compradores.
+**A ideia:** App onde o trabalhador cria perfil com foto e habilidades. Ao final do trabalho, o contratante valida a experiência via QR Code do app. A validação é objetiva: "Trabalhou de [data] a [data] na [Fazenda X]. Tarefa: [Colheita de uva]. Acordo cumprido: Sim/Não". Com o tempo, o trabalhador constrói um currículo de experiências verificadas e portável.
 
-**n) FrigoFit** — App de ginástica laboral personalizado por função em frigorífico (LER e DORT são epidemias nesses postos).
+**Sustentabilidade:** Uso gratuito para o trabalhador. Contratantes pagam R$2 por validação (via PIX). Sindicatos rurais e cooperativas podem patrocinar para acesso a banco de mão-de-obra qualificada.
 
-**o) Minha Ficha** — App que ajuda trabalhadores de frigoríficos a entender holerite, horas extras, adicionais e benefícios.
+**Público-alvo:** Trabalhadores rurais sazonais e informais + pequenos e médios produtores que os contratam.
 
-**p) AcessaRural** — App que centraliza programas rurais (Pronaf, Garantia-Safra, seguro rural, ITR) com calculadora de elegibilidade e passo a passo para solicitação.
-
-**q) WifiRural** — Mapa colaborativo de conectividade real em propriedades rurais.
-
-**r) Aprenda no Rádio** — Conteúdo educacional em formato de podcast/áudio curto para produtores rurais que trabalham no campo.
-
-**s) TalentoLocal** — Conecta jovens com habilidades digitais com pequenos comércios locais que precisam de presença online.
-
-**t) Feira Digital Meio Oeste** — Marketplace hiperlocal de cestas da agricultura familiar direto para famílias urbanas.
+**Por que é não-óbvio:** Foge da complexidade da formalização legal (CLT). Foca na formalização da reputação — analogia com "LinkedIn para o campo" onde a moeda é experiência prática verificada, não diploma.
 
 ---
 
-## Conceitos-Chave Identificados
+### ⭐⭐⭐ Ritmo Certo `🟡 Gemini`
 
-> Nomeados durante o brainstorming — conceitos que ainda não têm nome no mercado:
+**O problema:** Pausas em frigoríficos são padronizadas e não consideram fadiga individual — levando a afastamentos e custos para as empresas.
 
-- **"Autonomia informacional do integrado"** — produtor com todos os dados de produção mas nenhum dado de rentabilidade real frente à integradora
-- **"Estigma de portal de entrada"** — quando o nome do app afasta o usuário-alvo antes de qualquer uso
-- **"Capital social não-escalável"** — conhecimento comunitário que existe oralmente mas não sobrevive à escala ou ao tempo
-- **"Turismo de sabedoria"** — monetização de conhecimento tácito ancestral via experiência paga
-- **"Sensor humano calibrado"** — o morador ribeirinho como detector de padrão mais preciso que qualquer IoT acessível
+**A ideia:** App + sensor simples (acelerômetro do próprio celular em braçadeira) que monitora padrões de movimento do trabalhador na linha de produção. Detecta micro-variações que indicam fadiga muscular e envia alerta para rotação de função antes da exaustão.
+
+**Sustentabilidade:** Frigoríficos pagam assinatura de R$25/trabalhador/mês. ROI vem de redução de afastamentos médicos.
+
+**Público-alvo:** Trabalhadores na linha de desossa e seus supervisores.
+
+**Por que é não-óbvio:** Analogia com manutenção preditiva de máquinas — trata o trabalhador como ativo de performance, não item de compliance.
+
+**Atenção:** Modelo de sustentabilidade (empresa paga) cria conflito de interesse — empresa pode usar os dados contra o trabalhador. Considerar se é possível inverter para modelo sindicato/trabalhador (como no CicatriFrig).
+
+---
+
+### ⭐⭐⭐ Nossa Horta, Nossa Loja `🟡 Gemini`
+
+**O problema:** Pequenos produtores rurais têm produtos de alta qualidade mas sem tempo/habilidade para gestão digital. Jovens universitários com habilidades digitais deixam a região por falta de oportunidade.
+
+**A ideia:** Plataforma que conecta estudantes da UNIARP/UNOESC a pequenos produtores. O estudante cria presença digital (Instagram, WhatsApp Business, fotos) e ensina o produtor a gerenciar pedidos. Produtor paga R$250 de setup + 8% de comissão (5% para o estudante, 3% para a plataforma).
+
+**Público-alvo:** Produtores da agricultura familiar + estudantes de comunicação/administração/TI.
+
+**Por que é não-óbvio:** O verdadeiro produto é a mentoria disfarçada de plataforma — resolve escoamento do agricultor e "primeiro emprego qualificado" do jovem simultaneamente.
+
+---
+
+## Conceitos-Chave Nomeados (Geração 2)
+
+> Conceitos emergentes desta rodada de brainstorming:
+
+- **"Corpo como ativo invisível"** — trabalhador industrial não possui dados sobre seu próprio ativo produtivo principal
+- **"Conhecimento invisível por familiaridade"** — habilidades rurais desvalorizadas por quem as possui por considerar óbvias
+- **"Risco transferido mas não eliminado"** — integração cria ilusão de proteção que impede resiliência real
+- **"Invisibilidade voluntária"** — produtor com produto superior ao industrial fica fora do mercado por ausência de protocolo de confiança
+- **"Formalização da reputação"** — alternativa à formalização legal (CLT) para mercado informal rural
 
 ---
 
@@ -230,80 +172,8 @@
 
 | Provider | Status | Contribuição |
 |---|---|---|
-| 🟡 Gemini CLI | ✓ Ativo | Pensamento lateral, analogias de ecossistema |
-| 🔵 Claude | ✓ Ativo | Padrões, paradoxos, conceitos sem nome |
-| 🔴 Codex CLI | ✗ Falhou | Erro: modelo `gpt-5.4` não suportado |
+| 🟡 Gemini CLI (gemini-2.5-pro) | ✓ Ativo | 4 ideias: Ritmo Certo, Nossa Horta, Cria Certa, Diária Direita |
+| 🔵 Claude (claude-sonnet-4-6) | ✓ Ativo | 4 ideias: CicatriFrig, RaízCerta, SafraSeca, OficioVivo |
+| 🔴 Codex CLI | ✗ Falhou | Nenhum modelo disponível (gpt-5.3, gpt-5.4, o3 não suportados na conta ChatGPT) |
 
-*Sessão realizada em 2026-05-27 — Desafio Liga Jovem 4ª Edição*
-
----
-
-## Análise de Viabilidade Técnica — Rodada 2 (🟡 Gemini + 🔵 Claude)
-
-### Tabela comparativa
-
-| Ideia | Stack Principal | Dificuldade (1–5) | Melhor para... |
-|---|---|---|---|
-| Bio-School Loop | FlutterFlow + Firebase + ESP32/Arduino | 3/5 | Equipe maker (gosta de eletrônica) |
-| Memória de Enchente | FlutterFlow + Supabase + Leaflet + Metabase | **2/5** | Qualquer equipe — melhor relação impacto/esforço |
-| Cuida Sem Nome | Expo RN + Supabase + OpenAI/Groq | 4.5/5 | Equipe focada em UX/IA (prazo apertado) |
-
----
-
-### Recomendação consenso: Memória de Enchente
-
-**Stack (custo ~R$0):**
-- **Mobile:** FlutterFlow (templates prontos, exporta para Android/iOS/web)
-- **Backend:** Supabase — PostgreSQL + PostGIS (dados geoespaciais) + Storage (fotos/áudio)
-- **Mapa:** Leaflet.js ou Mapbox (tier gratuito)
-- **Dashboard Defesa Civil:** Metabase conectado ao Supabase (sem escrever SQL)
-
-**MVP mínimo em 3–4 semanas:**
-- Funciona de verdade: formulário de registro (foto + nível da água + GPS automático), mapa de ocorrências históricas, linha do tempo por localização
-- Pode ser mockado: modelo preditivo (apresentar como "em desenvolvimento com os dados coletados"), transcrição de áudio (gravar e armazenar é suficiente para o protótipo)
-
-**Sequência de execução:**
-
-| Semana | Entrega |
-|---|---|
-| 1 | FlutterFlow com formulário funcionando + Supabase recebendo dados + mapa básico |
-| 2 | Dashboard Metabase para Defesa Civil + inserção de dados históricos reais ou plausíveis |
-| 3–4 | Testes com moradores ribeirinhos reais → diferencial competitivo enorme na apresentação |
-
-**Fallback de segurança:** se câmera/GPS não abrir no dia da apresentação, FlutterFlow exporta versão web — sem dependência de celular físico.
-
----
-
-### Bio-School Loop — notas técnicas
-
-- Substitua sensores de pH/Nitrogênio (caros e instáveis) por sensor de umidade capacitivo + simule pH via software para o protótipo
-- Use Tinkercad para simular o circuito antes de comprar hardware
-- Biblioteca **FirebaseESP8266** tem exemplos prontos no GitHub
-- Fallback sem hardware: use Glide App (planilha Google Sheets como backend) para o marketplace escolar em 1 dia
-- Risco: ESP8266 pode não funcionar no Wi-Fi da escola (restrito) → configurar envio via Bluetooth para celular que sobe para nuvem
-
-### Cuida Sem Nome — notas técnicas
-
-- API Groq (LLaMA) é gratuita e funciona bem para NLP em português
-- Whisper API (OpenAI) para transcrição de áudio com precisão alta
-- **Risco ético:** nunca apresentar como diagnóstico; sempre como "assistente de produtividade e bem-estar"
-- Latência de 5–15s por entrada pode frustrar usuário — processar em background com resposta imediata de placeholder
-- Dificuldade real é o design de UX: fazer a "câmara de escuta" não parecer vigilância leva meses, não semanas
-
----
-
-### Ferramentas no-code/low-code recomendadas
-
-| Ferramenta | Uso | Custo |
-|---|---|---|
-| FlutterFlow | App mobile completo | Gratuito (tier básico) |
-| Supabase | Backend completo | Gratuito |
-| Firebase | Backend alternativo + real-time | Gratuito (tier Spark) |
-| Metabase | Dashboard sem código | Gratuito (self-host) |
-| Glide | App a partir de Google Sheets | Gratuito |
-| Bubble.io | Dashboard web sem código | Gratuito |
-| Tinkercad | Simulador de circuito Arduino | Gratuito |
-| Leaflet.js | Mapas interativos | Open source |
-| Groq API | LLM gratuito (LLaMA) | Gratuito |
-
-*Segunda sessão realizada em 2026-05-27 — foco em viabilidade técnica*
+*Sessão realizada em 2026-05-29 — Geração 2, ideias completamente novas*
