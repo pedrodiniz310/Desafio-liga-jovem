@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Conecta SUS — Design System
+   Paleta: pinheiro/esmeralda (saúde, confiança pública)
+           + terracota (calor humano, brasilidade)
+           sobre creme quente (nunca branco puro)
+   ============================================================ */
+
+@theme {
+  /* superfícies */
+  --color-paper: #f6f3ea;
+  --color-paper-soft: #fbf9f2;
+  --color-card: #ffffff;
+  --color-line: #e6e0d2;
+
+  /* tinta */
+  --color-ink: #16241f;
+  --color-ink-soft: #4c5a53;
+  --color-ink-faint: #6e7b74;
+
+  /* verde — cor de marca */
+  --color-verde: #0d6a51;
+  --color-verde-deep: #073b2e;
+  --color-verde-bright: #18a878;
+  --color-verde-wash: #e2efe8;
+
+  /* terracota — accent humano */
+  --color-coral: #d65a3c;
+  --color-coral-bright: #e8714f;
+  --color-coral-wash: #f8e6dd;
+
+  /* âmbar — destaque pontual */
+  --color-amber: #e0a23f;
+
+  /* fontes */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* sombras com tom quente, não cinza neutro */
+  --shadow-soft: 0 1px 2px rgba(22, 36, 31, 0.04),
+    0 8px 24px -12px rgba(22, 36, 31, 0.18);
+  --shadow-lift: 0 2px 6px rgba(22, 36, 31, 0.06),
+    0 24px 48px -20px rgba(13, 106, 81, 0.28);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* seleção de texto com a cor de marca */
+::selection {
+  background-color: #0d6a51;
+  color: #fbf9f2;
+}
+
+/* foco visível consistente — acessibilidade */
+:focus-visible {
+  outline: 2.5px solid var(--color-verde);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* tipografia de display */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* grão sutil sobre o creme — quebra a chapa lisa de fundo de IA */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* animação de cursor piscando na demo de busca */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret {
+  animation: caret 1s steps(1) infinite;
+}
+
+/* pulso suave para o indicador "ao vivo" */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--color-coral);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@theme inline {
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
