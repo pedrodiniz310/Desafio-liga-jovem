@@ -48,12 +48,12 @@ export function SiteFooter() {
               <h3 className="text-sm font-semibold tracking-wide text-ink">
                 {coluna.titulo}
               </h3>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-3 sm:mt-4">
                 {coluna.links.map((link) => (
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-ink-soft transition-colors hover:text-verde"
+                      className="inline-block py-1.5 text-sm text-ink-soft transition-colors hover:text-verde"
                     >
                       {link.label}
                     </a>

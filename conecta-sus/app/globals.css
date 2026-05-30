@@ -49,13 +49,16 @@ html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  /* clip (não hidden) corta o sangramento dos elementos decorativos
+     sem criar scroll container — assim o `sticky` do text-reveal segue ok */
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 ::selection {
