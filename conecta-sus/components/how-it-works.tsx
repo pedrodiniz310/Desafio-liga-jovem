@@ -57,7 +57,7 @@ export function HowItWorks() {
             const Icon = passo.icon;
             return (
               <Reveal key={passo.n} delay={i * 0.08}>
-                <article className="grid items-start gap-6 py-10 sm:grid-cols-[auto_1fr_auto] sm:gap-10">
+                <article className="group grid items-start gap-6 py-10 sm:grid-cols-[auto_1fr_auto] sm:gap-10">
                   <span className="font-display text-5xl leading-none font-semibold text-verde/25 sm:text-7xl">
                     {passo.n}
                   </span>
@@ -74,7 +74,7 @@ export function HowItWorks() {
                     </span>
                   </div>
 
-                  <span className="hidden h-14 w-14 items-center justify-center rounded-2xl border border-line bg-paper-soft text-verde sm:flex">
+                  <span className="hidden h-14 w-14 items-center justify-center rounded-2xl border border-line bg-paper-soft text-verde transition-colors group-hover:border-verde group-hover:bg-verde group-hover:text-paper-soft sm:flex">
                     <Icon className="h-6 w-6" aria-hidden="true" />
                   </span>
                 </article>

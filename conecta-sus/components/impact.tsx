@@ -49,7 +49,6 @@ export function Impact() {
           </div>
         </Reveal>
 
-        {/* comparação antes / depois */}
         <div className="mt-12 grid gap-4 lg:grid-cols-5">
           {/* antes */}
           <Reveal className="lg:col-span-2">

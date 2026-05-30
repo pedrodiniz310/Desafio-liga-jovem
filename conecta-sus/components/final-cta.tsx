@@ -1,4 +1,4 @@
-import { ArrowRight, Apple, Play } from "lucide-react";
+import { ArrowRight, Smartphone } from "lucide-react";
 import { Reveal } from "./reveal";
 
 export function FinalCta() {
@@ -29,14 +29,14 @@ export function FinalCta() {
                 href="#"
                 className="inline-flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full bg-paper-soft px-6 text-base font-semibold text-verde-deep transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
               >
-                <Apple className="h-5 w-5" aria-hidden="true" />
+                <Smartphone className="h-5 w-5" aria-hidden="true" />
                 Baixar para iPhone
               </a>
               <a
                 href="#"
                 className="inline-flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full border border-paper-soft/30 px-6 text-base font-semibold text-paper-soft transition-colors hover:bg-paper-soft/10 sm:w-auto"
               >
-                <Play className="h-5 w-5" aria-hidden="true" />
+                <Smartphone className="h-5 w-5" aria-hidden="true" />
                 Baixar para Android
               </a>
             </div>

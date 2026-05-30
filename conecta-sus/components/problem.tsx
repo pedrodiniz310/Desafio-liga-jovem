@@ -36,7 +36,6 @@ export function Problem() {
           </p>
         </Reveal>
 
-        {/* a cena, contada como história */}
         <Reveal delay={0.1}>
           <figure className="mt-12 max-w-2xl border-l-2 border-coral pl-6">
             <blockquote className="font-display text-xl leading-relaxed text-paper-soft/90 italic sm:text-2xl">
@@ -50,7 +49,6 @@ export function Problem() {
           </figure>
         </Reveal>
 
-        {/* blocos assimétricos */}
         <div className="mt-14 grid gap-4 sm:grid-cols-6">
           <Reveal className="sm:col-span-3" delay={0.05}>
             <div className="flex h-full flex-col justify-between rounded-3xl border border-paper-soft/10 bg-paper-soft/5 p-7">
@@ -84,10 +82,7 @@ export function Problem() {
 
           <Reveal className="sm:col-span-6" delay={0.18}>
             <div className="flex flex-col items-start gap-5 rounded-3xl border border-paper-soft/10 bg-paper-soft/5 p-7 sm:flex-row sm:items-center sm:gap-8">
-              <Map
-                className="h-7 w-7 shrink-0 text-coral-bright"
-                aria-hidden
-              />
+              <Map className="h-7 w-7 shrink-0 text-coral-bright" aria-hidden />
               <p className="text-lg leading-relaxed text-paper-soft/85">
                 O encaminhamento vem num papel que ninguém entende. O endereço
                 mudou. A unidade fechou. E não existe um lugar só que diga, em

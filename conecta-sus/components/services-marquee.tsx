@@ -38,7 +38,10 @@ function Pilula({ texto, i }: { texto: string; i: number }) {
 
 export function ServicesMarquee() {
   return (
-    <section className="overflow-hidden py-14 sm:py-20" aria-label="Exemplos de serviços do SUS">
+    <section
+      className="overflow-hidden py-14 sm:py-20"
+      aria-label="Exemplos de serviços do SUS"
+    >
       <p className="mx-auto mb-9 max-w-xl px-5 text-center text-lg text-ink-soft">
         Tudo isto já existe no SUS — e é{" "}
         <span className="font-semibold text-verde">de graça</span>. O Conecta SUS
@@ -57,7 +60,6 @@ export function ServicesMarquee() {
           ))}
         </Marquee>
 
-        {/* fades nas bordas */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-paper to-transparent sm:w-32" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-paper to-transparent sm:w-32" />
       </div>

@@ -21,7 +21,10 @@ const COLUNAS = [
   {
     titulo: "Projeto",
     links: [
-      { label: "Desafio Liga Jovem", href: "https://www.desafioligajovem.com.br/" },
+      {
+        label: "Desafio Liga Jovem",
+        href: "https://www.desafioligajovem.com.br/",
+      },
       { label: "SEBRAE", href: "https://sebrae.com.br/" },
     ],
   },

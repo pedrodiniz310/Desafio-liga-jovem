@@ -3,27 +3,26 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ============================================================
-   Conecta SUS — Design System
-   Paleta: pinheiro/esmeralda (saúde, confiança pública)
-           + terracota (calor humano, brasilidade)
-           sobre creme quente (nunca branco puro)
+   Conecta SUS — Design System (repaginada)
+   Paleta pinheiro/esmeralda + terracota sobre creme quente.
+   Fraunces (display) + Inter (texto). Moderno + confiável.
    ============================================================ */
 
 @theme {
   /* superfícies */
-  --color-paper: #f6f3ea;
+  --color-paper: #f4f1e7;
   --color-paper-soft: #fbf9f2;
   --color-card: #ffffff;
   --color-line: #e6e0d2;
 
   /* tinta */
-  --color-ink: #16241f;
+  --color-ink: #14211c;
   --color-ink-soft: #4c5a53;
-  --color-ink-faint: #6e7b74;
+  --color-ink-faint: #76837b;
 
   /* verde — cor de marca */
   --color-verde: #0d6a51;
-  --color-verde-deep: #073b2e;
+  --color-verde-deep: #062f25;
   --color-verde-bright: #18a878;
   --color-verde-wash: #e2efe8;
 
@@ -39,11 +38,11 @@
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  /* sombras com tom quente, não cinza neutro */
-  --shadow-soft: 0 1px 2px rgba(22, 36, 31, 0.04),
-    0 8px 24px -12px rgba(22, 36, 31, 0.18);
-  --shadow-lift: 0 2px 6px rgba(22, 36, 31, 0.06),
-    0 24px 48px -20px rgba(13, 106, 81, 0.28);
+  /* sombras com tom quente */
+  --shadow-soft: 0 1px 2px rgba(20, 33, 28, 0.04),
+    0 8px 24px -14px rgba(20, 33, 28, 0.22);
+  --shadow-lift: 0 2px 6px rgba(20, 33, 28, 0.06),
+    0 30px 60px -26px rgba(13, 106, 81, 0.32);
 }
 
 html {
@@ -59,26 +58,22 @@ body {
   overflow-x: hidden;
 }
 
-/* seleção de texto com a cor de marca */
 ::selection {
   background-color: #0d6a51;
   color: #fbf9f2;
 }
 
-/* foco visível consistente — acessibilidade */
 :focus-visible {
   outline: 2.5px solid var(--color-verde);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* tipografia de display */
 .font-display {
   font-family: var(--font-display);
   font-optical-sizing: auto;
 }
 
-/* respeita quem prefere menos movimento */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -90,7 +85,7 @@ body {
   }
 }
 
-/* grão sutil sobre o creme — quebra a chapa lisa de fundo de IA */
+/* grão sutil sobre o creme — quebra a chapa lisa de fundo */
 .grain::before {
   content: "";
   position: absolute;
@@ -102,32 +97,17 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
 }
 
-/* animação de cursor piscando na demo de busca */
+/* cursor piscando na demo de busca */
 @keyframes caret {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
-.caret {
-  animation: caret 1s steps(1) infinite;
-}
+.caret { animation: caret 1s steps(1) infinite; }
 
 /* pulso suave para o indicador "ao vivo" */
 @keyframes pulse-ring {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.7;
-  }
-  70%,
-  100% {
-    transform: scale(1.8);
-    opacity: 0;
-  }
+  0% { transform: scale(0.85); opacity: 0.7; }
+  70%, 100% { transform: scale(1.8); opacity: 0; }
 }
 .pulse-ring::after {
   content: "";
@@ -138,23 +118,36 @@ body {
   animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
+/* ============================================================
+   Fundo vivo do hero — manchas orgânicas que flutuam devagar
+   ============================================================ */
+.blob-drift-a { animation: drift-a 24s ease-in-out infinite; will-change: transform; }
+.blob-drift-b { animation: drift-b 29s ease-in-out infinite; will-change: transform; }
+.blob-drift-c { animation: drift-c 34s ease-in-out infinite; will-change: transform; }
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-46px, 34px) scale(1.1); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.08); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(38px, 26px) scale(1.12); }
+  66% { transform: translate(-30px, -22px) scale(0.94); }
+}
+
 @theme inline {
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
   @keyframes marquee {
-  from {
-    transform: translateX(0);
-    }
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
-    }
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap))); }
   }
   @keyframes marquee-vertical {
-  from {
-    transform: translateY(0);
-    }
-  to {
-    transform: translateY(calc(-100% - var(--gap)));
-    }
+    from { transform: translateY(0); }
+    to { transform: translateY(calc(-100% - var(--gap))); }
   }
 }

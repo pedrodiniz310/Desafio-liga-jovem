@@ -37,7 +37,7 @@ export function Differentiators() {
         <div className="mt-12 grid auto-rows-[minmax(0,1fr)] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* card destaque */}
           <Reveal className="lg:col-span-2 lg:row-span-2">
-            <div className="flex h-full flex-col justify-between rounded-3xl bg-verde p-8 text-paper-soft">
+            <div className="flex h-full flex-col justify-between rounded-3xl bg-verde p-8 text-paper-soft transition-shadow hover:shadow-lift">
               <div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-paper-soft/15">
                   <Search className="h-6 w-6" aria-hidden="true" />
@@ -67,7 +67,7 @@ export function Differentiators() {
 
           {/* CNES — largo */}
           <Reveal className="sm:col-span-2" delay={0.06}>
-            <div className="flex h-full flex-col rounded-3xl border border-line bg-card p-7">
+            <div className="flex h-full flex-col rounded-3xl border border-line bg-card p-7 transition-transform hover:-translate-y-1">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-verde-wash text-verde">
                 <Database className="h-6 w-6" aria-hidden="true" />
               </span>
@@ -76,15 +76,15 @@ export function Differentiators() {
               </h3>
               <p className="mt-2 leading-relaxed text-ink-soft">
                 Tudo vem do CNES, o cadastro do Ministério da Saúde com todos os
-                estabelecimentos do país. Informação de fonte pública, não
-                rumor de grupo de WhatsApp.
+                estabelecimentos do país. Informação de fonte pública, não rumor
+                de grupo de WhatsApp.
               </p>
             </div>
           </Reveal>
 
           {/* comunidade */}
           <Reveal delay={0.12}>
-            <div className="flex h-full flex-col rounded-3xl border border-line bg-card p-7">
+            <div className="flex h-full flex-col rounded-3xl border border-line bg-card p-7 transition-transform hover:-translate-y-1">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-coral-wash text-coral">
                 <Users className="h-6 w-6" aria-hidden="true" />
               </span>
@@ -100,7 +100,7 @@ export function Differentiators() {
 
           {/* gratuito */}
           <Reveal delay={0.18}>
-            <div className="flex h-full flex-col rounded-3xl border border-line bg-card p-7">
+            <div className="flex h-full flex-col rounded-3xl border border-line bg-card p-7 transition-transform hover:-translate-y-1">
               <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-verde-wash text-verde">
                 <HeartHandshake className="h-6 w-6" aria-hidden="true" />
               </span>

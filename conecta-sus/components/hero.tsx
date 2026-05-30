@@ -17,14 +17,24 @@ export function Hero() {
       id="topo"
       className="grain relative overflow-hidden pt-28 pb-16 sm:pt-32 lg:pb-24"
     >
-      {/* manchas orgânicas de fundo */}
+      {/* fundo vivo — manchas orgânicas que flutuam devagar */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-32 -right-24 h-[28rem] w-[28rem] rounded-full bg-verde-wash blur-3xl"
+        className="blob-drift-a pointer-events-none absolute -top-36 -right-28 h-[29rem] w-[29rem] rounded-full bg-verde-wash blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 -left-32 h-[26rem] w-[26rem] rounded-full bg-coral-wash blur-3xl"
+        className="blob-drift-b pointer-events-none absolute -bottom-48 -left-40 h-[26rem] w-[26rem] rounded-full bg-coral-wash blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="blob-drift-c pointer-events-none absolute top-[38%] left-[46%] h-[21rem] w-[21rem] rounded-full bg-verde-bright/25 opacity-50 blur-3xl"
+      />
+
+      {/* malha de pontos sutil */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(13,106,81,0.1)_1px,transparent_1.4px)] [background-size:26px_26px] [mask-image:radial-gradient(640px_460px_at_80%_6%,#000,transparent_75%)]"
       />
 
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8">
@@ -47,21 +57,18 @@ export function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08 }}
-            className="font-display mt-6 text-[2.6rem] leading-[1.04] font-semibold tracking-tight text-ink sm:text-6xl"
+            className="font-display mt-6 text-[2.7rem] leading-[1.05] font-semibold tracking-tight text-ink sm:text-6xl"
           >
-            O SUS tem o que
-            <br />
-            você precisa.
-            <span className="mt-1 block text-coral italic">
-              Ninguém te contou onde.
-            </span>
+            Encontre os serviços{" "}
+            <span className="text-coral italic">gratuitos</span> do SUS perto de
+            você.
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16 }}
-            className="mt-6 max-w-md text-lg leading-relaxed text-ink-soft"
+            className="mt-9 max-w-md text-lg leading-relaxed text-ink-soft"
           >
             Psicólogo, dentista especialista, remédio de graça — tudo já existe
             perto de você. O Conecta SUS mostra onde fica, o horário e o que

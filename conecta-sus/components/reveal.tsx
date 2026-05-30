@@ -5,23 +5,23 @@ import type { ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
-  delay?: number;
-  y?: number;
   className?: string;
+  delay?: number;
 };
 
 /**
- * Wrapper de entrada suave (fade + sobe) acionado ao entrar na viewport.
- * Respeita prefers-reduced-motion via CSS global.
+ * Revela o conteúdo com um leve fade + slide ao entrar na viewport.
+ * Usa motion/react (whileInView), então respeita abas em segundo plano
+ * e prefers-reduced-motion sem travar conteúdo invisível.
  */
-export function Reveal({ children, delay = 0, y = 24, className }: RevealProps) {
+export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
+      initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
