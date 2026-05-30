@@ -1,5 +1,6 @@
 import { useRef, useMemo } from "react";
-import { Animated, Pressable, StyleSheet, Text } from "react-native";
+import { Animated, Pressable, StyleSheet } from "react-native";
+import * as LucideIcons from "lucide-react-native";
 
 import { Texto } from "@/components/texto";
 import { useTema } from "@/theme/tema";
@@ -7,11 +8,11 @@ import type { Cores } from "@/theme/colors";
 
 type NeedChipProps = {
   rotulo: string;
-  emoji: string;
+  icone: string;
   onPress: () => void;
 };
 
-export function NeedChip({ rotulo, emoji, onPress }: NeedChipProps) {
+export function NeedChip({ rotulo, icone, onPress }: NeedChipProps) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
   const scale = useRef(new Animated.Value(1)).current;
@@ -20,6 +21,8 @@ export function NeedChip({ rotulo, emoji, onPress }: NeedChipProps) {
     Animated.spring(scale, { toValue: 0.93, useNativeDriver: true, speed: 40, bounciness: 0 }).start();
   const onPressOut = () =>
     Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 18, bounciness: 10 }).start();
+
+  const Icon = (LucideIcons as Record<string, React.ComponentType<{ size: number; color: string; strokeWidth: number }>>)[icone];
 
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
@@ -31,7 +34,7 @@ export function NeedChip({ rotulo, emoji, onPress }: NeedChipProps) {
         accessibilityLabel={rotulo}
         style={styles.chip}
       >
-        <Text style={styles.emoji}>{emoji}</Text>
+        {Icon && <Icon size={16} color={cores.inkSoft} strokeWidth={1.75} />}
         <Texto style={styles.label}>{rotulo}</Texto>
       </Pressable>
     </Animated.View>
@@ -43,7 +46,7 @@ const makeStyles = (cores: Cores) =>
     chip: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 8,
+      gap: 7,
       backgroundColor: cores.card,
       borderRadius: 24,
       borderWidth: 1,
@@ -51,7 +54,6 @@ const makeStyles = (cores: Cores) =>
       paddingVertical: 10,
       paddingHorizontal: 14,
     },
-    emoji: { fontSize: 16 },
     label: {
       fontSize: 14,
       fontWeight: "500",

@@ -106,7 +106,7 @@ export default function BuscaScreen() {
               <NeedChip
                 key={n.slug}
                 rotulo={n.rotulo}
-                emoji={n.emoji}
+                icone={n.icone}
                 onPress={() => pesquisar(n.rotulo)}
               />
             ))}
