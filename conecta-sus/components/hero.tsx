@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ArrowDown, HeartPulse, ShieldCheck } from "lucide-react";
 import { SearchDemo } from "./search-demo";
 import { MorphingText } from "./ui/liquid-text";
+import { CtaButton } from "./ui/cta-button";
 
 const NEEDS = [
   "psicólogo",
@@ -98,12 +99,9 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.24 }}
             className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
           >
-            <a
-              href="#baixar"
-              className="inline-flex h-[52px] items-center justify-center rounded-full bg-verde px-7 text-base font-semibold text-paper-soft shadow-lift transition-transform hover:-translate-y-0.5 active:translate-y-0"
-            >
+            <CtaButton href="#baixar" className="h-[52px] px-7 text-base">
               Encontrar um serviço perto de mim
-            </a>
+            </CtaButton>
             <a
               href="#como-funciona"
               className="group inline-flex items-center gap-2 px-1 py-2 text-base font-medium text-ink-soft transition-colors hover:text-verde"

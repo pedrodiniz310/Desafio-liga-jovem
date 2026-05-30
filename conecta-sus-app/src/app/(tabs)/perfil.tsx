@@ -9,10 +9,7 @@ import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 
 export default function PerfilScreen() {
-  const fonteGrande = usePreferencias((s) => s.fonteGrande);
-  const altoContraste = usePreferencias((s) => s.altoContraste);
-  const setFonteGrande = usePreferencias((s) => s.setFonteGrande);
-  const setAltoContraste = usePreferencias((s) => s.setAltoContraste);
+  const { fonteGrande, altoContraste, setFonteGrande, setAltoContraste } = usePreferencias();
 
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);

@@ -14,8 +14,7 @@ const TemaContext = createContext<Tema>({ cores: colors, escala: 1 });
 
 /** Fornece cores e escala de fonte derivadas das preferências do usuário. */
 export function TemaProvider({ children }: { children: ReactNode }) {
-  const fonteGrande = usePreferencias((s) => s.fonteGrande);
-  const altoContraste = usePreferencias((s) => s.altoContraste);
+  const { fonteGrande, altoContraste } = usePreferencias();
 
   const cores = altoContraste ? coresAltoContraste : colors;
   const escala = fonteGrande ? 1.25 : 1;

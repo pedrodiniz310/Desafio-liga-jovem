@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./logo";
+import { CtaButton } from "./ui/cta-button";
 
 const LINKS = [
   { href: "#problema", label: "O problema" },

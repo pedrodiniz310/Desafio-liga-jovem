@@ -12,8 +12,7 @@ import type { Cores } from "@/theme/colors";
 
 export default function SalvosScreen() {
   const router = useRouter();
-  const itens = useFavoritos((s) => s.itens);
-  const remover = useFavoritos((s) => s.remover);
+  const { itens, remover } = useFavoritos();
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
 
@@ -48,7 +47,7 @@ export default function SalvosScreen() {
                   params: { id: String(item.id) },
                 })
               }
-              onRemover={() => remover(item.id)}
+              onRemover={async () => await remover(item.id)}
             />
           )}
         />

@@ -25,8 +25,7 @@ export default function ServicoDetalhe() {
   const servicoId = Number(id);
   const { data: servico, isLoading, isError } = useServico(servicoId);
 
-  const itensSalvos = useFavoritos((s) => s.itens);
-  const alternarSalvo = useFavoritos((s) => s.alternar);
+  const { itens: itensSalvos, alternar: alternarSalvo } = useFavoritos();
   const salvo = itensSalvos.some((i) => i.id === servicoId);
 
   const confirmarMutation = useConfirmar();
@@ -97,8 +96,8 @@ export default function ServicoDetalhe() {
           <Ionicons name="medkit" size={28} color={cores.verde} />
         </View>
         <Pressable
-          onPress={() =>
-            alternarSalvo({
+          onPress={async () =>
+            await alternarSalvo({
               id: servicoId,
               nome: servico.nome,
               endereco: servico.endereco,

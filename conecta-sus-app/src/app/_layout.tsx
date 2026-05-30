@@ -4,6 +4,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { TemaProvider, useTema } from "@/theme/tema";
+import { LocalizacaoProvider } from "@/stores/use-localizacao";
+import { FavoritosProvider } from "@/stores/use-favoritos";
+import { PreferenciasProvider } from "@/stores/use-preferencias";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,9 +21,15 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
-        <TemaProvider>
-          <Chrome />
-        </TemaProvider>
+        <PreferenciasProvider>
+          <LocalizacaoProvider>
+            <FavoritosProvider>
+              <TemaProvider>
+                <Chrome />
+              </TemaProvider>
+            </FavoritosProvider>
+          </LocalizacaoProvider>
+        </PreferenciasProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

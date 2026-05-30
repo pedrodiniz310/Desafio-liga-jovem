@@ -10,7 +10,7 @@ import type { ServicoSalvo } from "@/stores/use-favoritos";
 type SavedCardProps = {
   servico: ServicoSalvo;
   onPress: () => void;
-  onRemover: () => void;
+  onRemover: () => Promise<void> | void;
 };
 
 /**
