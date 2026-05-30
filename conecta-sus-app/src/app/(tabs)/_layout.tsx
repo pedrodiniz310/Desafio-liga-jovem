@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router/js-tabs";
+import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { useTema } from "@/theme/tema";
