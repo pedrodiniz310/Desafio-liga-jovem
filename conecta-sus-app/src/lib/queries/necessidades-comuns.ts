@@ -15,6 +15,6 @@ export const NECESSIDADES_COMUNS: AtalhoNecessidade[] = [
   { slug: "fonoaudiologo", rotulo: "Fono", icone: "ear-outline" },
   { slug: "vacina", rotulo: "Vacina", icone: "shield-checkmark-outline" },
   { slug: "pre-natal", rotulo: "Pré-natal", icone: "heart-outline" },
-  { slug: "dependencia", rotulo: "Dependência química", icone: "people-outline" },
+  { slug: "dependencia", rotulo: "Dependência", icone: "people-outline" },
   { slug: "fisioterapia", rotulo: "Reabilitação", icone: "fitness-outline" },
 ];

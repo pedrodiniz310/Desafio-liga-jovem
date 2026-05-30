@@ -5,6 +5,7 @@ import { ArrowDown, HeartPulse, ShieldCheck } from "lucide-react";
 import { SearchDemo } from "./search-demo";
 import { MorphingText } from "./ui/liquid-text";
 import { CtaButton } from "./ui/cta-button";
+import { Marquee } from "./ui/marquee";
 
 const NEEDS = [
   "psicólogo",
@@ -21,11 +22,48 @@ const CHIPS = [
   { label: "Reabilitação · CER", bottom: "-3%", right: "4%", delay: 1.6 },
 ] as const;
 
+const LINHA_1 = [
+  "CAPS · saúde mental",
+  "Farmácia Popular",
+  "CEO · dentista especialista",
+  "Banco de Leite",
+  "CER · reabilitação",
+  "UPA 24h",
+  "SAMU 192",
+  "Academia da Saúde",
+];
+
+const LINHA_2 = [
+  "CAPS AD · dependência química",
+  "Saúde da Família",
+  "Melhor em Casa",
+  "Centro de Testagem",
+  "Planejamento familiar",
+  "Ambulatório de especialidades",
+  "Vacinação",
+  "Saúde bucal",
+];
+
+const CORES = ["bg-verde", "bg-coral", "bg-amber"];
+
+function Pilula({ texto, i }: { texto: string; i: number }) {
+  return (
+    <span className="mx-1.5 inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-5 py-2.5 text-sm font-medium whitespace-nowrap text-ink shadow-soft">
+      <span
+        className={`h-2 w-2 rounded-full ${CORES[i % CORES.length]}`}
+        aria-hidden="true"
+      />
+      {texto}
+    </span>
+  );
+}
+
 export function Hero() {
   return (
     <section
       id="topo"
-      className="grain relative overflow-hidden pt-28 pb-16 sm:pt-32 lg:pb-24"
+      className="grain relative pt-28 pb-14 sm:pt-32 sm:pb-20"
+      style={{ overflowX: "clip" }}
     >
       {/* fundo vivo — manchas orgânicas que flutuam devagar */}
       <div
@@ -34,7 +72,8 @@ export function Hero() {
       />
       <div
         aria-hidden="true"
-        className="blob-drift-b pointer-events-none absolute -bottom-48 -left-40 h-[26rem] w-[26rem] rounded-full bg-coral-wash blur-3xl"
+        className="blob-drift-b pointer-events-none absolute -left-40 h-[32rem] w-[32rem] rounded-full bg-coral-wash blur-3xl"
+        style={{ bottom: "-6rem" }}
       />
       <div
         aria-hidden="true"
@@ -47,6 +86,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(13,106,81,0.1)_1px,transparent_1.4px)] [background-size:26px_26px] [mask-image:radial-gradient(640px_460px_at_80%_6%,#000,transparent_75%)]"
       />
 
+      {/* — hero grid — */}
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8">
         {/* coluna de texto */}
         <div>
@@ -162,6 +202,37 @@ export function Hero() {
           ))}
         </motion.div>
       </div>
+
+      {/* — marquee de serviços — integrado para evitar corte do fundo — */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="relative mt-16 sm:mt-20"
+        aria-label="Exemplos de serviços do SUS"
+      >
+        <p className="mx-auto mb-9 max-w-xl px-5 text-center text-lg text-ink-soft">
+          Tudo isto já existe no SUS — e é{" "}
+          <span className="font-semibold text-verde">de graça</span>. O problema
+          nunca foi a falta de serviço. É achar.
+        </p>
+
+        <div className="relative">
+          <Marquee pauseOnHover className="[--duration:38s]">
+            {LINHA_1.map((s, i) => (
+              <Pilula key={s} texto={s} i={i} />
+            ))}
+          </Marquee>
+          <Marquee reverse pauseOnHover className="mt-3 [--duration:44s]">
+            {LINHA_2.map((s, i) => (
+              <Pilula key={s} texto={s} i={i + 1} />
+            ))}
+          </Marquee>
+
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-paper to-transparent sm:w-32" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-paper to-transparent sm:w-32" />
+        </div>
+      </motion.div>
     </section>
   );
 }

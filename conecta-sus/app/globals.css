@@ -143,164 +143,52 @@ body {
 }
 
 /* ============================================================
-   CTA Button — efeito shiny (borda conica giratória + shimmer)
-   Inspirado em 21st.dev/r/shiny-button, adaptado às cores verde.
+   CTA Button — shimmer sweep contínuo
    ============================================================ */
-@property --cta-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-@property --cta-angle-offset {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-@property --cta-percent {
-  syntax: "<percentage>";
-  initial-value: 5%;
-  inherits: false;
-}
-@property --cta-shine {
-  syntax: "<color>";
-  initial-value: white;
-  inherits: false;
-}
-
 .cta-shiny {
-  --_bg: #0d6a51;
-  --_bg-subtle: #062f25;
-  --_fg: #fbf9f2;
-  --_hl: #18a878;
-  --_hl-soft: #4cbe94;
-  --_dur: 3s;
-  --_ease: 800ms cubic-bezier(0.25, 1, 0.5, 1);
-  isolation: isolate;
   position: relative;
   overflow: hidden;
-  cursor: pointer;
-  outline-offset: 4px;
-  border: 1px solid transparent;
-  color: var(--_fg);
-  background:
-    linear-gradient(var(--_bg), var(--_bg)) padding-box,
-    conic-gradient(
-      from calc(var(--cta-angle) - var(--cta-angle-offset)),
-      transparent,
-      var(--_hl) var(--cta-percent),
-      var(--cta-shine) calc(var(--cta-percent) * 2),
-      var(--_hl) calc(var(--cta-percent) * 3),
-      transparent calc(var(--cta-percent) * 4)
-    ) border-box;
-  box-shadow: inset 0 0 0 1px var(--_bg-subtle);
-  transition: var(--_ease);
-  transition-property: --cta-angle-offset, --cta-percent, --cta-shine;
-  animation:
-    cta-rotate var(--_dur) linear infinite,
-    cta-rotate calc(var(--_dur) / 0.4) linear reverse paused;
-  animation-composition: add;
+  background-color: #0d6a51;
+  color: #fbf9f2;
+  box-shadow: 0 2px 6px rgba(13, 106, 81, 0.25);
 }
 
-.cta-shiny::before,
-.cta-shiny::after {
-  content: "";
-  pointer-events: none;
-  position: absolute;
-  inset-inline-start: 50%;
-  inset-block-start: 50%;
-  translate: -50% -50%;
-  z-index: -1;
-}
-
-/* grade de pontos giratória */
+/* faixa branca diagonal que varre o botão em loop */
 .cta-shiny::before {
-  width: calc(100% - 6px);
-  height: calc(100% - 6px);
-  background: radial-gradient(
-    circle at 2px 2px,
-    white 0.5px,
-    transparent 0
-  ) padding-box;
-  background-size: 4px 4px;
-  background-repeat: space;
-  mask-image: conic-gradient(
-    from calc(var(--cta-angle) + 45deg),
-    black,
-    transparent 10% 90%,
-    black
-  );
-  border-radius: inherit;
-  opacity: 0.35;
-  animation:
-    cta-rotate var(--_dur) linear infinite,
-    cta-rotate calc(var(--_dur) / 0.4) linear reverse paused;
-  animation-composition: add;
-}
-
-/* shimmer interno */
-.cta-shiny::after {
-  width: 100%;
-  aspect-ratio: 1;
-  background: linear-gradient(-50deg, transparent, var(--_hl), transparent);
-  mask-image: radial-gradient(circle at bottom, transparent 40%, black);
-  opacity: 0.55;
-  animation:
-    cta-shimmer var(--_dur) linear infinite,
-    cta-shimmer calc(var(--_dur) / 0.4) linear reverse paused;
-  animation-composition: add;
-}
-
-.cta-shiny > span {
-  position: relative;
-  z-index: 1;
-}
-
-.cta-shiny > span::before {
   content: "";
-  pointer-events: none;
   position: absolute;
-  inset-inline-start: 50%;
-  inset-block-start: 50%;
-  translate: -50% -50%;
-  width: calc(100% + 1rem);
-  height: calc(100% + 1rem);
-  box-shadow: inset 0 -1ex 2rem 4px var(--_hl);
-  opacity: 0;
-  transition: opacity var(--_ease);
-  animation: cta-breathe calc(var(--_dur) * 1.5) linear infinite;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%) skewX(-8deg);
+  animation: cta-sweep 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
 }
 
-.cta-shiny:is(:hover, :focus-visible) {
-  --cta-percent: 20%;
-  --cta-angle-offset: 95deg;
-  --cta-shine: var(--_hl-soft);
+/* anel de glow verde que pulsa suavemente */
+.cta-shiny::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: 0 0 0 0 rgba(24, 168, 120, 0.5);
+  animation: cta-glow 2.8s ease-in-out infinite;
+  pointer-events: none;
 }
 
-.cta-shiny:is(:hover, :focus-visible),
-.cta-shiny:is(:hover, :focus-visible)::before,
-.cta-shiny:is(:hover, :focus-visible)::after {
-  animation-play-state: running;
+@keyframes cta-sweep {
+  0%     { transform: translateX(-120%) skewX(-8deg); opacity: 1; }
+  55%, 100% { transform: translateX(220%) skewX(-8deg); opacity: 1; }
 }
 
-.cta-shiny:is(:hover, :focus-visible) > span::before {
-  opacity: 1;
-}
-
-.cta-shiny:active {
-  translate: 0 1px;
-}
-
-@keyframes cta-rotate {
-  to { --cta-angle: 360deg; }
-}
-
-@keyframes cta-shimmer {
-  to { rotate: 360deg; }
-}
-
-@keyframes cta-breathe {
-  from, to { scale: 1; }
-  50% { scale: 1.2; }
+@keyframes cta-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(24, 168, 120, 0.45); }
+  50%      { box-shadow: 0 0 0 6px rgba(24, 168, 120, 0); }
 }
 
 @theme inline {

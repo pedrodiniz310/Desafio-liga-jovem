@@ -53,12 +53,9 @@ export function SiteNav() {
         </ul>
 
         <div className="hidden md:block">
-          <a
-            href="#baixar"
-            className="inline-flex h-11 items-center rounded-full bg-verde px-5 text-sm font-semibold text-paper-soft shadow-soft transition-transform hover:-translate-y-0.5 active:translate-y-0"
-          >
+          <CtaButton href="#baixar" className="h-11 px-5 text-sm">
             Quero usar
-          </a>
+          </CtaButton>
         </div>
 
         <button
@@ -88,13 +85,13 @@ export function SiteNav() {
               </li>
             ))}
             <li className="mt-2">
-              <a
+              <CtaButton
                 href="#baixar"
                 onClick={() => setOpen(false)}
-                className="block rounded-full bg-verde px-5 py-3.5 text-center text-base font-semibold text-paper-soft"
+                className="w-full py-3.5 text-base"
               >
                 Quero usar
-              </a>
+              </CtaButton>
             </li>
           </ul>
         </div>

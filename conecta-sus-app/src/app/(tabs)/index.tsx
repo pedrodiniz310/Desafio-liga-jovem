@@ -63,11 +63,11 @@ export default function BuscaScreen() {
     <Screen>
       {/* cabeçalho */}
       <View style={styles.header}>
-        <Texto style={styles.titulo}>O que você precisa?</Texto>
         <View style={styles.localRow}>
-          <Ionicons name="location" size={14} color={cores.verde} />
+          <View style={styles.localDot} />
           <Texto style={styles.local}>{municipioNome}</Texto>
         </View>
+        <Texto style={styles.titulo}>O que você{"\n"}precisa?</Texto>
       </View>
 
       {/* campo de busca */}
@@ -107,7 +107,11 @@ export default function BuscaScreen() {
           }
         />
       ) : (
-        <ScrollView contentContainerStyle={styles.scroll}>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           <Texto style={styles.secao}>Buscas mais comuns</Texto>
           <View style={styles.chips}>
             {NECESSIDADES_COMUNS.map((n) => (
@@ -187,31 +191,41 @@ function Resultados({
 
 const makeStyles = (cores: Cores) =>
   StyleSheet.create({
-    header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
-    titulo: { fontSize: 26, fontWeight: "800", color: cores.ink },
-    localRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },
-    local: { fontSize: 13, color: cores.inkSoft, fontWeight: "500" },
+    header: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12 },
+    localRow: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 8 },
+    localDot: {
+      width: 7,
+      height: 7,
+      borderRadius: 4,
+      backgroundColor: cores.verde,
+    },
+    local: { fontSize: 13, color: cores.verde, fontWeight: "600" },
+    titulo: { fontSize: 30, fontWeight: "800", color: cores.ink, lineHeight: 36 },
     searchBox: {
       flexDirection: "row",
       alignItems: "center",
       gap: 10,
       marginHorizontal: 20,
-      marginTop: 8,
+      marginTop: 4,
+      marginBottom: 4,
       backgroundColor: cores.card,
-      borderWidth: 1,
-      borderColor: cores.line,
-      borderRadius: 16,
-      paddingHorizontal: 14,
-      paddingVertical: 12,
+      borderRadius: 18,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.08,
+      shadowRadius: 10,
+      elevation: 3,
     },
     input: { flex: 1, fontSize: 16, color: cores.ink },
     scroll: { padding: 20, gap: 14 },
     secao: {
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: "700",
-      color: cores.inkSoft,
+      color: cores.inkFaint,
       textTransform: "uppercase",
-      letterSpacing: 1,
+      letterSpacing: 1.2,
     },
     chips: {
       flexDirection: "row",

@@ -1,7 +1,6 @@
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/hero";
 import { Problem } from "@/components/problem";
-import { ServicesMarquee } from "@/components/services-marquee";
 import { HowItWorks } from "@/components/how-it-works";
 import { Differentiators } from "@/components/differentiators";
 import { TextRevealByWord } from "@/components/ui/text-reveal";
@@ -15,7 +14,6 @@ export default function Home() {
       <SiteNav />
       <main>
         <Hero />
-        <ServicesMarquee />
         <Problem />
         <HowItWorks />
         <Differentiators />

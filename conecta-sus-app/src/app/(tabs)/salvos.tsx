@@ -20,6 +20,11 @@ export default function SalvosScreen() {
     <Screen>
       <View style={styles.header}>
         <Texto style={styles.titulo}>Salvos</Texto>
+        {itens.length > 0 && (
+          <View style={styles.badge}>
+            <Texto style={styles.badgeText}>{itens.length}</Texto>
+          </View>
+        )}
       </View>
 
       {itens.length === 0 ? (
@@ -58,8 +63,23 @@ export default function SalvosScreen() {
 
 const makeStyles = (cores: Cores) =>
   StyleSheet.create({
-    header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 8 },
-    titulo: { fontSize: 26, fontWeight: "800", color: cores.ink },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 12,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+    },
+    titulo: { fontSize: 30, fontWeight: "800", color: cores.ink },
+    badge: {
+      backgroundColor: cores.verde,
+      borderRadius: 10,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      marginTop: 4,
+    },
+    badgeText: { fontSize: 12, fontWeight: "700", color: cores.paperSoft },
     lista: { padding: 20, gap: 12 },
     empty: { flex: 1, alignItems: "center", justifyContent: "center", padding: 40, gap: 12 },
     iconWrap: {
