@@ -34,15 +34,11 @@ export default function BuscaScreen() {
     useLocalizacao();
   const coord = coordenada ?? JOACABA;
 
-  // pede localização ao abrir; usa Joaçaba como fallback
   useEffect(() => {
     (async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setPermissaoNegada(true);
-          return;
-        }
+        if (status !== "granted") { setPermissaoNegada(true); return; }
         const pos = await Location.getCurrentPositionAsync({});
         setCoordenada({ lat: pos.coords.latitude, lng: pos.coords.longitude });
       } catch {
@@ -61,37 +57,34 @@ export default function BuscaScreen() {
 
   return (
     <Screen>
-      {/* cabeçalho */}
-      <View style={styles.header}>
+      {/* ── HERO BAND ── */}
+      <View style={styles.heroBand}>
         <View style={styles.localRow}>
-          <View style={styles.localDot} />
+          <Ionicons name="location" size={13} color="#a8d5c4" />
           <Texto style={styles.local}>{municipioNome}</Texto>
         </View>
         <Texto style={styles.titulo}>O que você{"\n"}precisa?</Texto>
-      </View>
+        <Texto style={styles.subtitulo}>Serviços de saúde gratuitos perto de você.</Texto>
 
-      {/* campo de busca */}
-      <View style={styles.searchBox}>
-        <Ionicons name="search" size={20} color={cores.verde} />
-        <TextInput
-          value={texto}
-          onChangeText={setTexto}
-          onSubmitEditing={(e) => setTermo(e.nativeEvent.text)}
-          placeholder="Ex.: preciso de psicólogo"
-          placeholderTextColor={cores.inkFaint}
-          returnKeyType="search"
-          style={[styles.input, { fontSize: 16 * escala }]}
-          accessibilityLabel="Buscar serviço de saúde"
-        />
-        {texto.length > 0 && (
-          <Pressable
-            onPress={() => pesquisar("")}
-            accessibilityLabel="Limpar busca"
-            hitSlop={8}
-          >
-            <Ionicons name="close-circle" size={20} color={cores.inkFaint} />
-          </Pressable>
-        )}
+        {/* busca embutida no hero — sem shadow */}
+        <View style={styles.searchBox}>
+          <Ionicons name="search" size={18} color={cores.verde} />
+          <TextInput
+            value={texto}
+            onChangeText={setTexto}
+            onSubmitEditing={(e) => setTermo(e.nativeEvent.text)}
+            placeholder="Ex.: preciso de psicólogo"
+            placeholderTextColor={cores.inkFaint}
+            returnKeyType="search"
+            style={[styles.input, { fontSize: 15 * escala }]}
+            accessibilityLabel="Buscar serviço de saúde"
+          />
+          {texto.length > 0 && (
+            <Pressable onPress={() => pesquisar("")} accessibilityLabel="Limpar busca" hitSlop={8}>
+              <Ionicons name="close-circle" size={18} color={cores.inkFaint} />
+            </Pressable>
+          )}
+        </View>
       </View>
 
       {buscando ? (
@@ -99,12 +92,7 @@ export default function BuscaScreen() {
           loading={busca.isLoading}
           error={busca.isError}
           dados={busca.data ?? []}
-          onAbrir={(id) =>
-            router.push({
-              pathname: "/servico/[id]",
-              params: { id: String(id) },
-            })
-          }
+          onAbrir={(id) => router.push({ pathname: "/servico/[id]", params: { id: String(id) } })}
         />
       ) : (
         <ScrollView
@@ -119,13 +107,12 @@ export default function BuscaScreen() {
                 key={n.slug}
                 rotulo={n.rotulo}
                 icone={n.icone}
+                cor={n.cor}
                 onPress={() => pesquisar(n.rotulo)}
               />
             ))}
           </View>
-          <Texto style={styles.dica}>
-            Tudo o que aparece aqui é gratuito pelo SUS.
-          </Texto>
+          <Texto style={styles.dica}>Tudo o que aparece aqui é gratuito pelo SUS.</Texto>
         </ScrollView>
       )}
     </Screen>
@@ -133,10 +120,7 @@ export default function BuscaScreen() {
 }
 
 function Resultados({
-  loading,
-  error,
-  dados,
-  onAbrir,
+  loading, error, dados, onAbrir,
 }: {
   loading: boolean;
   error: boolean;
@@ -146,44 +130,31 @@ function Resultados({
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
 
-  if (loading) {
-    return (
-      <View style={styles.estado}>
-        <ActivityIndicator color={cores.verde} />
-        <Texto style={styles.estadoTexto}>Procurando perto de você…</Texto>
-      </View>
-    );
-  }
-  if (error) {
-    return (
-      <View style={styles.estado}>
-        <Ionicons name="cloud-offline-outline" size={36} color={cores.inkFaint} />
-        <Texto style={styles.estadoTexto}>
-          Não foi possível buscar agora. Verifique a conexão.
-        </Texto>
-      </View>
-    );
-  }
-  if (dados.length === 0) {
-    return (
-      <View style={styles.estado}>
-        <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
-        <Texto style={styles.estadoTexto}>
-          Nenhum serviço encontrado por perto. Tente outras palavras.
-        </Texto>
-      </View>
-    );
-  }
+  if (loading) return (
+    <View style={styles.estado}>
+      <ActivityIndicator color={cores.verde} />
+      <Texto style={styles.estadoTexto}>Procurando perto de você…</Texto>
+    </View>
+  );
+  if (error) return (
+    <View style={styles.estado}>
+      <Ionicons name="cloud-offline-outline" size={36} color={cores.inkFaint} />
+      <Texto style={styles.estadoTexto}>Não foi possível buscar. Verifique a conexão.</Texto>
+    </View>
+  );
+  if (dados.length === 0) return (
+    <View style={styles.estado}>
+      <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
+      <Texto style={styles.estadoTexto}>Nenhum serviço encontrado. Tente outras palavras.</Texto>
+    </View>
+  );
   return (
     <FlatList
       data={dados}
       keyExtractor={(item) => String(item.estabelecimento_id)}
       contentContainerStyle={styles.lista}
       renderItem={({ item }) => (
-        <ServiceCard
-          servico={item}
-          onPress={() => onAbrir(item.estabelecimento_id)}
-        />
+        <ServiceCard servico={item} onPress={() => onAbrir(item.estabelecimento_id)} />
       )}
     />
   );
@@ -191,35 +162,29 @@ function Resultados({
 
 const makeStyles = (cores: Cores) =>
   StyleSheet.create({
-    header: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 12 },
-    localRow: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 8 },
-    localDot: {
-      width: 7,
-      height: 7,
-      borderRadius: 4,
-      backgroundColor: cores.verde,
+    heroBand: {
+      backgroundColor: cores.verdeDeep,
+      paddingHorizontal: 20,
+      paddingTop: 18,
+      paddingBottom: 28,
+      borderBottomLeftRadius: 28,
+      borderBottomRightRadius: 28,
     },
-    local: { fontSize: 13, color: cores.verde, fontWeight: "600" },
-    titulo: { fontSize: 30, fontWeight: "800", color: cores.ink, lineHeight: 36 },
+    localRow: { flexDirection: "row", alignItems: "center", gap: 5, marginBottom: 12 },
+    local: { fontSize: 13, color: "#a8d5c4", fontWeight: "600" },
+    titulo: { fontSize: 30, fontWeight: "800", color: "#ffffff", lineHeight: 36, marginBottom: 6 },
+    subtitulo: { fontSize: 14, color: "#a8d5c4", marginBottom: 18 },
     searchBox: {
       flexDirection: "row",
       alignItems: "center",
       gap: 10,
-      marginHorizontal: 20,
-      marginTop: 4,
-      marginBottom: 4,
-      backgroundColor: cores.card,
-      borderRadius: 18,
-      paddingHorizontal: 16,
-      paddingVertical: 14,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 0.08,
-      shadowRadius: 10,
-      elevation: 3,
+      backgroundColor: "#ffffff",
+      borderRadius: 16,
+      paddingHorizontal: 14,
+      paddingVertical: 13,
     },
-    input: { flex: 1, fontSize: 16, color: cores.ink },
-    scroll: { padding: 20, gap: 14 },
+    input: { flex: 1, fontSize: 15, color: cores.ink },
+    scroll: { padding: 20, paddingTop: 22, gap: 14 },
     secao: {
       fontSize: 12,
       fontWeight: "700",
@@ -235,6 +200,6 @@ const makeStyles = (cores: Cores) =>
     },
     dica: { fontSize: 13, color: cores.inkFaint, marginTop: 4 },
     lista: { padding: 20, gap: 12 },
-    estado: { alignItems: "center", justifyContent: "center", padding: 40, gap: 12, flex: 1 },
+    estado: { flex: 1, alignItems: "center", justifyContent: "center", padding: 40, gap: 12 },
     estadoTexto: { fontSize: 15, color: cores.inkSoft, textAlign: "center" },
   });

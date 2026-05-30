@@ -9,18 +9,22 @@ import type { Cores } from "@/theme/colors";
 type NeedChipProps = {
   rotulo: string;
   icone: string;
+  cor: string;
   onPress: () => void;
 };
 
-export function NeedChip({ rotulo, icone, onPress }: NeedChipProps) {
+export function NeedChip({ rotulo, icone, cor, onPress }: NeedChipProps) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
   const scale = useRef(new Animated.Value(1)).current;
 
   const onPressIn = () =>
-    Animated.spring(scale, { toValue: 0.94, useNativeDriver: true, speed: 40, bounciness: 0 }).start();
+    Animated.spring(scale, { toValue: 0.93, useNativeDriver: true, speed: 40, bounciness: 0 }).start();
   const onPressOut = () =>
     Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 18, bounciness: 10 }).start();
+
+  // ícone bg = cor com 15% opacidade (hex + "26")
+  const iconBg = cor + "26";
 
   return (
     <Animated.View style={[styles.wrap, { transform: [{ scale }] }]}>
@@ -32,8 +36,8 @@ export function NeedChip({ rotulo, icone, onPress }: NeedChipProps) {
         accessibilityLabel={rotulo}
         style={styles.chip}
       >
-        <View style={styles.iconWrap}>
-          <Ionicons name={icone as never} size={22} color={cores.verde} />
+        <View style={[styles.iconWrap, { backgroundColor: iconBg }]}>
+          <Ionicons name={icone as never} size={22} color={cor} />
         </View>
         <Texto style={styles.label} numberOfLines={2}>{rotulo}</Texto>
       </Pressable>
@@ -50,14 +54,11 @@ const makeStyles = (cores: Cores) =>
       minHeight: 70,
       gap: 12,
       backgroundColor: cores.card,
-      borderRadius: 20,
+      borderRadius: 18,
+      borderWidth: 1,
+      borderColor: cores.line,
       paddingVertical: 14,
       paddingHorizontal: 14,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.07,
-      shadowRadius: 8,
-      elevation: 2,
     },
     iconWrap: {
       width: 42,
@@ -65,7 +66,6 @@ const makeStyles = (cores: Cores) =>
       borderRadius: 13,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: cores.verdeWash,
       flexShrink: 0,
     },
     label: {
@@ -73,5 +73,6 @@ const makeStyles = (cores: Cores) =>
       fontSize: 14,
       fontWeight: "600",
       color: cores.ink,
+      lineHeight: 19,
     },
   });
