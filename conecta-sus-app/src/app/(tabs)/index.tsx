@@ -100,18 +100,32 @@ export default function BuscaScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Texto style={styles.secao}>Buscas mais comuns</Texto>
+          <Texto style={styles.secao}>O que mais pedem por aqui</Texto>
           <View style={styles.chips}>
             {NECESSIDADES_COMUNS.map((n) => (
               <NeedChip
                 key={n.slug}
                 rotulo={n.rotulo}
-                icone={n.icone}
-                cor={n.cor}
+                emoji={n.emoji}
                 onPress={() => pesquisar(n.rotulo)}
               />
             ))}
           </View>
+
+          {/* card explorar */}
+          <Pressable
+            style={styles.explorarCard}
+            onPress={() => pesquisar("saúde")}
+            accessibilityRole="button"
+            accessibilityLabel="Explorar todos os serviços"
+          >
+            <View style={styles.explorarTextos}>
+              <Texto style={styles.explorarTitulo}>Não encontrou o que precisa?</Texto>
+              <Texto style={styles.explorarSub}>Digite qualquer sintoma ou condição na busca acima</Texto>
+            </View>
+            <Ionicons name="arrow-forward-circle-outline" size={28} color={cores.verde} />
+          </Pressable>
+
           <Texto style={styles.dica}>Tudo o que aparece aqui é gratuito pelo SUS.</Texto>
         </ScrollView>
       )}
@@ -195,10 +209,22 @@ const makeStyles = (cores: Cores) =>
     chips: {
       flexDirection: "row",
       flexWrap: "wrap",
-      gap: 12,
-      justifyContent: "space-between",
+      gap: 10,
     },
-    dica: { fontSize: 13, color: cores.inkFaint, marginTop: 4 },
+    explorarCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 14,
+      backgroundColor: cores.verdeWash,
+      borderRadius: 18,
+      paddingVertical: 16,
+      paddingHorizontal: 18,
+      marginTop: 4,
+    },
+    explorarTextos: { flex: 1, gap: 2 },
+    explorarTitulo: { fontSize: 14, fontWeight: "700", color: cores.verdeDeep },
+    explorarSub: { fontSize: 12, color: cores.inkSoft, lineHeight: 17 },
+    dica: { fontSize: 12, color: cores.inkFaint, marginTop: 4 },
     lista: { padding: 20, gap: 12 },
     estado: { flex: 1, alignItems: "center", justifyContent: "center", padding: 40, gap: 12 },
     estadoTexto: { fontSize: 15, color: cores.inkSoft, textAlign: "center" },
