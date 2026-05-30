@@ -1,26 +1,10 @@
 import { useRef, useMemo } from "react";
 import { Animated, Pressable, StyleSheet } from "react-native";
-import {
-  Brain,
-  Smile,
-  Pill,
-  Mic,
-  Syringe,
-  Baby,
-  HandHeart,
-  Activity,
-  TestTube,
-  Apple,
-} from "lucide-react-native";
-import type { LucideIcon } from "lucide-react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { Texto } from "@/components/texto";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
-
-const ICON_MAP: Record<string, LucideIcon> = {
-  Brain, Smile, Pill, Mic, Syringe, Baby, HandHeart, Activity, TestTube, Apple,
-};
 
 type NeedChipProps = {
   rotulo: string;
@@ -38,8 +22,6 @@ export function NeedChip({ rotulo, icone, onPress }: NeedChipProps) {
   const onPressOut = () =>
     Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 18, bounciness: 10 }).start();
 
-  const Icon = ICON_MAP[icone];
-
   return (
     <Animated.View style={{ transform: [{ scale }] }}>
       <Pressable
@@ -50,7 +32,7 @@ export function NeedChip({ rotulo, icone, onPress }: NeedChipProps) {
         accessibilityLabel={rotulo}
         style={styles.chip}
       >
-        {Icon && <Icon size={16} color={cores.inkSoft} strokeWidth={1.75} />}
+        <Ionicons name={icone as never} size={15} color={cores.inkSoft} />
         <Texto style={styles.label}>{rotulo}</Texto>
       </Pressable>
     </Animated.View>

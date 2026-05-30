@@ -1,18 +1,18 @@
 export type AtalhoNecessidade = {
   slug: string;
   rotulo: string;
-  icone: string; // nome do ícone Lucide
+  icone: string; // Ionicons name
 };
 
 export const NECESSIDADES_COMUNS: AtalhoNecessidade[] = [
-  { slug: "psicologo",    rotulo: "Psicólogo",       icone: "Brain" },
-  { slug: "dentista",     rotulo: "Dentista",         icone: "Smile" },
-  { slug: "remedio",      rotulo: "Remédio grátis",   icone: "Pill" },
-  { slug: "fono",         rotulo: "Fonoaudiólogo",    icone: "Mic" },
-  { slug: "vacina",       rotulo: "Vacina",           icone: "Syringe" },
-  { slug: "pre-natal",    rotulo: "Pré-natal",        icone: "Baby" },
-  { slug: "dependencia",  rotulo: "Dependência",      icone: "HandHeart" },
-  { slug: "fisioterapia", rotulo: "Fisioterapia",     icone: "Activity" },
-  { slug: "exame",        rotulo: "Exame de sangue",  icone: "TestTube" },
-  { slug: "nutri",        rotulo: "Nutricionista",    icone: "Apple" },
+  { slug: "psicologo",    rotulo: "Psicólogo",       icone: "body-outline" },
+  { slug: "dentista",     rotulo: "Dentista",         icone: "medical-outline" },
+  { slug: "remedio",      rotulo: "Remédio grátis",   icone: "flask-outline" },
+  { slug: "fono",         rotulo: "Fonoaudiólogo",    icone: "mic-outline" },
+  { slug: "vacina",       rotulo: "Vacina",           icone: "bandage-outline" },
+  { slug: "pre-natal",    rotulo: "Pré-natal",        icone: "heart-outline" },
+  { slug: "dependencia",  rotulo: "Dependência",      icone: "people-outline" },
+  { slug: "fisioterapia", rotulo: "Fisioterapia",     icone: "walk-outline" },
+  { slug: "exame",        rotulo: "Exame de sangue",  icone: "eyedrop-outline" },
+  { slug: "nutri",        rotulo: "Nutricionista",    icone: "leaf-outline" },
 ];
