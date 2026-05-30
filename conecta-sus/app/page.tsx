@@ -15,8 +15,8 @@ export default function Home() {
       <SiteNav />
       <main>
         <Hero />
-        <Problem />
         <ServicesMarquee />
+        <Problem />
         <HowItWorks />
         <Differentiators />
         <TextRevealByWord text="O serviço já existe. Já é gratuito. Já é seu por direito. Só faltava alguém te mostrar onde fica." />
