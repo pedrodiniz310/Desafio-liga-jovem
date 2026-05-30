@@ -1,0 +1,27 @@
+import "react-native-url-polyfill/auto";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  // Em dev, avisa cedo se as variáveis não foram configuradas (ver .env.example)
+  console.warn(
+    "[Conecta SUS] Variáveis EXPO_PUBLIC_SUPABASE_URL / _ANON_KEY ausentes. " +
+      "Copie .env.example para .env e preencha.",
+  );
+}
+
+export const supabase = createClient(
+  supabaseUrl ?? "https://placeholder.supabase.co",
+  supabaseAnonKey ?? "placeholder-anon-key",
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  },
+);
