@@ -65,7 +65,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-line pt-6 text-sm text-ink-faint sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Conecta SUS. Feito com cuidado público.</p>
+          <p>© 2026 Tem no SUS!. Feito com cuidado público.</p>
           <p>
             Dados de saúde do{" "}
             <a

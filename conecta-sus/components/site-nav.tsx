@@ -35,7 +35,7 @@ export function SiteNav() {
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8"
         aria-label="Navegação principal"
       >
-        <a href="#topo" className="rounded-lg" aria-label="Conecta SUS, início">
+        <a href="#topo" className="rounded-lg" aria-label="Tem no SUS!, início">
           <Logo />
         </a>
 

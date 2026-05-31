@@ -8,7 +8,7 @@ const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 if (!supabaseUrl || !supabaseAnonKey) {
   // Em dev, avisa cedo se as variáveis não foram configuradas (ver .env.example)
   console.warn(
-    "[Conecta SUS] Variáveis EXPO_PUBLIC_SUPABASE_URL / _ANON_KEY ausentes. " +
+    "[Tem no SUS!] Variáveis EXPO_PUBLIC_SUPABASE_URL / _ANON_KEY ausentes. " +
       "Copie .env.example para .env e preencha.",
   );
 }

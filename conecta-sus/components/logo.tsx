@@ -3,7 +3,7 @@ type LogoMarkProps = {
 };
 
 /**
- * Marca do Conecta SUS: uma cruz da saúde cujo braço direito termina
+ * Marca do Tem no SUS!: uma cruz da saúde cujo braço direito termina
  * num "nó" terracota — a ideia de conexão entre a pessoa e o serviço.
  */
 export function LogoMark({ className = "" }: LogoMarkProps) {
@@ -49,7 +49,7 @@ export function Logo({ className = "", markClassName = "" }: LogoProps) {
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <LogoMark className={`h-8 w-8 ${markClassName}`} />
       <span className="text-[1.15rem] font-semibold tracking-tight text-ink">
-        Conecta<span className="text-verde">SUS</span>
+        Tem no <span className="text-verde">SUS!</span>
       </span>
     </span>
   );

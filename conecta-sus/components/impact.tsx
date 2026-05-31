@@ -43,7 +43,7 @@ export function Impact() {
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               Hoje, achar um serviço gratuito do SUS pode virar uma sequência de
-              ligações e becos sem saída. O Conecta SUS foi desenhado para
+              ligações e becos sem saída. O Tem no SUS! foi desenhado para
               resolver logo na primeira busca.
             </p>
           </div>

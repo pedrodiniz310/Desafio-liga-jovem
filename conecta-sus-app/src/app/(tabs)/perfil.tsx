@@ -69,7 +69,7 @@ export default function PerfilScreen() {
       { data_nascimento: dataValida, condicoes: condicoesSel },
       {
         onSuccess: () =>
-          Alert.alert("Conecta SUS", "Perfil salvo! Alertas de direitos personalizados ativados."),
+          Alert.alert("Tem no SUS!", "Perfil salvo! Alertas de direitos personalizados ativados."),
         onError: () =>
           Alert.alert("Erro", "Não foi possível salvar. Verifique a conexão."),
       }
@@ -220,7 +220,7 @@ export default function PerfilScreen() {
         <View style={styles.grupo}>
           <LinhaInfo icone="shield-checkmark-outline" rotulo="Fonte CNES/DATASUS após importação" />
           <LinhaInfo icone="heart-outline" rotulo="Gratuito para sempre" />
-          <LinhaInfo icone="information-circle-outline" rotulo="Conecta SUS · versão 0.1" />
+          <LinhaInfo icone="information-circle-outline" rotulo="Tem no SUS! · versão 0.1" />
         </View>
 
         {/* ── Conta ── */}

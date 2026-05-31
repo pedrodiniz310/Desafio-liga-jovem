@@ -129,7 +129,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.16 }}
             className="mt-9 max-w-md text-lg leading-relaxed text-ink-soft"
           >
-            Tudo isso já existe no SUS, de graça. O Conecta SUS mostra onde
+            Tudo isso já existe no SUS, de graça. O Tem no SUS! mostra onde
             fica, o horário e o que levar — em menos de um minuto.
           </motion.p>
 

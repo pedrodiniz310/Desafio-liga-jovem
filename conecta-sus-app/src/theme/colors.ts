@@ -1,5 +1,5 @@
 /**
- * Paleta Conecta SUS — mesma identidade da landing page.
+ * Paleta Tem no SUS! — mesma identidade da landing page.
  * Pinheiro/esmeralda (saúde, confiança) + terracota (calor humano)
  * sobre creme quente.
  */

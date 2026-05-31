@@ -47,7 +47,7 @@ export function Differentiators() {
                 </h3>
                 <p className="mt-3 max-w-md leading-relaxed text-paper-soft/75">
                   Ninguém acorda precisando de um “estabelecimento de atenção
-                  psicossocial”. A pessoa precisa de ajuda. O Conecta SUS traduz
+                  psicossocial”. A pessoa precisa de ajuda. O Tem no SUS! traduz
                   a necessidade real no serviço certo.
                 </p>
               </div>

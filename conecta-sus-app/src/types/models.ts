@@ -1,5 +1,5 @@
 /**
- * Tipos de domínio do Conecta SUS.
+ * Tipos de domínio do Tem no SUS!.
  */
 
 export type StatusConfirmacao = "funciona" | "fechou" | "mudou";

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Conecta SUS",
-    "slug": "conecta-sus-app",
+    "name": "Tem no SUS!",
+    "slug": "tem-no-sus",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "conectasusapp",
+    "scheme": "temnosus",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -24,7 +24,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.anonymous.conectasusapp"
+      "package": "com.temnosus.app"
     },
     "web": {
       "output": "single",
@@ -35,7 +35,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "O Conecta SUS usa sua localização para mostrar os serviços de saúde gratuitos mais perto de você."
+          "locationWhenInUsePermission": "O Tem no SUS! usa sua localização para mostrar os serviços de saúde gratuitos mais perto de você."
         }
       ],
       [

@@ -110,7 +110,7 @@ export default function ServicoDetalhe() {
       { estabelecimentoId: servicoId, status },
       {
         onSuccess: () => {
-          Alert.alert("Conecta SUS", msg[status]);
+          Alert.alert("Tem no SUS!", msg[status]);
           if (session?.user.id) mostrarToast();
         },
         onError: () =>

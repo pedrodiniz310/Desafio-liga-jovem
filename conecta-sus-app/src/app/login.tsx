@@ -67,7 +67,7 @@ export default function LoginScreen() {
         {/* CABEÇALHO HERO */}
         <View style={styles.heroBand}>
           <Ionicons name="medical" size={42} color={cores.paper} />
-          <Texto style={styles.titulo}>Bem-vindo ao{"\n"}Conecta SUS</Texto>
+          <Texto style={styles.titulo}>Bem-vindo ao{"\n"}Tem no SUS!</Texto>
           <Texto style={styles.subtitulo}>
             Faça login para acessar seus serviços.
           </Texto>

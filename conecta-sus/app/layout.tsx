@@ -16,9 +16,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Conecta SUS — O SUS que você não sabia que tinha",
+  title: "Tem no SUS! — O SUS que você não sabia que tinha",
   description:
-    "O SUS oferece mais de 100 serviços gratuitos. O Conecta SUS te mostra quais existem perto de você, com endereço, horário e o que levar. Preparado para dados oficiais do CNES/DATASUS.",
+    "O SUS oferece mais de 100 serviços gratuitos. O Tem no SUS! te mostra quais existem perto de você, com endereço, horário e o que levar. Preparado para dados oficiais do CNES/DATASUS.",
   keywords: [
     "SUS",
     "saúde pública",
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     "CAPS",
     "Farmácia Popular",
   ],
-  authors: [{ name: "Equipe Conecta SUS" }],
+  authors: [{ name: "Equipe Tem no SUS!" }],
   openGraph: {
-    title: "Conecta SUS — O SUS que você não sabia que tinha",
+    title: "Tem no SUS! — O SUS que você não sabia que tinha",
     description:
       "Encontre os serviços gratuitos do SUS perto de você em menos de um minuto.",
     locale: "pt_BR",
