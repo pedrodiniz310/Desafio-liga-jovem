@@ -46,11 +46,14 @@ export default function LoginScreen() {
       return;
     }
     await criarConta(email, senha);
-    setAvisoEmail("Verifique seu e-mail para confirmar o cadastro");
-    setEmail("");
-    setSenha("");
-    setConfirmarSenha("");
-    setModoCriar(false);
+    // só reseta estado se signup foi bem-sucedido (erro = null)
+    if (!erro) {
+      setAvisoEmail("Verifique seu e-mail para confirmar o cadastro");
+      setEmail("");
+      setSenha("");
+      setConfirmarSenha("");
+      setTimeout(() => setModoCriar(false), 2000);
+    }
   };
 
   return (
@@ -72,26 +75,6 @@ export default function LoginScreen() {
 
         {/* FORMULÁRIO */}
         <View style={styles.formContainer}>
-          {/* Gov.br desabilitado */}
-          <Pressable
-            style={[styles.btnGovbr, { opacity: 0.5 }]}
-            disabled
-            accessibilityRole="button"
-          >
-            <Ionicons name="finger-print-outline" size={24} color="#ffffff" />
-            <View>
-              <Texto style={styles.btnGovbrTexto}>Entrar com gov.br</Texto>
-              <Texto style={{ fontSize: 11, color: "#ffffff", opacity: 0.7 }}>
-                Em breve
-              </Texto>
-            </View>
-          </Pressable>
-
-          <View style={styles.divisor}>
-            <View style={styles.linhaDivisora} />
-            <Texto style={styles.textoDivisor}>ou use seu e-mail</Texto>
-            <View style={styles.linhaDivisora} />
-          </View>
 
           {/* Aviso ou erro */}
           {(erro || avisoEmail) && (
@@ -283,6 +266,27 @@ export default function LoginScreen() {
                 ? "Já tem conta? Faça login"
                 : "Ainda não tem conta? Crie uma"}
             </Texto>
+          </Pressable>
+
+          {/* Gov.br abaixo */}
+          <View style={styles.divisor}>
+            <View style={styles.linhaDivisora} />
+            <Texto style={styles.textoDivisor}>ou</Texto>
+            <View style={styles.linhaDivisora} />
+          </View>
+
+          <Pressable
+            style={[styles.btnGovbr, { opacity: 0.5 }]}
+            disabled
+            accessibilityRole="button"
+          >
+            <Ionicons name="finger-print-outline" size={24} color="#ffffff" />
+            <View>
+              <Texto style={styles.btnGovbrTexto}>Entrar com gov.br</Texto>
+              <Texto style={{ fontSize: 11, color: "#ffffff", opacity: 0.7 }}>
+                Em breve
+              </Texto>
+            </View>
           </Pressable>
         </View>
       </ScrollView>
