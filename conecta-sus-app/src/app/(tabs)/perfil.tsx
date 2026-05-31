@@ -218,7 +218,7 @@ export default function PerfilScreen() {
         {/* ── Sobre ── */}
         <Texto style={styles.secao}>Sobre</Texto>
         <View style={styles.grupo}>
-          <LinhaInfo icone="shield-checkmark-outline" rotulo="Dados oficiais do CNES" />
+          <LinhaInfo icone="shield-checkmark-outline" rotulo="Fonte CNES/DATASUS após importação" />
           <LinhaInfo icone="heart-outline" rotulo="Gratuito para sempre" />
           <LinhaInfo icone="information-circle-outline" rotulo="Conecta SUS · versão 0.1" />
         </View>
