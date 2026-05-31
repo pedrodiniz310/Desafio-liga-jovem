@@ -1,7 +1,5 @@
 /**
  * Tipos de domínio do Conecta SUS.
- * (Quando o schema do Supabase estiver no ar, substituir/gerar com
- *  `supabase gen types typescript` para tipagem ponta a ponta.)
  */
 
 export type StatusConfirmacao = "funciona" | "fechou" | "mudou";
@@ -29,7 +27,7 @@ export interface Estabelecimento {
   ativo: boolean;
 }
 
-/** Resultado da RPC `buscar_servicos` — estabelecimento + distância. */
+/** Resultado da RPC `buscar_servicos` — inclui necessidade_texto a partir da migration 0003. */
 export interface ResultadoBusca {
   estabelecimento_id: number;
   nome: string;
@@ -37,6 +35,7 @@ export interface ResultadoBusca {
   telefone: string | null;
   horario: string | null;
   distancia_metros: number;
+  necessidade_texto: string | null;
 }
 
 export interface Necessidade {
@@ -51,4 +50,51 @@ export interface Necessidade {
 export interface Coordenada {
   lat: number;
   lng: number;
+}
+
+export interface Perfil {
+  id: string;
+  data_nascimento: string | null; // formato ISO 'YYYY-MM-DD'
+  condicoes: string[];
+  pontos: number;
+}
+
+export interface RegraDireito {
+  id: number;
+  titulo: string;
+  mensagem: string;
+  condicao: {
+    idade_min?: number;
+    idade_max?: number;
+    condicoes?: string[];
+  };
+  servico_codigo: string | null;
+  icone: string | null;
+}
+
+export interface BadgeInfo {
+  slug: string;
+  nome: string;
+  descricao: string;
+  icone: string;
+  pontos_necessarios: number;
+}
+
+export interface BadgeUsuario extends BadgeInfo {
+  conquistado: boolean;
+  conquistado_em: string | null;
+}
+
+export interface EstatConfirmacoes {
+  total: number;
+  funciona: number;
+  fechou: number;
+  mudou: number;
+  status_dominante: StatusConfirmacao | null;
+}
+
+export interface GamificacaoData {
+  pontos: number;
+  total_confirmacoes: number;
+  badges: BadgeUsuario[];
 }

@@ -1,7 +1,21 @@
+import { Platform } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+// Configura handler antes de qualquer renderização (ignorado na web)
+if (Platform.OS !== "web") {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const Notifications = require("expo-notifications");
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+}
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AuthProvider, useAuth } from "@/stores/use-auth";

@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   Linking,
   Pressable,
   ScrollView,
@@ -16,9 +17,23 @@ import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 import { useServico } from "@/lib/queries/use-servico";
 import { useConfirmar } from "@/lib/queries/use-confirmar";
+import { useConfirmacoesEstab } from "@/lib/queries/use-confirmacoes-estab";
 import { useFavoritos } from "@/stores/use-favoritos";
+import { useAuth } from "@/stores/use-auth";
 import { telParaLink } from "@/utils/format";
 import type { StatusConfirmacao } from "@/types/models";
+
+const STATUS_COR: Record<StatusConfirmacao, string> = {
+  funciona: "#0d6a51",
+  fechou:   "#d65a3c",
+  mudou:    "#e0a23f",
+};
+
+const STATUS_LABEL: Record<StatusConfirmacao, string> = {
+  funciona: "✓ Funcionando",
+  fechou:   "✗ Fechado",
+  mudou:    "⚠ Mudou",
+};
 
 export default function ServicoDetalhe() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,10 +43,25 @@ export default function ServicoDetalhe() {
   const { itens: itensSalvos, alternar: alternarSalvo } = useFavoritos();
   const salvo = itensSalvos.some((i) => i.id === servicoId);
 
+  const { session } = useAuth();
   const confirmarMutation = useConfirmar();
+  const { data: stats } = useConfirmacoesEstab(servicoId);
 
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
+
+  const toastAnim = useRef(new Animated.Value(0)).current;
+  const [toastVisivel, setToastVisivel] = useState(false);
+
+  function mostrarToast() {
+    setToastVisivel(true);
+    toastAnim.setValue(0);
+    Animated.sequence([
+      Animated.timing(toastAnim, { toValue: 1, duration: 250, useNativeDriver: true }),
+      Animated.delay(1600),
+      Animated.timing(toastAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+    ]).start(() => setToastVisivel(false));
+  }
 
   if (isLoading) {
     return (
@@ -65,7 +95,7 @@ export default function ServicoDetalhe() {
         ? `${servico.lat},${servico.lng}`
         : encodeURIComponent(servico.endereco ?? servico.nome);
     Linking.openURL(
-      `https://www.google.com/maps/search/?api=1&query=${destino}`,
+      `https://www.google.com/maps/search/?api=1&query=${destino}`
     );
   }
 
@@ -73,122 +103,161 @@ export default function ServicoDetalhe() {
     if (confirmarMutation.isPending) return;
     const msg: Record<StatusConfirmacao, string> = {
       funciona: "Obrigado! Você ajudou a próxima pessoa.",
-      fechou: "Valeu pelo aviso. Vamos revisar este serviço.",
-      mudou: "Obrigado! Vamos atualizar as informações.",
+      fechou:   "Valeu pelo aviso. Vamos revisar este serviço.",
+      mudou:    "Obrigado! Vamos atualizar as informações.",
     };
     confirmarMutation.mutate(
       { estabelecimentoId: servicoId, status },
       {
-        onSuccess: () => Alert.alert("Conecta SUS", msg[status]),
+        onSuccess: () => {
+          Alert.alert("Conecta SUS", msg[status]);
+          if (session?.user.id) mostrarToast();
+        },
         onError: () =>
           Alert.alert(
             "Conecta SUS",
-            "Não foi possível registrar agora. Verifique a conexão e tente de novo.",
+            "Não foi possível registrar agora. Verifique a conexão e tente de novo."
           ),
-      },
+      }
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scroll}>
-      <View style={styles.topo}>
-        <View style={styles.iconWrap}>
-          <Ionicons name="medkit" size={28} color={cores.verde} />
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <View style={styles.topo}>
+          <View style={styles.iconWrap}>
+            <Ionicons name="medkit" size={28} color={cores.verde} />
+          </View>
+          <Pressable
+            onPress={async () =>
+              await alternarSalvo({
+                id: servicoId,
+                nome: servico.nome,
+                endereco: servico.endereco,
+                horario: servico.horario,
+              })
+            }
+            accessibilityRole="button"
+            accessibilityLabel={salvo ? "Remover dos salvos" : "Salvar serviço"}
+            hitSlop={10}
+            style={({ pressed }) => [styles.bookmark, pressed && { opacity: 0.7 }]}
+          >
+            <Ionicons
+              name={salvo ? "bookmark" : "bookmark-outline"}
+              size={26}
+              color={cores.verde}
+            />
+          </Pressable>
         </View>
-        <Pressable
-          onPress={async () =>
-            await alternarSalvo({
-              id: servicoId,
-              nome: servico.nome,
-              endereco: servico.endereco,
-              horario: servico.horario,
-            })
-          }
-          accessibilityRole="button"
-          accessibilityLabel={salvo ? "Remover dos salvos" : "Salvar serviço"}
-          hitSlop={10}
-          style={({ pressed }) => [styles.bookmark, pressed && { opacity: 0.7 }]}
-        >
-          <Ionicons
-            name={salvo ? "bookmark" : "bookmark-outline"}
-            size={26}
-            color={cores.verde}
+
+        <Texto style={styles.nome}>{servico.nome}</Texto>
+        {servico.tipo ? <Texto style={styles.tipo}>{servico.tipo}</Texto> : null}
+
+        {/* ── Stats comunitárias ── */}
+        {stats && stats.total > 0 && (
+          <View style={[
+            styles.statsBand,
+            stats.status_dominante
+              ? { borderLeftColor: STATUS_COR[stats.status_dominante], borderLeftWidth: 3 }
+              : undefined,
+          ]}>
+            <Ionicons name="people" size={16} color={cores.inkSoft} />
+            <Texto style={styles.statsTexto}>
+              <Texto style={{ fontWeight: "700" }}>{stats.total}</Texto>
+              {" "}validaçõe{stats.total === 1 ? "o" : "s"} da comunidade
+              {stats.status_dominante
+                ? ` · ${STATUS_LABEL[stats.status_dominante]}`
+                : ""}
+            </Texto>
+          </View>
+        )}
+
+        {/* ── Ações principais ── */}
+        <View style={styles.acoes}>
+          <AcaoBotao icone="navigate" rotulo="Como chegar" destaque onPress={comoChegar} />
+          {servico.telefone ? (
+            <AcaoBotao icone="call" rotulo="Ligar" onPress={ligar} />
+          ) : null}
+        </View>
+
+        {/* ── Informações ── */}
+        <View style={styles.bloco}>
+          {servico.endereco ? (
+            <LinhaInfo icone="location-outline" rotulo={servico.endereco} />
+          ) : null}
+          {servico.horario ? (
+            <LinhaInfo icone="time-outline" rotulo={servico.horario} />
+          ) : null}
+          {servico.telefone ? (
+            <LinhaInfo icone="call-outline" rotulo={servico.telefone} />
+          ) : null}
+        </View>
+
+        {/* ── Validação comunitária ── */}
+        <View style={styles.gamificacaoCabecalho}>
+          <Ionicons name="people-circle" size={24} color={cores.verde} />
+          <View style={{ flex: 1 }}>
+            <Texto style={styles.secao}>Ajude sua comunidade</Texto>
+            <Texto style={styles.subSecao}>
+              Você esteve aqui recentemente? Confirme se o serviço está funcionando e ajude outras
+              pessoas.
+            </Texto>
+          </View>
+        </View>
+        <View style={styles.validacao}>
+          <ValidaBotao
+            icone="checkmark-circle-outline"
+            rotulo="Funciona"
+            cor={cores.verde}
+            onPress={() => confirmar("funciona")}
           />
-        </Pressable>
-      </View>
-      <Texto style={styles.nome}>{servico.nome}</Texto>
-      {servico.tipo ? <Texto style={styles.tipo}>{servico.tipo}</Texto> : null}
-
-      {/* ações principais */}
-      <View style={styles.acoes}>
-        <AcaoBotao
-          icone="navigate"
-          rotulo="Como chegar"
-          destaque
-          onPress={comoChegar}
-        />
-        {servico.telefone ? (
-          <AcaoBotao icone="call" rotulo="Ligar" onPress={ligar} />
-        ) : null}
-      </View>
-
-      {/* informações */}
-      <View style={styles.bloco}>
-        {servico.endereco ? (
-          <LinhaInfo icone="location-outline" rotulo={servico.endereco} />
-        ) : null}
-        {servico.horario ? (
-          <LinhaInfo icone="time-outline" rotulo={servico.horario} />
-        ) : null}
-        {servico.telefone ? (
-          <LinhaInfo icone="call-outline" rotulo={servico.telefone} />
-        ) : null}
-      </View>
-
-      {/* validação comunitária */}
-      <View style={styles.gamificacaoCabecalho}>
-        <Ionicons name="people-circle" size={24} color={cores.verde} />
-        <View style={{ flex: 1 }}>
-          <Texto style={styles.secao}>Ajude sua comunidade</Texto>
-          <Texto style={styles.subSecao}>
-            Você esteve aqui recentemente? Confirme se o serviço está funcionando e ajude outras pessoas.
-          </Texto>
+          <ValidaBotao
+            icone="close-circle-outline"
+            rotulo="Fechou"
+            cor={cores.coral}
+            onPress={() => confirmar("fechou")}
+          />
+          <ValidaBotao
+            icone="swap-horizontal-outline"
+            rotulo="Mudou"
+            cor={cores.amber}
+            onPress={() => confirmar("mudou")}
+          />
         </View>
-      </View>
-      <View style={styles.validacao}>
-        <ValidaBotao
-          icone="checkmark-circle-outline"
-          rotulo="Funciona"
-          cor={cores.verde}
-          onPress={() => confirmar("funciona")}
-        />
-        <ValidaBotao
-          icone="close-circle-outline"
-          rotulo="Fechou"
-          cor={cores.coral}
-          onPress={() => confirmar("fechou")}
-        />
-        <ValidaBotao
-          icone="swap-horizontal-outline"
-          rotulo="Mudou"
-          cor={cores.amber}
-          onPress={() => confirmar("mudou")}
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* ── Toast de pontos ── */}
+      {toastVisivel && (
+        <Animated.View
+          style={[
+            styles.toast,
+            {
+              opacity: toastAnim,
+              transform: [
+                {
+                  translateY: toastAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [16, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+          pointerEvents="none"
+        >
+          <Ionicons name="star" size={16} color={cores.amber} />
+          <Texto style={styles.toastTexto}>+10 pontos ganhos!</Texto>
+        </Animated.View>
+      )}
+    </View>
   );
 }
 
 function AcaoBotao({
-  icone,
-  rotulo,
-  onPress,
-  destaque,
+  icone, rotulo, onPress, destaque,
 }: {
-  icone: string;
-  rotulo: string;
-  onPress: () => void;
-  destaque?: boolean;
+  icone: string; rotulo: string; onPress: () => void; destaque?: boolean;
 }) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
@@ -203,14 +272,8 @@ function AcaoBotao({
         pressed && { opacity: 0.8 },
       ]}
     >
-      <Ionicons
-        name={icone as never}
-        size={20}
-        color={destaque ? cores.paperSoft : cores.verde}
-      />
-      <Texto style={[styles.acaoTexto, destaque && { color: cores.paperSoft }]}>
-        {rotulo}
-      </Texto>
+      <Ionicons name={icone as never} size={20} color={destaque ? cores.paperSoft : cores.verde} />
+      <Texto style={[styles.acaoTexto, destaque && { color: cores.paperSoft }]}>{rotulo}</Texto>
     </Pressable>
   );
 }
@@ -227,15 +290,9 @@ function LinhaInfo({ icone, rotulo }: { icone: string; rotulo: string }) {
 }
 
 function ValidaBotao({
-  icone,
-  rotulo,
-  cor,
-  onPress,
+  icone, rotulo, cor, onPress,
 }: {
-  icone: string;
-  rotulo: string;
-  cor: string;
-  onPress: () => void;
+  icone: string; rotulo: string; cor: string; onPress: () => void;
 }) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
@@ -257,96 +314,78 @@ const makeStyles = (cores: Cores) =>
     center: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, padding: 40 },
     estadoTexto: { fontSize: 15, color: cores.inkSoft, textAlign: "center" },
     scroll: { padding: 20, gap: 16 },
-    topo: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
+    topo: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
     iconWrap: {
-      width: 60,
-      height: 60,
-      borderRadius: 20,
-      alignItems: "center",
-      justifyContent: "center",
+      width: 60, height: 60, borderRadius: 20,
+      alignItems: "center", justifyContent: "center",
       backgroundColor: cores.verdeWash,
     },
     bookmark: {
-      width: 44,
-      height: 44,
-      borderRadius: 14,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: cores.card,
-      borderWidth: 1,
-      borderColor: cores.line,
+      width: 44, height: 44, borderRadius: 14,
+      alignItems: "center", justifyContent: "center",
+      backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
     },
     nome: { fontSize: 24, fontWeight: "800", color: cores.ink },
     tipo: { fontSize: 15, color: cores.inkSoft, marginTop: -8 },
+    statsBand: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      backgroundColor: cores.card,
+      borderWidth: 1,
+      borderColor: cores.line,
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+    },
+    statsTexto: { fontSize: 13, color: cores.inkSoft, flex: 1 },
     acoes: { flexDirection: "row", gap: 12 },
     acao: {
-      flex: 1,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 8,
-      borderRadius: 16,
-      paddingVertical: 14,
+      flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center",
+      gap: 8, borderRadius: 16, paddingVertical: 14,
     },
     acaoDestaque: { backgroundColor: cores.verde },
-    acaoSecundaria: {
-      backgroundColor: cores.card,
-      borderWidth: 1,
-      borderColor: cores.line,
-    },
+    acaoSecundaria: { backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line },
     acaoTexto: { fontSize: 15, fontWeight: "700", color: cores.verde },
     bloco: {
-      backgroundColor: cores.card,
-      borderWidth: 1,
-      borderColor: cores.line,
-      borderRadius: 18,
-      overflow: "hidden",
+      backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
+      borderRadius: 18, overflow: "hidden",
     },
     linha: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 14,
-      paddingHorizontal: 16,
-      paddingVertical: 16,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: cores.line,
+      flexDirection: "row", alignItems: "center", gap: 14,
+      paddingHorizontal: 16, paddingVertical: 16,
+      borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: cores.line,
     },
     linhaTexto: { flex: 1, fontSize: 15, color: cores.ink },
     gamificacaoCabecalho: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 12,
-      marginTop: 8,
-      backgroundColor: cores.verdeWash,
-      padding: 16,
-      borderRadius: 16,
+      flexDirection: "row", alignItems: "center", gap: 12, marginTop: 8,
+      backgroundColor: cores.verdeWash, padding: 16, borderRadius: 16,
     },
-    secao: {
-      fontSize: 14,
-      fontWeight: "800",
-      color: cores.verdeDeep,
-      letterSpacing: 0.5,
-    },
-    subSecao: {
-      fontSize: 13,
-      color: cores.inkSoft,
-      marginTop: 2,
-      lineHeight: 18,
-    },
+    secao: { fontSize: 14, fontWeight: "800", color: cores.verdeDeep, letterSpacing: 0.5 },
+    subSecao: { fontSize: 13, color: cores.inkSoft, marginTop: 2, lineHeight: 18 },
     validacao: { flexDirection: "row", gap: 10 },
     valida: {
-      flex: 1,
-      alignItems: "center",
-      gap: 6,
-      backgroundColor: cores.card,
-      borderWidth: 1,
-      borderColor: cores.line,
-      borderRadius: 16,
-      paddingVertical: 16,
+      flex: 1, alignItems: "center", gap: 6,
+      backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
+      borderRadius: 16, paddingVertical: 16,
     },
     validaTexto: { fontSize: 13, fontWeight: "600", color: cores.ink },
+    toast: {
+      position: "absolute",
+      bottom: 32,
+      alignSelf: "center",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      backgroundColor: cores.ink,
+      paddingHorizontal: 18,
+      paddingVertical: 12,
+      borderRadius: 24,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    toastTexto: { fontSize: 14, fontWeight: "700", color: "#ffffff" },
   });
