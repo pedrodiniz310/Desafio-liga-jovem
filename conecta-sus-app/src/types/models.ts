@@ -109,10 +109,12 @@ export interface ResultadoDescoberta {
   slug: string;
   descoberta_texto: string;
   icone: string | null;
-  estabelecimento_id: number;
-  nome_estabelecimento: string;
+  /** true = vale em todo o SUS (sem estabelecimento/distância). */
+  universal: boolean;
+  estabelecimento_id: number | null;
+  nome_estabelecimento: string | null;
   endereco: string | null;
-  distancia_metros: number;
+  distancia_metros: number | null;
 }
 
 export interface JornadaPasso {

@@ -71,11 +71,14 @@ export default function DescobrirScreen() {
           <DiscoveryCard
             item={item}
             height={cardHeight}
-            onVer={() =>
-              router.push({
-                pathname: "/servico/[id]",
-                params: { id: String(item.estabelecimento_id) },
-              })
+            onVer={
+              item.estabelecimento_id != null
+                ? () =>
+                    router.push({
+                      pathname: "/servico/[id]",
+                      params: { id: String(item.estabelecimento_id) },
+                    })
+                : undefined
             }
           />
         )}
@@ -91,7 +94,7 @@ function DiscoveryCard({
 }: {
   item: ResultadoDescoberta;
   height: number;
-  onVer: () => void;
+  onVer?: () => void;
 }) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
@@ -112,27 +115,40 @@ function DiscoveryCard({
 
         <Texto style={styles.descobertaTexto}>{item.descoberta_texto}</Texto>
 
-        <View style={styles.meta}>
-          <Texto style={styles.nomeEstab} numberOfLines={2}>
-            {item.nome_estabelecimento}
-          </Texto>
-          <View style={styles.distRow}>
-            <Ionicons name="location" size={14} color={cores.verdeBright} />
-            <Texto style={styles.dist}>
-              {formatarDistancia(item.distancia_metros)}
+        {item.universal ? (
+          <View style={styles.universalBadge}>
+            <Ionicons name="globe-outline" size={15} color={cores.verdeBright} />
+            <Texto style={styles.universalTexto}>
+              Vale em qualquer cidade do Brasil
             </Texto>
           </View>
-        </View>
+        ) : (
+          <>
+            <View style={styles.meta}>
+              <Texto style={styles.nomeEstab} numberOfLines={2}>
+                {item.nome_estabelecimento}
+              </Texto>
+              <View style={styles.distRow}>
+                <Ionicons name="location" size={14} color={cores.verdeBright} />
+                <Texto style={styles.dist}>
+                  {item.distancia_metros != null
+                    ? formatarDistancia(item.distancia_metros)
+                    : ""}
+                </Texto>
+              </View>
+            </View>
 
-        <Pressable
-          onPress={onVer}
-          style={({ pressed }) => [styles.ctaBtn, pressed && { opacity: 0.8 }]}
-          accessibilityRole="button"
-          accessibilityLabel="Ver como chegar"
-        >
-          <Texto style={styles.ctaTexto}>Ver como chegar</Texto>
-          <Ionicons name="arrow-forward" size={18} color={cores.verdeDeep} />
-        </Pressable>
+            <Pressable
+              onPress={onVer}
+              style={({ pressed }) => [styles.ctaBtn, pressed && { opacity: 0.8 }]}
+              accessibilityRole="button"
+              accessibilityLabel="Ver como chegar"
+            >
+              <Texto style={styles.ctaTexto}>Ver como chegar</Texto>
+              <Ionicons name="arrow-forward" size={18} color={cores.verdeDeep} />
+            </Pressable>
+          </>
+        )}
 
         <Texto style={styles.hint}>▲ Deslize para descobrir mais</Texto>
       </View>
@@ -176,6 +192,21 @@ const makeStyles = (cores: Cores) =>
       color: "#ffffff",
       textAlign: "center",
       lineHeight: 34,
+    },
+    universalBadge: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      backgroundColor: "rgba(255,255,255,0.15)",
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderRadius: 18,
+    },
+    universalTexto: {
+      fontSize: 14,
+      fontWeight: "700",
+      color: "#ffffff",
+      textAlign: "center",
     },
     meta: { alignItems: "center", gap: 6 },
     nomeEstab: {
