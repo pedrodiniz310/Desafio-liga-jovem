@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
   FlatList,
   Pressable,
   ScrollView,
@@ -210,6 +211,19 @@ function Resultados({
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
 
+  const badgeAnim = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (necessidadeTexto) {
+      badgeAnim.setValue(0);
+      Animated.spring(badgeAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 80,
+        friction: 8,
+      }).start();
+    }
+  }, [necessidadeTexto, badgeAnim]);
+
   if (loading) return (
     <View style={styles.estado}>
       <ActivityIndicator color={cores.verde} />
@@ -257,13 +271,28 @@ function Resultados({
       contentContainerStyle={styles.lista}
       ListHeaderComponent={
         necessidadeTexto ? (
-          <View style={styles.matchBadge}>
-            <Ionicons name="sparkles-outline" size={13} color={cores.verdeDeep} />
+          <Animated.View
+            style={[
+              styles.matchBadge,
+              {
+                opacity: badgeAnim,
+                transform: [
+                  {
+                    scale: badgeAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.85, 1],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <Ionicons name="sparkles" size={15} color="#a8d5c4" />
             <Texto style={styles.matchTexto}>
-              Mostrando por:{" "}
+              Entendemos que você busca:{" "}
               <Texto style={styles.matchDestaque}>{necessidadeTexto}</Texto>
             </Texto>
-          </View>
+          </Animated.View>
         ) : null
       }
       renderItem={({ item }) => (
@@ -353,14 +382,14 @@ const makeStyles = (cores: Cores) =>
     matchBadge: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 6,
-      backgroundColor: cores.verdeWash,
-      paddingHorizontal: 12,
-      paddingVertical: 7,
+      gap: 8,
+      backgroundColor: cores.verdeDeep,
+      paddingHorizontal: 16,
+      paddingVertical: 10,
       borderRadius: 20,
       alignSelf: "flex-start",
-      marginBottom: 8,
+      marginBottom: 12,
     },
-    matchTexto: { fontSize: 12, color: cores.inkSoft },
-    matchDestaque: { fontSize: 12, fontWeight: "700", color: cores.verdeDeep },
+    matchTexto: { fontSize: 13, color: "#a8d5c4" },
+    matchDestaque: { fontSize: 13, fontWeight: "800", color: "#ffffff" },
   });

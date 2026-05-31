@@ -8,12 +8,14 @@ import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { ErrorBoundary, FallbackTela } from "@/components/error-boundary";
 import { AuthProvider, useAuth } from "@/stores/use-auth";
 import { TemaProvider, useTema } from "@/theme/tema";
 import { LocalizacaoProvider } from "@/stores/use-localizacao";
 import { FavoritosProvider } from "@/stores/use-favoritos";
 import { PreferenciasProvider } from "@/stores/use-preferencias";
 import { PersonaProvider, usePersona } from "@/stores/use-persona";
+import { PerfilSaudeProvider } from "@/stores/use-perfil-saude";
 
 if (Platform.OS !== "web") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -34,9 +36,11 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   return (
+    <ErrorBoundary fallback={<FallbackTela onReset={() => {}} />}>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <PreferenciasProvider>
+          <PerfilSaudeProvider>
           <PersonaProvider>
             <AuthProvider>
               <LocalizacaoProvider>
@@ -48,9 +52,11 @@ export default function RootLayout() {
               </LocalizacaoProvider>
             </AuthProvider>
           </PersonaProvider>
+          </PerfilSaudeProvider>
         </PreferenciasProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
 

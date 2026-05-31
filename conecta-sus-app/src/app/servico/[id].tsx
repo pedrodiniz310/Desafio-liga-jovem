@@ -13,10 +13,11 @@ import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Texto } from "@/components/texto";
+import { BadgeCelebracao } from "@/components/badge-celebracao";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 import { useServico } from "@/lib/queries/use-servico";
-import { useConfirmar } from "@/lib/queries/use-confirmar";
+import { useConfirmar, type TempoEspera, type NovoBadge } from "@/lib/queries/use-confirmar";
 import { useConfirmacoesEstab } from "@/lib/queries/use-confirmacoes-estab";
 import { useFavoritos } from "@/stores/use-favoritos";
 import { useAuth } from "@/stores/use-auth";
@@ -52,6 +53,9 @@ export default function ServicoDetalhe() {
 
   const toastAnim = useRef(new Animated.Value(0)).current;
   const [toastVisivel, setToastVisivel] = useState(false);
+  const [mostraPicker, setMostraPicker] = useState(false);
+  const [tempoEsperaSelecionado, setTempoEsperaSelecionado] = useState<TempoEspera | null>(null);
+  const [novoBadge, setNovoBadge] = useState<NovoBadge | null>(null);
 
   function mostrarToast() {
     setToastVisivel(true);
@@ -121,17 +125,31 @@ export default function ServicoDetalhe() {
 
   function confirmar(status: StatusConfirmacao) {
     if (confirmarMutation.isPending) return;
+    if (status === "funciona" && !mostraPicker) {
+      setMostraPicker(true);
+      return;
+    }
     const msg: Record<StatusConfirmacao, string> = {
       funciona: "Obrigado! Você ajudou a próxima pessoa.",
       fechou:   "Valeu pelo aviso. Vamos revisar este serviço.",
       mudou:    "Obrigado! Vamos atualizar as informações.",
     };
     confirmarMutation.mutate(
-      { estabelecimentoId: servicoId, status },
       {
-        onSuccess: () => {
-          Alert.alert("Tem no SUS!", msg[status]);
-          if (session?.user.id) mostrarToast();
+        estabelecimentoId: servicoId,
+        status,
+        tempoEsperaMinutos: status === "funciona" ? (tempoEsperaSelecionado ?? undefined) : undefined,
+      },
+      {
+        onSuccess: (resultado) => {
+          setMostraPicker(false);
+          setTempoEsperaSelecionado(null);
+          if (resultado) {
+            setNovoBadge(resultado);
+          } else {
+            Alert.alert("Tem no SUS!", msg[status]);
+            if (session?.user.id) mostrarToast();
+          }
         },
         onError: () =>
           Alert.alert(
@@ -183,13 +201,20 @@ export default function ServicoDetalhe() {
               : undefined,
           ]}>
             <Ionicons name="people" size={16} color={cores.inkSoft} />
-            <Texto style={styles.statsTexto}>
-              <Texto style={{ fontWeight: "700" }}>{stats.total}</Texto>
-              {" "}validaçõe{stats.total === 1 ? "o" : "s"} da comunidade
-              {stats.status_dominante
-                ? ` · ${STATUS_LABEL[stats.status_dominante]}`
-                : ""}
-            </Texto>
+            <View style={{ flex: 1, gap: 2 }}>
+              <Texto style={styles.statsTexto}>
+                <Texto style={{ fontWeight: "700" }}>{stats.total}</Texto>
+                {" "}validaçõe{stats.total === 1 ? "o" : "s"} recente{stats.total === 1 ? "" : "s"}
+                {stats.status_dominante
+                  ? ` · ${STATUS_LABEL[stats.status_dominante]}`
+                  : ""}
+              </Texto>
+              {stats.tempo_espera_recente !== null && (
+                <Texto style={[styles.statsTexto, { color: tempoParaCor(stats.tempo_espera_recente) }]}>
+                  {tempoParaLabel(stats.tempo_espera_recente)}
+                </Texto>
+              )}
+            </View>
           </View>
         )}
 
@@ -246,7 +271,52 @@ export default function ServicoDetalhe() {
             onPress={() => confirmar("mudou")}
           />
         </View>
+
+        {mostraPicker && (
+          <View style={styles.pickerWrap}>
+            <Texto style={styles.pickerTitulo}>Quanto tempo de espera?</Texto>
+            <View style={styles.pickerOpcoes}>
+              {([0, 30, 60, 120] as TempoEspera[]).map((t) => (
+                <Pressable
+                  key={t}
+                  onPress={() => setTempoEsperaSelecionado(t)}
+                  accessibilityRole="button"
+                  accessibilityLabel={tempoParaLabel(t)}
+                  style={({ pressed }) => [
+                    styles.pickerBtn,
+                    tempoEsperaSelecionado === t && styles.pickerBtnAtivo,
+                    pressed && { opacity: 0.8 },
+                  ]}
+                >
+                  <Texto style={[
+                    styles.pickerBtnTexto,
+                    tempoEsperaSelecionado === t && { color: cores.verdeDeep, fontWeight: "700" },
+                  ]}>
+                    {tempoParaLabel(t)}
+                  </Texto>
+                </Pressable>
+              ))}
+            </View>
+            <Pressable
+              onPress={() => confirmar("funciona")}
+              accessibilityRole="button"
+              accessibilityLabel="Confirmar funcionamento"
+              style={({ pressed }) => [styles.pickerConfirmar, pressed && { opacity: 0.88 }]}
+            >
+              <Ionicons name="checkmark-circle" size={18} color="#ffffff" />
+              <Texto style={styles.pickerConfirmarTexto}>Confirmar</Texto>
+            </Pressable>
+          </View>
+        )}
       </ScrollView>
+
+      <BadgeCelebracao
+        visivel={novoBadge !== null}
+        badgeNome={novoBadge?.nome ?? ""}
+        badgeIcone={novoBadge?.icone ?? "ribbon"}
+        badgeDescricao={novoBadge?.descricao ?? ""}
+        onFechar={() => setNovoBadge(null)}
+      />
 
       {/* ── Toast de pontos ── */}
       {toastVisivel && (
@@ -273,6 +343,20 @@ export default function ServicoDetalhe() {
       )}
     </View>
   );
+}
+
+function tempoParaLabel(minutos: number): string {
+  if (minutos === 0) return "🟢 Sem fila";
+  if (minutos === 30) return "🟡 ~30 minutos";
+  if (minutos === 60) return "🟠 ~1 hora";
+  return "🔴 +2 horas";
+}
+
+function tempoParaCor(minutos: number): string {
+  if (minutos === 0) return "#0d6a51";
+  if (minutos === 30) return "#e0a23f";
+  if (minutos === 60) return "#e07d3f";
+  return "#d65a3c";
 }
 
 function formatarFonte(servico: {
@@ -429,4 +513,22 @@ const makeStyles = (cores: Cores) =>
       elevation: 8,
     },
     toastTexto: { fontSize: 14, fontWeight: "700", color: "#ffffff" },
+    pickerWrap: {
+      backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
+      borderRadius: 18, padding: 16, gap: 12,
+    },
+    pickerTitulo: { fontSize: 14, fontWeight: "700", color: cores.ink },
+    pickerOpcoes: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+    pickerBtn: {
+      paddingHorizontal: 14, paddingVertical: 10,
+      backgroundColor: cores.paper, borderWidth: 1.5, borderColor: cores.line,
+      borderRadius: 20,
+    },
+    pickerBtnAtivo: { borderColor: cores.verde, backgroundColor: cores.verdeWash },
+    pickerBtnTexto: { fontSize: 13, color: cores.inkSoft },
+    pickerConfirmar: {
+      flexDirection: "row", alignItems: "center", justifyContent: "center",
+      gap: 8, backgroundColor: cores.verde, borderRadius: 16, paddingVertical: 14,
+    },
+    pickerConfirmarTexto: { fontSize: 15, fontWeight: "700", color: "#ffffff" },
   });
