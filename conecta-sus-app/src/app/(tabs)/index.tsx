@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
 import { Screen } from "@/components/screen";
+import { LogoMarca } from "@/components/logo-marca";
 import { NeedChip } from "@/components/need-chip";
 import { ServiceCard } from "@/components/service-card";
 import { Texto } from "@/components/texto";
@@ -91,8 +92,11 @@ export default function BuscaScreen() {
       {/* ── HERO BAND ── */}
       <View style={styles.heroBand}>
         <View style={styles.localRow}>
-          <Ionicons name="location" size={13} color="#a8d5c4" />
-          <Texto style={styles.local}>{municipioNome}</Texto>
+          <View style={styles.localLeft}>
+            <Ionicons name="location" size={13} color="#a8d5c4" />
+            <Texto style={styles.local}>{municipioNome}</Texto>
+          </View>
+          <LogoMarca size={32} />
         </View>
         <Texto style={styles.titulo}>{personaConfig.tituloBusca}</Texto>
         <Texto style={styles.subtitulo}>Serviços de saúde gratuitos perto de você.</Texto>
@@ -315,7 +319,8 @@ const makeStyles = (cores: Cores) =>
       borderBottomLeftRadius: 28,
       borderBottomRightRadius: 28,
     },
-    localRow: { flexDirection: "row", alignItems: "center", gap: 5, marginBottom: 12 },
+    localRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
+    localLeft: { flexDirection: "row", alignItems: "center", gap: 5 },
     local: { fontSize: 13, color: "#a8d5c4", fontWeight: "600" },
     titulo: { fontSize: 30, fontWeight: "800", color: "#ffffff", lineHeight: 36, marginBottom: 6 },
     subtitulo: { fontSize: 14, color: "#a8d5c4", marginBottom: 18 },

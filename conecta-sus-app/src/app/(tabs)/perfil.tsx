@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { Image } from "react-native";
 import { Screen } from "@/components/screen";
 import { Texto } from "@/components/texto";
 import { usePreferencias } from "@/stores/use-preferencias";
@@ -79,7 +80,15 @@ export default function PerfilScreen() {
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Texto style={styles.titulo}>Perfil</Texto>
+        <View style={styles.perfilHeader}>
+          <Image
+            source={require("../../../assets/images/icon.png")}
+            style={styles.perfilLogo}
+            resizeMode="cover"
+            accessibilityLabel="Tem no SUS!"
+          />
+          <Texto style={styles.titulo}>Perfil</Texto>
+        </View>
 
         {/* ── Perfil de Saúde ── */}
         {session && (
@@ -278,7 +287,9 @@ function LinhaInfo({ icone, rotulo }: { icone: string; rotulo: string }) {
 const makeStyles = (cores: Cores) =>
   StyleSheet.create({
     scroll: { padding: 20, gap: 12 },
-    titulo: { fontSize: 26, fontWeight: "800", color: cores.ink, marginBottom: 4 },
+    perfilHeader: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 4 },
+    perfilLogo: { width: 40, height: 40, borderRadius: 9 },
+    titulo: { fontSize: 26, fontWeight: "800", color: cores.ink },
     secao: {
       fontSize: 13,
       fontWeight: "700",

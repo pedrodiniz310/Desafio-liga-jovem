@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Screen } from "@/components/screen";
+import { LogoMarca } from "@/components/logo-marca";
 import { Texto } from "@/components/texto";
 import { PERSONAS, usePersona, type PersonaSlug } from "@/stores/use-persona";
 import { usePerfilSaude, type FaixaEtaria } from "@/stores/use-perfil-saude";
@@ -67,9 +68,7 @@ export default function OnboardingScreen() {
       <Screen>
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <View style={styles.logoWrap}>
-              <Ionicons name="medkit" size={36} color={cores.verde} />
-            </View>
+            <LogoMarca size={72} />
             <Texto style={styles.titulo}>
               Para quem você está{"\n"}buscando saúde hoje?
             </Texto>
@@ -114,9 +113,7 @@ export default function OnboardingScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <View style={styles.logoWrap}>
-            <Ionicons name="person" size={32} color={cores.verde} />
-          </View>
+          <LogoMarca size={72} />
           <Texto style={styles.titulo}>Mais um passo{"\n"}(opcional)</Texto>
           <Texto style={styles.subtitulo}>
             Isso nos permite enviar alertas de saúde personalizados para o seu perfil.
@@ -206,11 +203,6 @@ const makeStyles = (cores: Cores) =>
   StyleSheet.create({
     scroll: { padding: 28, gap: 28, flexGrow: 1, justifyContent: "center" },
     header: { gap: 14, alignItems: "center" },
-    logoWrap: {
-      width: 72, height: 72, borderRadius: 24,
-      backgroundColor: cores.verdeWash,
-      alignItems: "center", justifyContent: "center",
-    },
     titulo: { fontSize: 26, fontWeight: "800", color: cores.ink, textAlign: "center", lineHeight: 34 },
     subtitulo: { fontSize: 15, color: cores.inkSoft, textAlign: "center", lineHeight: 22 },
     opcoes: { gap: 12 },
