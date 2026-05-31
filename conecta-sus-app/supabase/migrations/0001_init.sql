@@ -1,5 +1,5 @@
 -- ============================================================
--- Conecta SUS — Migration inicial (schema + RPC + RLS + seed)
+-- Tem no SUS! — Migration inicial (schema + RPC + RLS + seed)
 -- Banco: Postgres 17 + PostGIS (Supabase)
 -- Município piloto: Joaçaba/SC
 -- ============================================================
