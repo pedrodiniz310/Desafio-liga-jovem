@@ -25,6 +25,10 @@ export interface Estabelecimento {
   lat: number | null;
   lng: number | null;
   ativo: boolean;
+  fonte_dados: string | null;
+  competencia_cnes: string | null;
+  importado_em: string | null;
+  geocoding_status: string | null;
 }
 
 /** Resultado da RPC `buscar_servicos` — inclui necessidade_texto a partir da migration 0003. */
@@ -97,4 +101,33 @@ export interface GamificacaoData {
   pontos: number;
   total_confirmacoes: number;
   badges: BadgeUsuario[];
+}
+
+export interface ResultadoDescoberta {
+  necessidade_id: number;
+  slug: string;
+  descoberta_texto: string;
+  icone: string | null;
+  estabelecimento_id: number;
+  nome_estabelecimento: string;
+  endereco: string | null;
+  distancia_metros: number;
+}
+
+export interface JornadaPasso {
+  ordem: number;
+  servico_codigo: string;
+  titulo_passo: string;
+  por_que_importa: string;
+}
+
+export interface Jornada {
+  id: number;
+  slug: string;
+  titulo: string;
+  descricao: string;
+  icone: string;
+  cor: string;        // hex, ex: '#f8e6dd'
+  passos: JornadaPasso[];
+  ativo: boolean;
 }
