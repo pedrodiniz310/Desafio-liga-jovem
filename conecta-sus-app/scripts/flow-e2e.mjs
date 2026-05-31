@@ -77,7 +77,7 @@ try {
   await page.getByPlaceholder("Sua senha").fill("Teste1234!");
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
 
-  // ── ONBOARDING ──
+  // ── ONBOARDING passo 1: persona ──
   etapa = "onboarding";
   await page.getByText("Para quem você está").waitFor({ timeout: 30000 });
   await snap(page, "02-onboarding");
@@ -85,14 +85,30 @@ try {
   // escolhe persona "Meu filho"
   await page.getByRole("button", { name: "Meu filho" }).click();
 
+  // ── ONBOARDING passo 2: perfil de saúde (faixa etária + condições, opcional) ──
+  etapa = "onboarding-perfil";
+  try {
+    await page.getByText("Mais um passo").waitFor({ timeout: 15000 });
+    await page.getByText("Jovem", { exact: true }).first().click();
+    await page.waitForTimeout(300);
+    for (const nome of ["Continuar", "Concluir", "Avançar", "Pular", "Começar", "Finalizar"]) {
+      const btn = page.getByRole("button", { name: new RegExp(nome, "i") });
+      if ((await btn.count()) > 0) { await btn.first().click(); break; }
+    }
+  } catch { console.log("  (passo de perfil não apareceu — pulando)"); }
+
   // ── HOME (Buscar) com hero personalizado ──
   etapa = "home";
   await page.getByText("O que seu filho").waitFor({ timeout: 30000 });
   await snap(page, "03-home-persona");
 
-  // rola até a seção de jornadas
+  // rola até a seção de jornadas e confirma as jornadas novas
   await page.getByText("Está passando por isso?").scrollIntoViewIfNeeded();
   await snap(page, "04-jornadas-secao");
+  for (const nome of ["Saúde do Homem", "Saúde da Mulher"]) {
+    const ok = (await page.getByText(nome).count()) > 0;
+    console.log(`  jornada "${nome}" no carrossel: ${ok ? "OK ✓" : "AUSENTE ✗"}`);
+  }
 
   // ── DESCOBRIR ──
   etapa = "descobrir";
@@ -100,6 +116,21 @@ try {
   await page.getByText("Você sabia?").first().waitFor({ timeout: 20000 });
   await page.waitForTimeout(800);
   await snap(page, "05-descobrir");
+
+  // desliza o feed até achar uma descoberta universal (selo "Vale em qualquer cidade")
+  const selo = page.getByText("Vale em qualquer cidade do Brasil").first();
+  let achouUniversal = false;
+  for (let i = 0; i < 8; i++) {
+    if ((await selo.count()) > 0) { achouUniversal = true; break; }
+    await page.mouse.wheel(0, 844);
+    await page.waitForTimeout(700);
+  }
+  if (achouUniversal) {
+    await selo.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600);
+    await snap(page, "05b-descobrir-universal");
+  }
+  console.log(`  descoberta universal no feed: ${achouUniversal ? "OK ✓" : "AUSENTE ✗"}`);
 
   // volta para Buscar
   await page.getByText("Buscar", { exact: true }).first().click();
