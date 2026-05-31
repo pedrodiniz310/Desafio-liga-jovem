@@ -1,15 +1,17 @@
 import { useMemo } from "react";
-import { ScrollView, StyleSheet, Switch, View } from "react-native";
+import { ScrollView, StyleSheet, Switch, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Screen } from "@/components/screen";
 import { Texto } from "@/components/texto";
 import { usePreferencias } from "@/stores/use-preferencias";
+import { useAuth } from "@/stores/use-auth";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 
 export default function PerfilScreen() {
   const { fonteGrande, altoContraste, setFonteGrande, setAltoContraste } = usePreferencias();
+  const { sair } = useAuth();
 
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
@@ -48,6 +50,17 @@ export default function PerfilScreen() {
           <LinhaInfo icone="heart-outline" rotulo="Gratuito para sempre" />
           <LinhaInfo icone="information-circle-outline" rotulo="Conecta SUS · versão 0.1" />
         </View>
+
+        <Texto style={styles.secao}>Conta</Texto>
+        <Pressable
+          style={[styles.btnSair, { backgroundColor: cores.coralWash }]}
+          onPress={sair}
+          accessibilityRole="button"
+          accessibilityLabel="Sair da conta"
+        >
+          <Ionicons name="log-out-outline" size={20} color={cores.coral} />
+          <Texto style={[styles.btnSairTexto, { color: cores.coral }]}>Sair da conta</Texto>
+        </Pressable>
       </ScrollView>
     </Screen>
   );
@@ -129,4 +142,16 @@ const makeStyles = (cores: Cores) =>
     linhaTextoWrap: { flex: 1 },
     linhaTexto: { fontSize: 15, color: cores.ink, fontWeight: "500" },
     emBreve: { fontSize: 12, color: cores.inkFaint, marginTop: 2 },
+    btnSair: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      borderRadius: 18,
+    },
+    btnSairTexto: {
+      fontSize: 15,
+      fontWeight: "600",
+    },
   });
