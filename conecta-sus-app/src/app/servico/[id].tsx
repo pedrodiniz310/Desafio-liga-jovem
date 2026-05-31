@@ -115,7 +115,7 @@ export default function ServicoDetalhe() {
         },
         onError: () =>
           Alert.alert(
-            "Conecta SUS",
+            "Tem no SUS!",
             "Não foi possível registrar agora. Verifique a conexão e tente de novo."
           ),
       }

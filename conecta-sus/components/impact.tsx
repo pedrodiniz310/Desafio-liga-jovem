@@ -81,7 +81,7 @@ export function Impact() {
               <div className="relative flex items-center gap-2 text-paper-soft/80">
                 <Smile className="h-5 w-5" aria-hidden="true" />
                 <span className="text-sm font-semibold tracking-wide uppercase">
-                  Com o Conecta SUS
+                  Com o Tem no SUS!
                 </span>
               </div>
               <div className="relative mt-10 flex flex-wrap items-end gap-x-8 gap-y-4">
