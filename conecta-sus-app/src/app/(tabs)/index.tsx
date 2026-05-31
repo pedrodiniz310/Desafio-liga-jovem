@@ -71,11 +71,11 @@ export default function BuscaScreen() {
   useFocusEffect(
     useCallback(() => {
       (async () => {
-        const pendente = await AsyncStorage.getItem("@conecta_sus_busca_pendente");
+        const pendente = await AsyncStorage.getItem("@tem_no_sus_busca_pendente");
         if (pendente) {
           setTexto(pendente);
           setTermo(pendente);
-          await AsyncStorage.removeItem("@conecta_sus_busca_pendente");
+          await AsyncStorage.removeItem("@tem_no_sus_busca_pendente");
         }
       })();
     }, [])

@@ -9,7 +9,7 @@ type PreferenciasState = {
 };
 
 const PreferenciasContext = createContext<PreferenciasState | undefined>(undefined);
-const STORAGE_KEY = "@conecta_sus_preferencias";
+const STORAGE_KEY = "@tem_no_sus_preferencias";
 
 export function PreferenciasProvider({ children }: { children: ReactNode }) {
   const [fonteGrande, setFonteGrandeState] = useState(false);

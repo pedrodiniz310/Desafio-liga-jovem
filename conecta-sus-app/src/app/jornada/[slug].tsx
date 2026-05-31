@@ -40,7 +40,7 @@ export default function JornadaScreen() {
 
   async function buscarServico(servico_codigo: string) {
     const termo = BUSCA_MAP[servico_codigo] ?? servico_codigo;
-    await AsyncStorage.setItem("@conecta_sus_busca_pendente", termo);
+    await AsyncStorage.setItem("@tem_no_sus_busca_pendente", termo);
     router.push("/(tabs)");
   }
 

@@ -59,7 +59,7 @@ type PersonaState = {
 };
 
 const PersonaContext = createContext<PersonaState | undefined>(undefined);
-const STORAGE_KEY = "@conecta_sus_persona";
+const STORAGE_KEY = "@tem_no_sus_persona";
 
 export function PersonaProvider({ children }: { children: ReactNode }) {
   const [persona, setPersonaState] = useState<PersonaSlug | null>(null);

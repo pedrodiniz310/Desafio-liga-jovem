@@ -16,7 +16,7 @@ type FavoritosState = {
 };
 
 const FavoritosContext = createContext<FavoritosState | undefined>(undefined);
-const STORAGE_KEY = "@conecta_sus_favoritos";
+const STORAGE_KEY = "@tem_no_sus_favoritos";
 
 export function FavoritosProvider({ children }: { children: ReactNode }) {
   const [itens, setItens] = useState<ServicoSalvo[]>([]);

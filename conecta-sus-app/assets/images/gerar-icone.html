@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Gerar Ícones — Tem no SUS!</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f0f0f0; padding: 40px; text-align: center; }
+  h1 { color: #073b2e; }
+  .canvases { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin: 32px 0; }
+  .item { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+  canvas { border-radius: 12px; display: block; margin: 0 auto 12px; }
+  button {
+    background: #0d6a51; color: white; border: none; border-radius: 10px;
+    padding: 10px 20px; font-size: 14px; font-weight: 700; cursor: pointer;
+    width: 100%;
+  }
+  button:hover { background: #073b2e; }
+  p { color: #6b7c76; font-size: 13px; margin: 4px 0; }
+</style>
+</head>
+<body>
+<h1>🏥 Gerador de Ícones — Tem no SUS!</h1>
+<p style="color:#6b7c76">Clique em "Baixar" em cada ícone e substitua os arquivos em <code>assets/images/</code></p>
+
+<div class="canvases">
+  <div class="item">
+    <canvas id="icon" width="1024" height="1024"></canvas>
+    <p><strong>icon.png</strong> — Ícone principal do app</p>
+    <p>Substitui: <code>assets/images/icon.png</code></p>
+    <button onclick="baixar('icon','icon.png')">⬇ Baixar icon.png</button>
+  </div>
+
+  <div class="item">
+    <canvas id="splash" width="1024" height="1024"></canvas>
+    <p><strong>splash-icon.png</strong> — Splash screen (fundo verde)</p>
+    <p>Substitui: <code>assets/images/splash-icon.png</code></p>
+    <button onclick="baixar('splash','splash-icon.png')">⬇ Baixar splash-icon.png</button>
+  </div>
+
+  <div class="item">
+    <canvas id="foreground" width="1024" height="1024"></canvas>
+    <p><strong>android-icon-foreground.png</strong></p>
+    <p>Substitui: <code>assets/images/android-icon-foreground.png</code></p>
+    <button onclick="baixar('foreground','android-icon-foreground.png')">⬇ Baixar foreground</button>
+  </div>
+</div>
+
+<script>
+function desenharCruzSUS(ctx, size, bgColor, fgColor, mostrarFundo) {
+  const cx = size / 2, cy = size / 2;
+  const r = size * 0.46;
+
+  ctx.clearRect(0, 0, size, size);
+
+  if (mostrarFundo) {
+    // Fundo arredondado
+    const raio = size * 0.22;
+    ctx.beginPath();
+    ctx.moveTo(raio, 0);
+    ctx.lineTo(size - raio, 0);
+    ctx.quadraticCurveTo(size, 0, size, raio);
+    ctx.lineTo(size, size - raio);
+    ctx.quadraticCurveTo(size, size, size - raio, size);
+    ctx.lineTo(raio, size);
+    ctx.quadraticCurveTo(0, size, 0, size - raio);
+    ctx.lineTo(0, raio);
+    ctx.quadraticCurveTo(0, 0, raio, 0);
+    ctx.closePath();
+    ctx.fillStyle = bgColor;
+    ctx.fill();
+  }
+
+  // Cruz / símbolo de saúde
+  const armW = size * 0.18;  // largura do braço
+  const armL = size * 0.48;  // comprimento do braço
+
+  ctx.fillStyle = fgColor;
+
+  // Braço horizontal
+  ctx.beginPath();
+  ctx.roundRect(cx - armL/2, cy - armW/2, armL, armW, armW * 0.4);
+  ctx.fill();
+
+  // Braço vertical
+  ctx.beginPath();
+  ctx.roundRect(cx - armW/2, cy - armL/2, armW, armL, armW * 0.4);
+  ctx.fill();
+
+  // Coração no centro da cruz
+  const hSize = size * 0.095;
+  const hx = cx, hy = cy + hSize * 0.08;
+  ctx.fillStyle = bgColor === 'transparent' ? '#0d6a51' : bgColor;
+  // Coração via path
+  ctx.beginPath();
+  ctx.moveTo(hx, hy + hSize * 0.55);
+  ctx.bezierCurveTo(hx - hSize * 1.0, hy - hSize * 0.1, hx - hSize * 1.0, hy - hSize * 0.85, hx, hy - hSize * 0.35);
+  ctx.bezierCurveTo(hx + hSize * 1.0, hy - hSize * 0.85, hx + hSize * 1.0, hy - hSize * 0.1, hx, hy + hSize * 0.55);
+  ctx.fill();
+
+  // Ponto de localização (pin) no topo da cruz
+  const pinR = size * 0.055;
+  const pinX = cx + armL * 0.26;
+  const pinY = cy - armL * 0.26;
+  ctx.fillStyle = fgColor;
+  ctx.beginPath();
+  ctx.arc(pinX, pinY, pinR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(pinX, pinY, pinR * 0.45, 0, Math.PI * 2);
+  ctx.fillStyle = bgColor === 'transparent' ? '#e8f5f0' : bgColor;
+  ctx.fill();
+}
+
+// --- ICON.PNG (fundo verde com ícone branco) ---
+const ctxIcon = document.getElementById('icon').getContext('2d');
+desenharCruzSUS(ctxIcon, 1024, '#0d6a51', '#ffffff', true);
+
+// --- SPLASH-ICON.PNG (transparente, ícone branco — para fundo verde do splash) ---
+const ctxSplash = document.getElementById('splash').getContext('2d');
+// Preview: mostra sobre fundo verde, mas o PNG exportado é transparente
+ctxSplash.fillStyle = '#0d6a51';
+ctxSplash.fillRect(0, 0, 1024, 1024);
+desenharCruzSUS(ctxSplash, 1024, 'transparent', '#ffffff', false);
+
+// --- FOREGROUND (transparente, ícone verde escuro — para fundo claro do adaptive icon) ---
+const ctxFg = document.getElementById('foreground').getContext('2d');
+ctxFg.fillStyle = '#e8f5f0';
+ctxFg.fillRect(0, 0, 1024, 1024);
+desenharCruzSUS(ctxFg, 1024, '#e8f5f0', '#0d6a51', false);
+
+function baixar(id, filename) {
+  const canvas = document.getElementById(id);
+
+  if (id === 'splash') {
+    // splash: exportar sem o fundo verde (transparente)
+    const tmp = document.createElement('canvas');
+    tmp.width = 1024; tmp.height = 1024;
+    const t = tmp.getContext('2d');
+    desenharCruzSUS(t, 1024, 'transparent', '#ffffff', false);
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = tmp.toDataURL('image/png');
+    link.click();
+    return;
+  }
+
+  if (id === 'foreground') {
+    // foreground: exportar transparente com ícone verde
+    const tmp = document.createElement('canvas');
+    tmp.width = 1024; tmp.height = 1024;
+    const t = tmp.getContext('2d');
+    desenharCruzSUS(t, 1024, 'transparent', '#0d6a51', false);
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = tmp.toDataURL('image/png');
+    link.click();
+    return;
+  }
+
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 -- ============================================================
--- Conecta SUS — Migration 0002
+-- Tem no SUS! — Migration 0002
 -- Permite validação comunitária anônima (sem login).
 -- A coluna confirmacoes.usuario_id continua nullable; no piloto
 -- aceitamos confirmações sem atribuição de usuário.

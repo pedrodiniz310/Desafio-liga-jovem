@@ -20,7 +20,7 @@ type PerfilSaudeState = PerfilSaude & {
   setPerfil: (perfil: PerfilSaude) => Promise<void>;
 };
 
-const STORAGE_KEY = "@conecta_sus_perfil_saude";
+const STORAGE_KEY = "@tem_no_sus_perfil_saude";
 
 const PerfilSaudeContext = createContext<PerfilSaudeState | undefined>(undefined);
 

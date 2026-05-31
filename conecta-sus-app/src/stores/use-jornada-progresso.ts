@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export function useJornadaProgresso(slug: string) {
   const [passosConcluidos, setPassosConcluidos] = useState<number[]>([]);
 
-  const storageKey = `@conecta_sus_jornada_${slug}`;
+  const storageKey = `@tem_no_sus_jornada_${slug}`;
 
   useEffect(() => {
     (async () => {
