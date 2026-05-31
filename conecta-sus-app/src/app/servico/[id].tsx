@@ -146,7 +146,15 @@ export default function ServicoDetalhe() {
       </View>
 
       {/* validação comunitária */}
-      <Texto style={styles.secao}>Este serviço ainda funciona?</Texto>
+      <View style={styles.gamificacaoCabecalho}>
+        <Ionicons name="people-circle" size={24} color={cores.verde} />
+        <View style={{ flex: 1 }}>
+          <Texto style={styles.secao}>Ajude sua comunidade</Texto>
+          <Texto style={styles.subSecao}>
+            Você esteve aqui recentemente? Confirme se o serviço está funcionando e ajude outras pessoas.
+          </Texto>
+        </View>
+      </View>
       <View style={styles.validacao}>
         <ValidaBotao
           icone="checkmark-circle-outline"
@@ -308,13 +316,26 @@ const makeStyles = (cores: Cores) =>
       borderBottomColor: cores.line,
     },
     linhaTexto: { flex: 1, fontSize: 15, color: cores.ink },
-    secao: {
-      fontSize: 13,
-      fontWeight: "700",
-      color: cores.inkSoft,
-      textTransform: "uppercase",
-      letterSpacing: 1,
+    gamificacaoCabecalho: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
       marginTop: 8,
+      backgroundColor: cores.verdeWash,
+      padding: 16,
+      borderRadius: 16,
+    },
+    secao: {
+      fontSize: 14,
+      fontWeight: "800",
+      color: cores.verdeDeep,
+      letterSpacing: 0.5,
+    },
+    subSecao: {
+      fontSize: 13,
+      color: cores.inkSoft,
+      marginTop: 2,
+      lineHeight: 18,
     },
     validacao: { flexDirection: "row", gap: 10 },
     valida: {
