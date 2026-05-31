@@ -43,7 +43,7 @@ create table if not exists regras_direitos (
 create or replace function fn_pontos_confirmacao()
 returns trigger language plpgsql security definer as $$
 begin
-  if new.usuario_id is not null then
+  if new.usuario_id is not null and auth.uid() = new.usuario_id then
     insert into perfis (id, pontos)
     values (new.usuario_id, 10)
     on conflict (id) do update set pontos = perfis.pontos + 10;
@@ -63,6 +63,10 @@ returns void language plpgsql security definer as $$
 declare
   qtd int;
 begin
+  if auth.uid() is null or auth.uid() <> uid then
+    raise exception 'usuario nao autorizado para verificar badges';
+  end if;
+
   select count(*) into qtd from confirmacoes where usuario_id = uid;
   if qtd >= 1 then
     insert into usuario_badges (usuario_id, badge_slug)
@@ -81,6 +85,8 @@ $$;
 
 -- ---------- buscar_servicos: adiciona campo necessidade_texto ----------
 -- Ordena pelo score do melhor sinônimo para busca semântica correta.
+drop function if exists buscar_servicos(text, double precision, double precision, int);
+
 create or replace function buscar_servicos(
   termo       text,
   lat         double precision,
@@ -152,14 +158,24 @@ create policy "badges publico" on badges for select using (true);
 
 drop policy if exists "ub proprio" on usuario_badges;
 create policy "ub proprio" on usuario_badges
-  for all using (auth.uid() = usuario_id) with check (auth.uid() = usuario_id);
+  for select using (auth.uid() = usuario_id);
 
 drop policy if exists "regras publico" on regras_direitos;
 create policy "regras publico" on regras_direitos for select using (ativo = true);
 
+drop policy if exists "leitura publica confirmacoes" on confirmacoes;
+create policy "leitura publica confirmacoes" on confirmacoes
+  for select to anon, authenticated using (true);
+
 -- ---------- Grants ----------
-grant select, insert, update on perfis to authenticated;
+revoke insert, update, delete on perfis from authenticated;
+grant select on perfis to authenticated;
+grant insert (id, data_nascimento, condicoes) on perfis to authenticated;
+grant update (data_nascimento, condicoes) on perfis to authenticated;
 grant select on badges to anon, authenticated;
-grant select, insert on usuario_badges to authenticated;
+revoke insert, update, delete on usuario_badges from authenticated;
+grant select on usuario_badges to authenticated;
 grant select on regras_direitos to anon, authenticated;
+grant select (estabelecimento_id, status, criado_em) on confirmacoes to anon;
+grant select (id, estabelecimento_id, usuario_id, status, criado_em) on confirmacoes to authenticated;
 grant execute on function verificar_badges(uuid) to authenticated;
