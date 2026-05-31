@@ -192,6 +192,7 @@ export default function ServicoDetalhe() {
           {servico.telefone ? (
             <LinhaInfo icone="call-outline" rotulo={servico.telefone} />
           ) : null}
+          <LinhaInfo icone="shield-checkmark-outline" rotulo={formatarFonte(servico)} />
         </View>
 
         {/* ── Validação comunitária ── */}
@@ -252,6 +253,26 @@ export default function ServicoDetalhe() {
       )}
     </View>
   );
+}
+
+function formatarFonte(servico: {
+  fonte_dados?: string | null;
+  competencia_cnes?: string | null;
+}) {
+  if (servico.fonte_dados?.includes("CNES")) {
+    const competencia = servico.competencia_cnes
+      ? new Intl.DateTimeFormat("pt-BR", {
+          month: "2-digit",
+          year: "numeric",
+          timeZone: "UTC",
+        }).format(new Date(servico.competencia_cnes))
+      : null;
+    return competencia
+      ? `Fonte: CNES/DATASUS - atualizado em ${competencia}`
+      : "Fonte: CNES/DATASUS";
+  }
+
+  return "Dados do piloto; validar antes de usar em produção";
 }
 
 function AcaoBotao({
