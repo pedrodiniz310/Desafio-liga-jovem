@@ -34,15 +34,19 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.10",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~10.0.0",
     "playwright": "^1.60.0",
     "typescript": "~5.9.2"
   },
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
+    "import:cnes": "node ./scripts/import-cnes.mjs",
+    "import:cnes:dry-run": "node ./scripts/import-cnes.mjs --dry-run",
     "lint": "expo lint"
   },
   "private": true
