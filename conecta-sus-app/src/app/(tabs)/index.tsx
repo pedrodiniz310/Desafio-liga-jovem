@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
@@ -17,8 +17,12 @@ import { NeedChip } from "@/components/need-chip";
 import { ServiceCard } from "@/components/service-card";
 import { Texto } from "@/components/texto";
 import { NECESSIDADES_COMUNS } from "@/lib/queries/necessidades-comuns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SituacaoCard } from "@/components/situacao-card";
 import { useBuscaServicos } from "@/lib/queries/use-busca-servicos";
 import { JOACABA, useLocalizacao } from "@/stores/use-localizacao";
+import { usePersona } from "@/stores/use-persona";
+import { useJornadas } from "@/lib/queries/use-jornadas";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 import type { ResultadoBusca } from "@/types/models";
@@ -59,6 +63,23 @@ export default function BuscaScreen() {
   const buscando = termo.trim().length > 1;
   const necessidadeTexto = busca.data?.[0]?.necessidade_texto ?? null;
 
+  const { personaConfig } = usePersona();
+  const { data: jornadas = [] } = useJornadas();
+
+  // Aplica busca pendente definida pela tela de jornada
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        const pendente = await AsyncStorage.getItem("@conecta_sus_busca_pendente");
+        if (pendente) {
+          setTexto(pendente);
+          setTermo(pendente);
+          await AsyncStorage.removeItem("@conecta_sus_busca_pendente");
+        }
+      })();
+    }, [])
+  );
+
   function pesquisar(valor: string) {
     setTexto(valor);
     setTermo(valor);
@@ -72,7 +93,7 @@ export default function BuscaScreen() {
           <Ionicons name="location" size={13} color="#a8d5c4" />
           <Texto style={styles.local}>{municipioNome}</Texto>
         </View>
-        <Texto style={styles.titulo}>O que você{"\n"}precisa?</Texto>
+        <Texto style={styles.titulo}>{personaConfig.tituloBusca}</Texto>
         <Texto style={styles.subtitulo}>Serviços de saúde gratuitos perto de você.</Texto>
 
         <View style={styles.searchBox}>
@@ -81,7 +102,7 @@ export default function BuscaScreen() {
             value={texto}
             onChangeText={setTexto}
             onSubmitEditing={(e) => setTermo(e.nativeEvent.text)}
-            placeholder="Ex.: meu filho chora muito"
+            placeholder={personaConfig.placeholder}
             placeholderTextColor={cores.inkFaint}
             returnKeyType="search"
             style={[styles.input, { fontSize: 15 * escala }]}
@@ -122,6 +143,30 @@ export default function BuscaScreen() {
               />
             ))}
           </View>
+
+          {jornadas.length > 0 && (
+            <>
+              <Texto style={styles.secao}>Está passando por isso?</Texto>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.jornadasScroll}
+              >
+                {jornadas.map((j) => (
+                  <SituacaoCard
+                    key={j.slug}
+                    jornada={j}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/jornada/[slug]",
+                        params: { slug: j.slug },
+                      })
+                    }
+                  />
+                ))}
+              </ScrollView>
+            </>
+          )}
 
           <Pressable
             style={styles.explorarCard}
@@ -183,7 +228,7 @@ function Resultados({
     <View style={styles.estado}>
       <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
       <Texto style={styles.estadoTexto}>
-        Nenhum resultado para "{termoBuscado}".
+        Nenhum resultado para {termoBuscado}.
       </Texto>
       <Texto style={[styles.estadoTexto, { fontSize: 13, marginTop: -4 }]}>
         Experimente uma dessas buscas:
@@ -264,6 +309,7 @@ const makeStyles = (cores: Cores) =>
       letterSpacing: 1.2,
     },
     chips: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+    jornadasScroll: { gap: 10, paddingRight: 4 },
     explorarCard: {
       flexDirection: "row",
       alignItems: "center",
