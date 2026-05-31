@@ -90,10 +90,30 @@ export default function ServicoDetalhe() {
 
   function comoChegar() {
     if (!servico) return;
-    const destino =
-      servico.lat != null && servico.lng != null
-        ? `${servico.lat},${servico.lng}`
-        : encodeURIComponent(servico.endereco ?? servico.nome);
+
+    // Coordenadas só são confiáveis quando geocodificadas de verdade.
+    // Seeds e importações CNES sem geocoding ficam com geocoding_status
+    // 'coordenada_demo' ou 'sem_geocoding' — nesses casos a busca por
+    // endereço completo é mais precisa que a coordenada aproximada.
+    const coordenadasConfiaveis =
+      servico.lat != null &&
+      servico.lng != null &&
+      servico.geocoding_status === "confirmado";
+
+    let destino: string;
+    if (coordenadasConfiaveis) {
+      destino = `${servico.lat},${servico.lng}`;
+    } else {
+      const partes = [
+        servico.nome,
+        servico.endereco,
+        servico.bairro,
+        servico.municipios?.nome,
+        servico.municipios?.uf ?? "SC",
+      ].filter(Boolean);
+      destino = encodeURIComponent(partes.join(", "));
+    }
+
     Linking.openURL(
       `https://www.google.com/maps/search/?api=1&query=${destino}`
     );

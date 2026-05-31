@@ -10,7 +10,7 @@ export function useServico(id: number | null) {
     queryFn: async (): Promise<Estabelecimento> => {
       const { data, error } = await supabase
         .from("estabelecimentos")
-        .select("*")
+        .select("*, municipios(nome, uf)")
         .eq("id", id)
         .single();
       if (error) throw error;

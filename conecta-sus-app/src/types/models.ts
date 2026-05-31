@@ -22,6 +22,7 @@ export interface Estabelecimento {
   telefone: string | null;
   horario: string | null;
   municipio_id: number | null;
+  municipios: { nome: string; uf: string } | null;
   lat: number | null;
   lng: number | null;
   ativo: boolean;
