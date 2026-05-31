@@ -72,12 +72,12 @@ export function Differentiators() {
                 <Database className="h-6 w-6" aria-hidden="true" />
               </span>
               <h3 className="font-display mt-5 text-xl font-semibold text-ink sm:text-2xl">
-                Dados oficiais, não achismo
+                Pronto para dados oficiais
               </h3>
               <p className="mt-2 leading-relaxed text-ink-soft">
-                Tudo vem do CNES, o cadastro do Ministério da Saúde com todos os
-                estabelecimentos do país. Informação de fonte pública, não rumor
-                de grupo de WhatsApp.
+                A base do app pode ser alimentada pelo CNES/DATASUS, o cadastro
+                público do Ministério da Saúde. O piloto deixa de depender de
+                lista manual quando a importação é executada.
               </p>
             </div>
           </Reveal>

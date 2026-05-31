@@ -18,7 +18,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Conecta SUS — O SUS que você não sabia que tinha",
   description:
-    "O SUS oferece mais de 100 serviços gratuitos. O Conecta SUS te mostra quais existem perto de você, com endereço, horário e o que levar. Dados oficiais do CNES.",
+    "O SUS oferece mais de 100 serviços gratuitos. O Conecta SUS te mostra quais existem perto de você, com endereço, horário e o que levar. Preparado para dados oficiais do CNES/DATASUS.",
   keywords: [
     "SUS",
     "saúde pública",

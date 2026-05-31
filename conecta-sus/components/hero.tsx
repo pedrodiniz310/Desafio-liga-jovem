@@ -159,7 +159,7 @@ export function Hero() {
           >
             <span className="inline-flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-verde" />
-              Dados oficiais do CNES
+              Preparado para CNES/DATASUS
             </span>
             <span className="inline-flex items-center gap-2">
               <HeartPulse className="h-4 w-4 text-coral" />

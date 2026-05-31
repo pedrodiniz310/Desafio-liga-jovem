@@ -20,7 +20,7 @@ const METRICAS: Metrica[] = [
   {
     icon: MapPinned,
     value: 5570,
-    label: "municípios cobertos pela base do CNES, nossa fonte de dados",
+    label: "municípios na base CNES, fonte prevista para a ingestão",
   },
   {
     icon: Languages,
