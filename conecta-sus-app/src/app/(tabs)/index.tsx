@@ -15,6 +15,7 @@ import * as Location from "expo-location";
 
 import { Screen } from "@/components/screen";
 import { LogoMarca } from "@/components/logo-marca";
+import { MapaResultados } from "@/components/mapa-resultados";
 import { NeedChip } from "@/components/need-chip";
 import { ServiceCard } from "@/components/service-card";
 import { Texto } from "@/components/texto";
@@ -27,7 +28,7 @@ import { usePersona } from "@/stores/use-persona";
 import { useJornadas } from "@/lib/queries/use-jornadas";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
-import type { ResultadoBusca } from "@/types/models";
+import type { Coordenada, ResultadoBusca } from "@/types/models";
 
 const SUGESTOES_VAZIAS = [
   { rotulo: "psicólogo",        icone: "happy-outline"   as const },
@@ -128,6 +129,7 @@ export default function BuscaScreen() {
           dados={busca.data ?? []}
           necessidadeTexto={necessidadeTexto}
           termoBuscado={termo}
+          coordUsuario={coord}
           onAbrir={(id) => router.push({ pathname: "/servico/[id]", params: { id: String(id) } })}
           onSugerir={pesquisar}
         />
@@ -201,6 +203,7 @@ function Resultados({
   dados,
   necessidadeTexto,
   termoBuscado,
+  coordUsuario,
   onAbrir,
   onSugerir,
 }: {
@@ -209,11 +212,13 @@ function Resultados({
   dados: ResultadoBusca[];
   necessidadeTexto: string | null;
   termoBuscado: string;
+  coordUsuario: Coordenada;
   onAbrir: (id: number) => void;
   onSugerir: (termo: string) => void;
 }) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
+  const [modo, setModo] = useState<"lista" | "mapa">("lista");
 
   const badgeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -268,44 +273,91 @@ function Resultados({
     </View>
   );
 
+  const temCoordenadas = dados.some((d) => d.lat != null && d.lng != null);
+
+  const matchBadgeNode = necessidadeTexto ? (
+    <Animated.View
+      style={[
+        styles.matchBadge,
+        {
+          opacity: badgeAnim,
+          transform: [
+            {
+              scale: badgeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.85, 1],
+              }),
+            },
+          ],
+        },
+      ]}
+    >
+      <Ionicons name="sparkles" size={15} color="#a8d5c4" />
+      <Texto style={styles.matchTexto}>
+        Entendemos que você busca:{" "}
+        <Texto style={styles.matchDestaque}>{necessidadeTexto}</Texto>
+      </Texto>
+    </Animated.View>
+  ) : null;
+
   return (
-    <FlatList
-      data={dados}
-      keyExtractor={(item) => String(item.estabelecimento_id)}
-      contentContainerStyle={styles.lista}
-      ListHeaderComponent={
-        necessidadeTexto ? (
-          <Animated.View
-            style={[
-              styles.matchBadge,
-              {
-                opacity: badgeAnim,
-                transform: [
-                  {
-                    scale: badgeAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0.85, 1],
-                    }),
-                  },
-                ],
-              },
-            ]}
+    <View style={{ flex: 1 }}>
+      {temCoordenadas && (
+        <View style={styles.toggle}>
+          <Pressable
+            style={[styles.toggleBtn, modo === "lista" && styles.toggleBtnAtivo]}
+            onPress={() => setModo("lista")}
+            accessibilityRole="button"
+            accessibilityLabel="Ver em lista"
           >
-            <Ionicons name="sparkles" size={15} color="#a8d5c4" />
-            <Texto style={styles.matchTexto}>
-              Entendemos que você busca:{" "}
-              <Texto style={styles.matchDestaque}>{necessidadeTexto}</Texto>
+            <Ionicons
+              name="list"
+              size={15}
+              color={modo === "lista" ? "#ffffff" : cores.verdeDeep}
+            />
+            <Texto style={[styles.toggleTexto, modo === "lista" && styles.toggleTextoAtivo]}>
+              Lista
             </Texto>
-          </Animated.View>
-        ) : null
-      }
-      renderItem={({ item }) => (
-        <ServiceCard
-          servico={item}
-          onPress={() => onAbrir(item.estabelecimento_id)}
+          </Pressable>
+          <Pressable
+            style={[styles.toggleBtn, modo === "mapa" && styles.toggleBtnAtivo]}
+            onPress={() => setModo("mapa")}
+            accessibilityRole="button"
+            accessibilityLabel="Ver no mapa"
+          >
+            <Ionicons
+              name="map"
+              size={15}
+              color={modo === "mapa" ? "#ffffff" : cores.verdeDeep}
+            />
+            <Texto style={[styles.toggleTexto, modo === "mapa" && styles.toggleTextoAtivo]}>
+              Mapa
+            </Texto>
+          </Pressable>
+        </View>
+      )}
+
+      {modo === "mapa" && temCoordenadas ? (
+        <MapaResultados
+          dados={dados}
+          coordUsuario={coordUsuario}
+          onAbrir={onAbrir}
+        />
+      ) : (
+        <FlatList
+          data={dados}
+          keyExtractor={(item) => String(item.estabelecimento_id)}
+          contentContainerStyle={styles.lista}
+          ListHeaderComponent={matchBadgeNode}
+          renderItem={({ item }) => (
+            <ServiceCard
+              servico={item}
+              onPress={() => onAbrir(item.estabelecimento_id)}
+            />
+          )}
         />
       )}
-    />
+    </View>
   );
 }
 
@@ -397,4 +449,32 @@ const makeStyles = (cores: Cores) =>
     },
     matchTexto: { fontSize: 13, color: "#a8d5c4" },
     matchDestaque: { fontSize: 13, fontWeight: "800", color: "#ffffff" },
+    toggle: {
+      flexDirection: "row",
+      gap: 8,
+      paddingHorizontal: 20,
+      paddingTop: 12,
+      paddingBottom: 4,
+    },
+    toggleBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 20,
+      borderWidth: 1.5,
+      borderColor: cores.verdeDeep,
+    },
+    toggleBtnAtivo: {
+      backgroundColor: cores.verdeDeep,
+    },
+    toggleTexto: {
+      fontSize: 13,
+      fontWeight: "700",
+      color: cores.verdeDeep,
+    },
+    toggleTextoAtivo: {
+      color: "#ffffff",
+    },
   });
