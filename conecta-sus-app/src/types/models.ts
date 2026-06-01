@@ -32,7 +32,7 @@ export interface Estabelecimento {
   geocoding_status: string | null;
 }
 
-/** Resultado da RPC `buscar_servicos` — inclui necessidade_texto a partir da migration 0003. */
+/** Resultado da RPC `buscar_servicos` — inclui lat/lng para o mapa a partir da migration 0012. */
 export interface ResultadoBusca {
   estabelecimento_id: number;
   nome: string;
@@ -41,6 +41,8 @@ export interface ResultadoBusca {
   horario: string | null;
   distancia_metros: number;
   necessidade_texto: string | null;
+  lat: number | null;
+  lng: number | null;
 }
 
 export interface Necessidade {
