@@ -1,5 +1,7 @@
-import { ArrowRight, Smartphone } from "lucide-react";
+import { ArrowRight, Smartphone, Clock } from "lucide-react";
 import { Reveal } from "./reveal";
+
+const APK_URL = "https://expo.dev/artifacts/eas/egc6KDzzZWs4eqb2hQgvtC.apk";
 
 export function FinalCta() {
   return (
@@ -25,16 +27,18 @@ export function FinalCta() {
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <a
-                href="#"
-                className="inline-flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full bg-paper-soft px-6 text-base font-semibold text-verde-deep transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
+              <span
+                className="inline-flex h-[52px] w-full cursor-not-allowed items-center justify-center gap-2.5 rounded-full bg-paper-soft/30 px-6 text-base font-semibold text-paper-soft/40 sm:w-auto"
+                aria-disabled="true"
+                title="Em breve na App Store"
               >
-                <Smartphone className="h-5 w-5" aria-hidden="true" />
-                Baixar para iPhone
-              </a>
+                <Clock className="h-5 w-5" aria-hidden="true" />
+                iPhone — em breve
+              </span>
               <a
-                href="#"
-                className="inline-flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full border border-paper-soft/30 px-6 text-base font-semibold text-paper-soft transition-colors hover:bg-paper-soft/10 sm:w-auto"
+                href={APK_URL}
+                download
+                className="inline-flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full bg-paper-soft px-6 text-base font-semibold text-verde-deep transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
               >
                 <Smartphone className="h-5 w-5" aria-hidden="true" />
                 Baixar para Android
