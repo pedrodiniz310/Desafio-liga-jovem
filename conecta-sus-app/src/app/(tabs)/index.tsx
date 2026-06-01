@@ -62,7 +62,11 @@ export default function BuscaScreen() {
     })();
   }, [setCoordenada, setPermissaoNegada]);
 
-  const busca = useBuscaServicos({ termo, coordenada: coord });
+  // Raio de busca: começa em 15 km; o estado vazio permite ampliar para 50 km.
+  const [raioMetros, setRaioMetros] = useState(15000);
+  useEffect(() => setRaioMetros(15000), [termo]); // novo termo volta ao raio padrão
+
+  const busca = useBuscaServicos({ termo, coordenada: coord, raioMetros });
   const buscando = termo.trim().length > 1;
   const necessidadeTexto = busca.data?.[0]?.necessidade_texto ?? null;
 
@@ -90,8 +94,8 @@ export default function BuscaScreen() {
 
   return (
     <Screen>
-      {/* ── HERO BAND ── */}
-      <View style={styles.heroBand}>
+      {/* ── HERO BAND (colapsa quando há busca ativa) ── */}
+      <View style={[styles.heroBand, buscando && styles.heroBandCompacto]}>
         <View style={styles.localRow}>
           <View style={styles.localLeft}>
             <Ionicons name="location" size={13} color="#a8d5c4" />
@@ -99,8 +103,12 @@ export default function BuscaScreen() {
           </View>
           <LogoMarca size={32} />
         </View>
-        <Texto style={styles.titulo}>{personaConfig.tituloBusca}</Texto>
-        <Texto style={styles.subtitulo}>Serviços de saúde gratuitos perto de você.</Texto>
+        {!buscando && (
+          <>
+            <Texto style={styles.titulo}>{personaConfig.tituloBusca}</Texto>
+            <Texto style={styles.subtitulo}>Serviços de saúde gratuitos perto de você.</Texto>
+          </>
+        )}
 
         <View style={styles.searchBox}>
           <Ionicons name="search" size={18} color={cores.verde} />
@@ -130,6 +138,8 @@ export default function BuscaScreen() {
           necessidadeTexto={necessidadeTexto}
           termoBuscado={termo}
           coordUsuario={coord}
+          raioMetros={raioMetros}
+          onAmpliar={() => setRaioMetros(50000)}
           onAbrir={(id) => router.push({ pathname: "/servico/[id]", params: { id: String(id) } })}
           onSugerir={pesquisar}
         />
@@ -204,6 +214,8 @@ function Resultados({
   necessidadeTexto,
   termoBuscado,
   coordUsuario,
+  raioMetros,
+  onAmpliar,
   onAbrir,
   onSugerir,
 }: {
@@ -213,12 +225,15 @@ function Resultados({
   necessidadeTexto: string | null;
   termoBuscado: string;
   coordUsuario: Coordenada;
+  raioMetros: number;
+  onAmpliar: () => void;
   onAbrir: (id: number) => void;
   onSugerir: (termo: string) => void;
 }) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
   const [modo, setModo] = useState<"lista" | "mapa">("lista");
+  const raioKm = Math.round(raioMetros / 1000);
 
   const badgeAnim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -247,58 +262,111 @@ function Resultados({
     </View>
   );
 
-  if (dados.length === 0) return (
-    <View style={styles.estado}>
-      <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
-      <Texto style={styles.estadoTexto}>
-        Nenhum resultado para {termoBuscado}.
-      </Texto>
-      <Texto style={[styles.estadoTexto, { fontSize: 13, marginTop: -4 }]}>
-        Experimente uma dessas buscas:
-      </Texto>
-      <View style={styles.sugestoes}>
-        {SUGESTOES_VAZIAS.map((s) => (
+  if (dados.length === 0) {
+    // Nunca sugerir o termo que acabou de falhar (evita loop).
+    const sugestoes = SUGESTOES_VAZIAS.filter(
+      (s) => s.rotulo.toLowerCase() !== termoBuscado.trim().toLowerCase()
+    );
+    return (
+      <View style={styles.estado}>
+        <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
+        <Texto style={styles.estadoTexto}>
+          Nenhum serviço encontrado num raio de {raioKm} km.
+        </Texto>
+
+        {raioMetros < 50000 && (
           <Pressable
-            key={s.rotulo}
-            style={styles.sugestaoBtn}
-            onPress={() => onSugerir(s.rotulo)}
+            onPress={onAmpliar}
+            style={({ pressed }) => [styles.ampliarBtn, pressed && { opacity: 0.85 }]}
             accessibilityRole="button"
-            accessibilityLabel={`Buscar por ${s.rotulo}`}
+            accessibilityLabel="Ampliar a busca para 50 km"
           >
-            <Ionicons name={s.icone} size={15} color={cores.verde} />
-            <Texto style={styles.sugestaoTexto}>{s.rotulo}</Texto>
+            <Ionicons name="resize-outline" size={16} color="#ffffff" />
+            <Texto style={styles.ampliarTexto}>Procurar num raio maior (50 km)</Texto>
           </Pressable>
-        ))}
+        )}
+
+        <Texto style={[styles.estadoTexto, { fontSize: 13, marginTop: 8 }]}>
+          Ou experimente uma dessas buscas:
+        </Texto>
+        <View style={styles.sugestoes}>
+          {sugestoes.map((s) => (
+            <Pressable
+              key={s.rotulo}
+              style={styles.sugestaoBtn}
+              onPress={() => onSugerir(s.rotulo)}
+              accessibilityRole="button"
+              accessibilityLabel={`Buscar por ${s.rotulo}`}
+            >
+              <Ionicons name={s.icone} size={15} color={cores.verde} />
+              <Texto style={styles.sugestaoTexto}>{s.rotulo}</Texto>
+            </Pressable>
+          ))}
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
 
   const temCoordenadas = dados.some((d) => d.lat != null && d.lng != null);
 
-  const matchBadgeNode = necessidadeTexto ? (
-    <Animated.View
-      style={[
-        styles.matchBadge,
-        {
-          opacity: badgeAnim,
-          transform: [
+  // Cabeçalho da lista: badge "entendemos que você busca" + contagem de resultados.
+  const cabecalhoLista = (
+    <View style={styles.cabecalho}>
+      {necessidadeTexto ? (
+        <Animated.View
+          style={[
+            styles.matchBadge,
             {
-              scale: badgeAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.85, 1],
-              }),
+              opacity: badgeAnim,
+              transform: [
+                {
+                  scale: badgeAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.85, 1],
+                  }),
+                },
+              ],
             },
-          ],
-        },
-      ]}
-    >
-      <Ionicons name="sparkles" size={15} color="#a8d5c4" />
-      <Texto style={styles.matchTexto}>
-        Entendemos que você busca:{" "}
-        <Texto style={styles.matchDestaque}>{necessidadeTexto}</Texto>
+          ]}
+        >
+          <Ionicons name="sparkles" size={15} color="#a8d5c4" />
+          <Texto style={styles.matchTexto}>
+            Entendemos que você busca:{" "}
+            <Texto style={styles.matchDestaque}>{necessidadeTexto}</Texto>
+          </Texto>
+        </Animated.View>
+      ) : null}
+      <Texto style={styles.contagem}>
+        {dados.length}{" "}
+        {dados.length === 1 ? "serviço encontrado" : "serviços encontrados"} num raio de {raioKm} km
       </Texto>
-    </Animated.View>
-  ) : null;
+    </View>
+  );
+
+  // Rodapé: preenche a tela com algo útil em vez de vazio — buscas relacionadas.
+  const relacionadas = NECESSIDADES_COMUNS.filter(
+    (n) => n.rotulo.toLowerCase() !== termoBuscado.trim().toLowerCase()
+  ).slice(0, 6);
+  const rodapeLista = (
+    <View style={styles.rodapeLista}>
+      <Texto style={styles.rodapeLabel}>Buscar outra coisa</Texto>
+      <View style={styles.rodapeChips}>
+        {relacionadas.map((n) => (
+          <Pressable
+            key={n.slug}
+            style={styles.sugestaoBtn}
+            onPress={() => onSugerir(n.rotulo)}
+            accessibilityRole="button"
+            accessibilityLabel={`Buscar por ${n.rotulo}`}
+          >
+            <Ionicons name={n.icone as never} size={15} color={cores.verde} />
+            <Texto style={styles.sugestaoTexto}>{n.rotulo}</Texto>
+          </Pressable>
+        ))}
+      </View>
+      <Texto style={styles.rodapeDica}>Tudo o que aparece aqui é gratuito pelo SUS.</Texto>
+    </View>
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -348,7 +416,8 @@ function Resultados({
           data={dados}
           keyExtractor={(item) => String(item.estabelecimento_id)}
           contentContainerStyle={styles.lista}
-          ListHeaderComponent={matchBadgeNode}
+          ListHeaderComponent={cabecalhoLista}
+          ListFooterComponent={rodapeLista}
           renderItem={({ item }) => (
             <ServiceCard
               servico={item}
@@ -371,6 +440,7 @@ const makeStyles = (cores: Cores) =>
       borderBottomLeftRadius: 28,
       borderBottomRightRadius: 28,
     },
+    heroBandCompacto: { paddingTop: 14, paddingBottom: 16 },
     localRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
     localLeft: { flexDirection: "row", alignItems: "center", gap: 5 },
     local: { fontSize: 13, color: "#a8d5c4", fontWeight: "600" },
@@ -449,6 +519,39 @@ const makeStyles = (cores: Cores) =>
     },
     matchTexto: { fontSize: 13, color: "#a8d5c4" },
     matchDestaque: { fontSize: 13, fontWeight: "800", color: "#ffffff" },
+    cabecalho: { gap: 8, marginBottom: 4 },
+    contagem: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: cores.inkFaint,
+    },
+    ampliarBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      backgroundColor: cores.verde,
+      paddingHorizontal: 20,
+      paddingVertical: 13,
+      borderRadius: 16,
+      marginTop: 4,
+    },
+    ampliarTexto: { fontSize: 14, fontWeight: "700", color: "#ffffff" },
+    rodapeLista: {
+      marginTop: 20,
+      paddingTop: 20,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: cores.line,
+      gap: 12,
+    },
+    rodapeLabel: {
+      fontSize: 12,
+      fontWeight: "700",
+      color: cores.inkFaint,
+      textTransform: "uppercase",
+      letterSpacing: 1.2,
+    },
+    rodapeChips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+    rodapeDica: { fontSize: 12, color: cores.inkFaint, marginTop: 4 },
     toggle: {
       flexDirection: "row",
       gap: 8,
