@@ -100,6 +100,13 @@ try {
   // ── HOME (Buscar) com hero personalizado ──
   etapa = "home";
   await page.getByText("O que seu filho").waitFor({ timeout: 30000 });
+
+  // ── MUNICIPIO RESOLVIDO (geo negada no web => fallback Joaçaba) ──
+  // Espera o header sair de "Carregando…" para "<Cidade> · UF".
+  etapa = "municipio";
+  await page.getByText(/·\s*[A-Z]{2}\b/).first().waitFor({ timeout: 20000 });
+  const cidadeOk = (await page.getByText(/·\s*[A-Z]{2}\b/).first().count()) > 0;
+  console.log(`  municipio resolvido no header: ${cidadeOk ? "OK ✓" : "AINDA CARREGANDO ✗"}`);
   await snap(page, "03-home-persona");
 
   // rola até a seção de jornadas e confirma as jornadas novas
