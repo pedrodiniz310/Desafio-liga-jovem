@@ -40,9 +40,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <PreferenciasProvider>
-          <PerfilSaudeProvider>
-          <PersonaProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <PerfilSaudeProvider>
+            <PersonaProvider>
               <LocalizacaoProvider>
                 <FavoritosProvider>
                   <TemaProvider>
@@ -50,9 +50,9 @@ export default function RootLayout() {
                   </TemaProvider>
                 </FavoritosProvider>
               </LocalizacaoProvider>
-            </AuthProvider>
-          </PersonaProvider>
-          </PerfilSaudeProvider>
+            </PersonaProvider>
+            </PerfilSaudeProvider>
+          </AuthProvider>
         </PreferenciasProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

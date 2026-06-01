@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "@/stores/use-auth";
 
 export type PersonaSlug = "eu_mesmo" | "meu_filho" | "mae_pai" | "familia";
 
@@ -59,32 +60,59 @@ type PersonaState = {
 };
 
 const PersonaContext = createContext<PersonaState | undefined>(undefined);
-const STORAGE_KEY = "@tem_no_sus_persona";
+// Persona é por usuário: a chave inclui o id da conta. Assim, criar uma conta
+// nova (ou trocar de usuário no mesmo aparelho) zera a persona e dispara o
+// onboarding, enquanto o mesmo usuário que volta a logar mantém a sua escolha.
+const STORAGE_PREFIX = "@tem_no_sus_persona:";
 
 export function PersonaProvider({ children }: { children: ReactNode }) {
+  const { session } = useAuth();
+  const userId = session?.user?.id ?? null;
+
   const [persona, setPersonaState] = useState<PersonaSlug | null>(null);
-  const [carregado, setCarregado] = useState(false);
+  // Guarda para qual usuário a persona em memória foi carregada. Enquanto não
+  // bater com o userId atual, `carregado` é false — evita usar persona de outro
+  // usuário por um frame durante a troca de conta.
+  const [userIdCarregado, setUserIdCarregado] = useState<string | null | undefined>(
+    undefined
+  );
 
   useEffect(() => {
+    let ativo = true;
     (async () => {
-      try {
-        const data = await AsyncStorage.getItem(STORAGE_KEY);
-        if (data) setPersonaState(data as PersonaSlug);
-      } catch {
-        // silent — falha no carregamento mantém persona null
+      let valor: PersonaSlug | null = null;
+      if (userId) {
+        try {
+          const data = await AsyncStorage.getItem(`${STORAGE_PREFIX}${userId}`);
+          if (data) valor = data as PersonaSlug;
+        } catch {
+          // silent — falha no carregamento mantém persona null
+        }
       }
-      setCarregado(true);
+      if (ativo) {
+        setPersonaState(valor);
+        setUserIdCarregado(userId);
+      }
     })();
-  }, []);
+    return () => {
+      ativo = false;
+    };
+  }, [userId]);
 
-  const setPersona = useCallback(async (slug: PersonaSlug) => {
-    setPersonaState(slug);
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, slug);
-    } catch {
-      // silent
-    }
-  }, []);
+  const setPersona = useCallback(
+    async (slug: PersonaSlug) => {
+      setPersonaState(slug);
+      if (!userId) return;
+      try {
+        await AsyncStorage.setItem(`${STORAGE_PREFIX}${userId}`, slug);
+      } catch {
+        // silent
+      }
+    },
+    [userId]
+  );
+
+  const carregado = userIdCarregado === userId;
 
   const personaConfig =
     (persona ? PERSONAS.find((p) => p.slug === persona) : undefined) ??
