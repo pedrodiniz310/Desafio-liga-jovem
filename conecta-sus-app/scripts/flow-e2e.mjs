@@ -110,6 +110,24 @@ try {
     console.log(`  jornada "${nome}" no carrossel: ${ok ? "OK ✓" : "AUSENTE ✗"}`);
   }
 
+  // ── TOGGLE MAPA ──
+  etapa = "toggle-mapa";
+  await page.getByText("Buscar", { exact: true }).first().click();
+  await page.getByPlaceholder(/.*/).first().fill("psicólogo");
+  await page.getByPlaceholder(/.*/).first().press("Enter");
+  await page.waitForTimeout(2500); // aguarda resultados do Supabase
+  const temToggle = (await page.getByRole("button", { name: "Mapa" }).count()) > 0;
+  console.log(`  toggle "Mapa" aparece nos resultados: ${temToggle ? "OK ✓" : "AUSENTE ✗"}`);
+  if (temToggle) {
+    await page.getByRole("button", { name: "Mapa" }).click();
+    await page.waitForTimeout(1200); // WebView precisa de tempo para carregar
+    await snap(page, "04b-mapa-resultados");
+  }
+  // limpa a busca via o botão X (chama pesquisar("") e reseta o termo)
+  const clearBtn = page.getByRole("button", { name: "Limpar busca" });
+  if ((await clearBtn.count()) > 0) await clearBtn.click();
+  await page.waitForTimeout(400);
+
   // ── DESCOBRIR ──
   etapa = "descobrir";
   await page.getByText("Descobrir", { exact: true }).first().click();
@@ -132,8 +150,15 @@ try {
   }
   console.log(`  descoberta universal no feed: ${achouUniversal ? "OK ✓" : "AUSENTE ✗"}`);
 
-  // volta para Buscar
+  // volta para Buscar — limpa busca ativa antes de esperar seção de jornadas
   await page.getByText("Buscar", { exact: true }).first().click();
+  const inp = page.getByPlaceholder(/.*/).first();
+  const inpVal = await inp.inputValue().catch(() => "");
+  if (inpVal.trim().length > 1) {
+    await inp.fill("");
+    await inp.press("Enter"); // dispara onSubmitEditing("") → setTermo("")
+    await page.waitForTimeout(400);
+  }
   await page.getByText("Está passando por isso?").waitFor({ timeout: 20000 });
 
   // ── JORNADA ──
