@@ -2,6 +2,7 @@
 
 # Binários/artefatos redundantes (o código-fonte já está versionado)
 *.zip
+/image.png
 
 # Secrets — NUNCA versionar (.env.example pode ser commitado)
 **/.env

@@ -40,11 +40,15 @@ type LogoProps = {
 
 export function Logo({ className = "", markClassName = "" }: LogoProps) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <LogoMark className={`h-8 w-8 ${markClassName}`} />
-      <span className="text-[1.15rem] font-semibold tracking-tight text-ink">
-        Tem no <span className="text-verde">SUS!</span>
-      </span>
+    <span className={`inline-flex items-center ${className}`}>
+      {/* Lockup oficial da marca (ícone + wordmark). eslint-disable: SVG estático,
+          dimensionado por altura — next/image não agrega valor aqui. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo-wordmark.svg"
+        alt="Tem no SUS!"
+        className={`h-8 w-auto ${markClassName}`}
+      />
     </span>
   );
 }
