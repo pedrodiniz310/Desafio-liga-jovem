@@ -1,0 +1,10 @@
+# Config do Supabase CLI para este projeto.
+# project_id é só o identificador local (usado por `supabase link`).
+project_id = "tem-no-sus"
+
+# A Edge Function importar-municipio é um gatilho público de ingestão CNES
+# (usa service-role por dentro; não depende de auth de usuário). Sem verify_jwt
+# o app consegue chamá-la com a publishable key (que não é um JWT) e o gateway
+# não rejeita. Mantém isso em qualquer redeploy.
+[functions.importar-municipio]
+verify_jwt = false
