@@ -55,10 +55,9 @@ export async function fetchEstabelecimentos(codigoMunicipioCnes: string): Promis
     });
     const json = await fetchJson(`${API_BASE}/estabelecimentos?${params}`);
     const batch = json.estabelecimentos ?? [];
-    if (batch.length === 0) break;
-    rows.push(...batch);
-    offset += batch.length;
-    if (batch.length < PAGE_LIMIT) break;
+    if (batch.length === 0) break; // única condição de parada confiável:
+    rows.push(...batch);           // a API CNES capa a página em ~20 mesmo pedindo 100,
+    offset += batch.length;        // então NÃO dá pra parar por batch.length < PAGE_LIMIT.
   }
   return rows;
 }
