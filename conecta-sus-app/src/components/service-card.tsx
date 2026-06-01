@@ -51,15 +51,15 @@ export function ServiceCard({ servico, onPress }: ServiceCardProps) {
                 {formatarDistancia(servico.distancia_metros)}
               </Texto>
             </View>
-            {servico.horario ? (
-              <View style={styles.metaItem}>
-                <Ionicons name="time-outline" size={12} color={cores.inkFaint} />
-                <Texto style={styles.metaText} numberOfLines={1}>
-                  {servico.horario}
-                </Texto>
-              </View>
-            ) : null}
           </View>
+          {servico.horario ? (
+            <View style={styles.horarioRow}>
+              <Ionicons name="time-outline" size={12} color={cores.inkFaint} />
+              <Texto style={styles.metaText} numberOfLines={1}>
+                {servico.horario}
+              </Texto>
+            </View>
+          ) : null}
         </View>
         <Ionicons name="chevron-forward" size={18} color={cores.line} />
       </Animated.View>
@@ -104,6 +104,6 @@ const makeStyles = (cores: Cores) =>
       borderRadius: 8,
     },
     distText: { fontSize: 11, fontWeight: "700", color: cores.verde },
-    metaItem: { flexDirection: "row", alignItems: "center", gap: 3, flexShrink: 1 },
-    metaText: { fontSize: 12, color: cores.inkFaint },
+    horarioRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 5 },
+    metaText: { flex: 1, fontSize: 12, color: cores.inkFaint },
   });
