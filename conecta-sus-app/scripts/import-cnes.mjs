@@ -250,6 +250,8 @@ function buildVinculacoes(estabelecimentos) {
 
 function inferServicos(estabelecimento) {
   const servicos = new Set(SERVICOS_POR_TIPO.get(estabelecimento._codigoTipoUnidade) ?? []);
+
+  const tipoDesc = normalizeText(estabelecimento.tipo);
   const textoNome = normalizeText(
     [
       estabelecimento.nome,
@@ -257,32 +259,36 @@ function inferServicos(estabelecimento) {
       estabelecimento._raw?.nome_razao_social,
     ].join(" "),
   );
-  const texto = normalizeText([textoNome, estabelecimento.tipo].join(" "));
-  const atendeSus = normalizeText(
-    estabelecimento._raw?.estabelecimento_faz_atendimento_ambulatorial_sus,
-  ) === "SIM";
-  const nomeSugerePublico =
-    /\b(CAPS|CEO|CER|UBS|UNIDADE BASICA|POSTO DE SAUDE|MUNICIPAL|PREFEITURA|SECRETARIA)\b/.test(textoNome);
-  const permiteHeuristica = atendeSus || nomeSugerePublico;
 
-  if (/\bCAPS\b|PSICOSSOCIAL|SAUDE MENTAL/.test(texto)) servicos.add("saude_mental");
-  if (/\bCAPS\b.*\b(AD|ALCOOL|DROG)|DEPENDENCIA QUIMICA/.test(texto)) {
-    servicos.add("dependencia");
-  }
-  if (/\bFARMAC/.test(texto)) servicos.add("farmacia");
-  if (/\b(UBS|UNIDADE BASICA|POSTO DE SAUDE|SAUDE DA FAMILIA|ESF)\b/.test(textoNome)) {
+  // 1) Estrutural por TIPO de unidade (unidades SUS por natureza)
+  if (/\b(UNIDADE BASICA|CENTRO DE SAUDE|POSTO DE SAUDE)\b/.test(tipoDesc)
+      || /\b(UBS|POSTO DE SAUDE|SAUDE DA FAMILIA|ESF)\b/.test(textoNome)) {
     servicos.add("atencao_basica");
     servicos.add("vacina");
     servicos.add("prenatal");
   }
-  if (permiteHeuristica && /\b(CEO|ODONTO|SAUDE BUCAL)\b/.test(texto)) {
-    servicos.add("odonto_esp");
+  if (/CENTRO DE ATENCAO PSICOSSOCIAL/.test(tipoDesc)
+      || /\bCAPS\b|PSICOSSOCIAL|SAUDE MENTAL/.test(textoNome)) {
+    servicos.add("saude_mental");
   }
-  if (permiteHeuristica && /\b(FONO|FONOAUDIO)\b/.test(texto)) {
-    servicos.add("fono");
+  if (/\bFARMAC/.test(tipoDesc) || /\bFARMAC/.test(textoNome)) {
+    servicos.add("farmacia");
   }
-  if (permiteHeuristica && /\b(CER|REABIL|FISIOTER)\b/.test(texto)) {
-    servicos.add("reabilitacao");
+
+  // 2) Especialidade por NOME com gate PUBLICO (natureza juridica 1xxx = Adm. Publica)
+  // atende_sus=SIM nao discrimina (privada credenciada tambem marca SIM).
+  const naturezaPublica = /^1/.test(
+    String(estabelecimento._raw?.descricao_natureza_juridica_estabelecimento ?? "").trim(),
+  );
+  const nomePublico = /\b(MUNICIPAL|PREFEITURA|SECRETARIA|ESTADUAL|FEDERAL|SUS)\b/.test(textoNome);
+  const ehSus = naturezaPublica || nomePublico;
+
+  if (ehSus && /\b(ODONTO|SAUDE BUCAL|CEO)\b/.test(textoNome)) servicos.add("odonto_esp");
+  if (ehSus && /\b(FONO|FONOAUDIO)\b/.test(textoNome)) servicos.add("fono");
+  if (ehSus && /(FISIOTER|REABIL|\bCER\b)/.test(textoNome)) servicos.add("reabilitacao");
+
+  if (/\bCAPS\b.*\b(AD|ALCOOL|DROG)\b|DEPENDENCIA QUIMICA/.test(textoNome)) {
+    servicos.add("dependencia");
   }
 
   return [...servicos];

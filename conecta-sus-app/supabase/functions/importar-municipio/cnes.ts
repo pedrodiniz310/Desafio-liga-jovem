@@ -91,24 +91,45 @@ export function normalizeEstabelecimento(row: any, tiposPorCodigo: Map<number, a
 
 export function inferServicos(e: EstabNormalizado): string[] {
   const servicos = new Set<string>(SERVICOS_POR_TIPO.get(e._codigoTipoUnidade) ?? []);
-  const textoNome = normalizeText([e.nome, e.nome_fantasia, e._raw?.nome_razao_social].join(" "));
-  const texto = normalizeText([textoNome, e.tipo].join(" "));
-  const atendeSus = normalizeText(e._raw?.estabelecimento_faz_atendimento_ambulatorial_sus) === "SIM";
-  const nomeSugerePublico =
-    /\b(CAPS|CEO|CER|UBS|UNIDADE BASICA|POSTO DE SAUDE|MUNICIPAL|PREFEITURA|SECRETARIA)\b/.test(textoNome);
-  const permite = atendeSus || nomeSugerePublico;
 
-  if (/\bCAPS\b|PSICOSSOCIAL|SAUDE MENTAL/.test(texto)) servicos.add("saude_mental");
-  if (/\bCAPS\b.*\b(AD|ALCOOL|DROG)|DEPENDENCIA QUIMICA/.test(texto)) servicos.add("dependencia");
-  if (/\bFARMAC/.test(texto)) servicos.add("farmacia");
-  if (/\b(UBS|UNIDADE BASICA|POSTO DE SAUDE|SAUDE DA FAMILIA|ESF)\b/.test(textoNome)) {
+  const tipoDesc = normalizeText(e.tipo);
+  const textoNome = normalizeText([e.nome, e.nome_fantasia, e._raw?.nome_razao_social].join(" "));
+
+  // ── 1) Estrutural por TIPO de unidade (unidades SUS por natureza) ──
+  if (/\b(UNIDADE BASICA|CENTRO DE SAUDE|POSTO DE SAUDE)\b/.test(tipoDesc)
+      || /\b(UBS|POSTO DE SAUDE|SAUDE DA FAMILIA|ESF)\b/.test(textoNome)) {
     servicos.add("atencao_basica");
     servicos.add("vacina");
     servicos.add("prenatal");
   }
-  if (permite && /\b(CEO|ODONTO|SAUDE BUCAL)\b/.test(texto)) servicos.add("odonto_esp");
-  if (permite && /\b(FONO|FONOAUDIO)\b/.test(texto)) servicos.add("fono");
-  if (permite && /\b(CER|REABIL|FISIOTER)\b/.test(texto)) servicos.add("reabilitacao");
+  if (/CENTRO DE ATENCAO PSICOSSOCIAL/.test(tipoDesc)
+      || /\bCAPS\b|PSICOSSOCIAL|SAUDE MENTAL/.test(textoNome)) {
+    servicos.add("saude_mental");
+  }
+  if (/\bFARMAC/.test(tipoDesc) || /\bFARMAC/.test(textoNome)) {
+    servicos.add("farmacia");
+  }
+
+  // ── 2) Especialidade por NOME, com gate PÚBLICO honesto ──
+  // atende_sus=SIM NÃO discrimina (clínica privada credenciada também marca SIM).
+  // O sinal real é a natureza jurídica: códigos 1xxx = Administração Pública
+  // (município/estado/união) = serviço gratuito. 2xxx/3xxx/4xxx = privado/empresa
+  // -> fica de fora (app é SUS gratuito; honestidade > recall).
+  const naturezaPublica = /^1/.test(
+    String(e._raw?.descricao_natureza_juridica_estabelecimento ?? "").trim(),
+  );
+  const nomePublico = /\b(MUNICIPAL|PREFEITURA|SECRETARIA|ESTADUAL|FEDERAL|SUS)\b/.test(textoNome);
+  const ehSus = naturezaPublica || nomePublico;
+
+  if (ehSus && /\b(ODONTO|SAUDE BUCAL|CEO)\b/.test(textoNome)) servicos.add("odonto_esp");
+  if (ehSus && /\b(FONO|FONOAUDIO)\b/.test(textoNome)) servicos.add("fono");
+  if (ehSus && /(FISIOTER|REABIL|\bCER\b)/.test(textoNome)) servicos.add("reabilitacao");
+
+  // dependencia: CAPS AD / alcool / drogas
+  if (/\bCAPS\b.*\b(AD|ALCOOL|DROG)\b|DEPENDENCIA QUIMICA/.test(textoNome)) {
+    servicos.add("dependencia");
+  }
+
   return [...servicos];
 }
 
