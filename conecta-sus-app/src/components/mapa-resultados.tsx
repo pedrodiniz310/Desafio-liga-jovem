@@ -70,19 +70,6 @@ map.fitBounds(bounds,{padding:[40,40]});
 }
 
 export function MapaResultados({ dados, coordUsuario, onAbrir }: Props) {
-  if (Platform.OS === "web") {
-    return (
-      <View style={styles.webFallback}>
-        <Ionicons name="map-outline" size={44} color="#6e7b74" />
-        <Texto style={styles.webFallbackTexto}>
-          O mapa está disponível no app instalado no celular.
-        </Texto>
-        <Texto style={styles.webFallbackSub}>
-          Abra o Tem no SUS! no Android ou iOS para ver os serviços no mapa.
-        </Texto>
-      </View>
-    );
-  }
   const pins = useMemo<PinMapa[]>(
     () =>
       dados
@@ -114,6 +101,22 @@ export function MapaResultados({ dados, coordUsuario, onAbrir }: Props) {
     },
     [onAbrir]
   );
+
+  // WebView não roda no build web (expo export). Após os hooks (rules-of-hooks),
+  // mostramos um fallback explicando que o mapa está no app móvel.
+  if (Platform.OS === "web") {
+    return (
+      <View style={styles.webFallback}>
+        <Ionicons name="map-outline" size={44} color="#6e7b74" />
+        <Texto style={styles.webFallbackTexto}>
+          O mapa está disponível no app instalado no celular.
+        </Texto>
+        <Texto style={styles.webFallbackSub}>
+          Abra o Tem no SUS! no Android ou iOS para ver os serviços no mapa.
+        </Texto>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
