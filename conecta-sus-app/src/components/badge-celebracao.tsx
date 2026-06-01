@@ -14,6 +14,7 @@ import { useTema } from "@/theme/tema";
 
 interface Props {
   visivel: boolean;
+  titulo?: string;
   badgeNome: string;
   badgeIcone: string;
   badgeDescricao: string;
@@ -61,7 +62,14 @@ function Estrela({ index, visivel }: { index: number; visivel: boolean }) {
   );
 }
 
-export function BadgeCelebracao({ visivel, badgeNome, badgeIcone, badgeDescricao, onFechar }: Props) {
+export function BadgeCelebracao({
+  visivel,
+  titulo = "🏆 Badge conquistado!",
+  badgeNome,
+  badgeIcone,
+  badgeDescricao,
+  onFechar,
+}: Props) {
   const { cores } = useTema();
 
   const escala = useSharedValue(0);
@@ -104,7 +112,7 @@ export function BadgeCelebracao({ visivel, badgeNome, badgeIcone, badgeDescricao
           <View style={[styles.iconeWrap, { backgroundColor: cores.amber + "22" }]}>
             <Ionicons name={badgeIcone as never} size={44} color={cores.amber} />
           </View>
-          <Texto style={styles.conquista}>🏆 Badge conquistado!</Texto>
+          <Texto style={styles.conquista}>{titulo}</Texto>
           <Texto style={styles.nome}>{badgeNome}</Texto>
           <Texto style={styles.descricao}>{badgeDescricao}</Texto>
           <Pressable

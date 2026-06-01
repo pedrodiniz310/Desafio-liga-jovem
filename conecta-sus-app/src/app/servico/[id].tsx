@@ -56,6 +56,7 @@ export default function ServicoDetalhe() {
   const [mostraPicker, setMostraPicker] = useState(false);
   const [tempoEsperaSelecionado, setTempoEsperaSelecionado] = useState<TempoEspera | null>(null);
   const [novoBadge, setNovoBadge] = useState<NovoBadge | null>(null);
+  const [celebracaoGenerica, setCelebracaoGenerica] = useState(false);
 
   function mostrarToast() {
     setToastVisivel(true);
@@ -144,11 +145,17 @@ export default function ServicoDetalhe() {
         onSuccess: (resultado) => {
           setMostraPicker(false);
           setTempoEsperaSelecionado(null);
+
           if (resultado) {
+            // Ganhou um badge novo → modal de badge conquistado (+ toast de pontos)
             setNovoBadge(resultado);
-          } else {
-            Alert.alert("Tem no SUS!", msg[status]);
             if (session?.user.id) mostrarToast();
+          } else if (session?.user.id) {
+            // Contribuição registrada sem badge novo → modal de agradecimento
+            setCelebracaoGenerica(true);
+          } else {
+            // Anônimo (sem pontuação) → alerta simples
+            Alert.alert("Tem no SUS!", msg[status]);
           }
         },
         onError: () =>
@@ -316,6 +323,15 @@ export default function ServicoDetalhe() {
         badgeIcone={novoBadge?.icone ?? "ribbon"}
         badgeDescricao={novoBadge?.descricao ?? ""}
         onFechar={() => setNovoBadge(null)}
+      />
+
+      <BadgeCelebracao
+        visivel={celebracaoGenerica}
+        titulo="✨ Contribuição registrada!"
+        badgeNome="Comunidade agradece"
+        badgeIcone="people"
+        badgeDescricao="Sua validação ajuda milhares de pessoas a encontrarem atendimento de qualidade."
+        onFechar={() => setCelebracaoGenerica(false)}
       />
 
       {/* ── Toast de pontos ── */}
