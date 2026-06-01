@@ -26,6 +26,7 @@ import { useBuscaServicos } from "@/lib/queries/use-busca-servicos";
 import { JOACABA, useLocalizacao } from "@/stores/use-localizacao";
 import { usePersona } from "@/stores/use-persona";
 import { useJornadas } from "@/lib/queries/use-jornadas";
+import { useMunicipioAtivo } from "@/lib/queries/use-municipio-ativo";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 import type { Coordenada, ResultadoBusca } from "@/types/models";
@@ -48,6 +49,7 @@ export default function BuscaScreen() {
   const { coordenada, municipioNome, setCoordenada, setPermissaoNegada } =
     useLocalizacao();
   const coord = coordenada ?? JOACABA;
+  const { carregandoCidade, importando } = useMunicipioAtivo(coord);
 
   useEffect(() => {
     (async () => {
@@ -103,6 +105,14 @@ export default function BuscaScreen() {
           </View>
           <LogoMarca size={32} />
         </View>
+        {carregandoCidade && (
+          <View style={styles.cidadeBanner}>
+            <ActivityIndicator size="small" color="#a8d5c4" />
+            <Texto style={styles.cidadeBannerTexto}>
+              {importando ? "Carregando serviços da sua cidade…" : "Localizando você…"}
+            </Texto>
+          </View>
+        )}
         {!buscando && (
           <>
             <Texto style={styles.titulo}>{personaConfig.tituloBusca}</Texto>
@@ -443,6 +453,17 @@ const makeStyles = (cores: Cores) =>
     heroBandCompacto: { paddingTop: 14, paddingBottom: 16 },
     localRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 },
     localLeft: { flexDirection: "row", alignItems: "center", gap: 5 },
+    cidadeBanner: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      backgroundColor: "rgba(255,255,255,0.12)",
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 12,
+      marginBottom: 12,
+    },
+    cidadeBannerTexto: { fontSize: 13, color: "#a8d5c4", fontWeight: "600" },
     local: { fontSize: 13, color: "#a8d5c4", fontWeight: "600" },
     titulo: { fontSize: 30, fontWeight: "800", color: "#ffffff", lineHeight: 36, marginBottom: 6 },
     subtitulo: { fontSize: 14, color: "#a8d5c4", marginBottom: 18 },

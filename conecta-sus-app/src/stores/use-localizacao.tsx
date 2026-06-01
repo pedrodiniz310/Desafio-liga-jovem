@@ -6,9 +6,10 @@ export const JOACABA: Coordenada = { lat: -27.1771, lng: -51.5045 };
 type LocalizacaoState = {
   coordenada: Coordenada | null;
   municipioNome: string;
+  codigoIbge: string | null;
   permissaoNegada: boolean;
   setCoordenada: (c: Coordenada) => void;
-  setMunicipio: (nome: string) => void;
+  setMunicipio: (nome: string, codigoIbge?: string) => void;
   setPermissaoNegada: (v: boolean) => void;
 };
 
@@ -16,24 +17,29 @@ const LocalizacaoContext = createContext<LocalizacaoState | undefined>(undefined
 
 export function LocalizacaoProvider({ children }: { children: ReactNode }) {
   const [coordenada, setCoordenada] = useState<Coordenada | null>(null);
-  const [municipioNome, setMunicipioNome] = useState("Joaçaba · SC");
+  const [municipioNome, setMunicipioNome] = useState("Carregando…");
+  const [codigoIbge, setCodigoIbge] = useState<string | null>(null);
   const [permissaoNegada, setPermissaoNegada] = useState(false);
 
-  const setMunicipio = useCallback((nome: string) => setMunicipioNome(nome), []);
-  const setCoordenadaCallback = useCallback((c: Coordenada) => setCoordenada(c), []);
-  const setPermissaoNegadaCallback = useCallback((v: boolean) => setPermissaoNegada(v), []);
-
-  const value: LocalizacaoState = {
-    coordenada,
-    municipioNome,
-    permissaoNegada,
-    setCoordenada: setCoordenadaCallback,
-    setMunicipio,
-    setPermissaoNegada: setPermissaoNegadaCallback,
-  };
+  const setMunicipio = useCallback((nome: string, ibge?: string) => {
+    setMunicipioNome(nome);
+    if (ibge) setCodigoIbge(ibge);
+  }, []);
+  const setCoordenadaCb = useCallback((c: Coordenada) => setCoordenada(c), []);
+  const setPermissaoNegadaCb = useCallback((v: boolean) => setPermissaoNegada(v), []);
 
   return (
-    <LocalizacaoContext.Provider value={value}>
+    <LocalizacaoContext.Provider
+      value={{
+        coordenada,
+        municipioNome,
+        codigoIbge,
+        permissaoNegada,
+        setCoordenada: setCoordenadaCb,
+        setMunicipio,
+        setPermissaoNegada: setPermissaoNegadaCb,
+      }}
+    >
       {children}
     </LocalizacaoContext.Provider>
   );

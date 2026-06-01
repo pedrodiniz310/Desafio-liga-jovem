@@ -59,6 +59,15 @@ export interface Coordenada {
   lng: number;
 }
 
+/** Resultado da RPC `municipio_mais_proximo`. */
+export interface MunicipioProximo {
+  codigo_ibge: string;
+  nome: string;
+  uf: string;
+  importado_em: string | null;
+  distancia_km: number;
+}
+
 export interface Perfil {
   id: string;
   data_nascimento: string | null; // formato ISO 'YYYY-MM-DD'
