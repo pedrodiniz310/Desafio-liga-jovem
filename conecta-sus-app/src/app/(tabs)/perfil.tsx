@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Image } from "react-native";
 import { Screen } from "@/components/screen";
+import { LogoCompleta } from "@/components/logo-completa";
 import { Texto } from "@/components/texto";
 import { usePreferencias } from "@/stores/use-preferencias";
 import { useAuth } from "@/stores/use-auth";
@@ -243,6 +244,14 @@ export default function PerfilScreen() {
           <Ionicons name="log-out-outline" size={20} color={cores.coral} />
           <Texto style={[styles.btnSairTexto, { color: cores.coral }]}>Sair da conta</Texto>
         </Pressable>
+
+        {/* ── Assinatura da marca ── */}
+        <View style={styles.marcaRodape}>
+          <LogoCompleta largura={150} cor={cores.inkFaint} />
+          <Texto style={styles.marcaRodapeTexto}>
+            Saúde pública, fácil de encontrar.
+          </Texto>
+        </View>
       </ScrollView>
     </Screen>
   );
@@ -409,4 +418,15 @@ const makeStyles = (cores: Cores) =>
       borderRadius: 18,
     },
     btnSairTexto: { fontSize: 15, fontWeight: "600" },
+    marcaRodape: {
+      alignItems: "center",
+      gap: 6,
+      marginTop: 28,
+      marginBottom: 8,
+      opacity: 0.85,
+    },
+    marcaRodapeTexto: {
+      fontSize: 12,
+      color: cores.inkFaint,
+    },
   });

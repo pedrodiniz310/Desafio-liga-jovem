@@ -11,6 +11,9 @@
 const MSG_PUSH_EXPO_GO =
   "expo-notifications: Android Push notifications (remote notifications) functionality provided by expo-notifications was removed from Expo Go";
 
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([MSG_PUSH_EXPO_GO, "expo-notifications: Android Push notifications"]);
+
 function ehAvisoPushExpoGo(args: unknown[]): boolean {
   return typeof args[0] === "string" && args[0].includes(MSG_PUSH_EXPO_GO);
 }

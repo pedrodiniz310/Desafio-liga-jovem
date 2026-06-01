@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Screen } from "@/components/screen";
 import { LogoMarca } from "@/components/logo-marca";
+import { LogoCompleta } from "@/components/logo-completa";
 import { Texto } from "@/components/texto";
 import { PERSONAS, usePersona, type PersonaSlug } from "@/stores/use-persona";
 import { usePerfilSaude, type FaixaEtaria } from "@/stores/use-perfil-saude";
@@ -68,7 +69,7 @@ export default function OnboardingScreen() {
       <Screen>
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <LogoMarca size={72} />
+            <LogoCompleta largura={216} cor={cores.ink} />
             <Texto style={styles.titulo}>
               Para quem você está{"\n"}buscando saúde hoje?
             </Texto>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <clipPath id="tile"><path d="M200,0 h624 a200,200 0 0 1 200,200 v624 a200,200 0 0 1 -200,200 h-624 a200,200 0 0 1 -200,-200 v-624 a200,200 0 0 1 200,-200 Z"></path></clipPath>
+  <g clip-path="url(#tile)">
+    <rect width="1024" height="1024" fill="#0D6A51"></rect>
+    
+  <path d="M252,406 h520 a72,72 0 0 1 72,72 v68 a72,72 0 0 1 -72,72 h-520 a72,72 0 0 1 -72,-72 v-68 a72,72 0 0 1 72,-72 Z M478,180 h68 a72,72 0 0 1 72,72 v520 a72,72 0 0 1 -72,72 h-68 a72,72 0 0 1 -72,-72 v-520 a72,72 0 0 1 72,-72 Z" fill="#ffffff"></path>
+  <g fill="none" stroke="#F2683C" stroke-width="20">
+    <circle cx="512" cy="520" r="150" opacity="0.16"></circle>
+    <circle cx="512" cy="520" r="224" opacity="0.10"></circle>
+  </g>
+  <g transform="translate(512 520) rotate(38)">
+    <path d="M0 0 C -64.8 -132.83999999999997 -108 -212.76 -108 -275.4 A 108 108 0 1 1 108 -275.4 C 108 -212.76 64.8 -132.83999999999997 0 0 Z" fill="#F2683C"></path>
+    <circle cx="0" cy="-275.4" r="42.1" fill="#ffffff"></circle>
+  </g>
+  </g>
+</svg>

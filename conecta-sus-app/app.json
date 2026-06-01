@@ -53,6 +53,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f479e815-a469-4762-8509-3ce995cc074d"
+      }
+    },
+    "owner": "pedinizx"
   }
 }

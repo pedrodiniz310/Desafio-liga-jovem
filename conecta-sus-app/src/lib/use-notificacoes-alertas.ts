@@ -1,7 +1,11 @@
 import { useEffect } from "react";
-import { Platform } from "react-native";
+import { Platform, LogBox } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Perfil, RegraDireito } from "@/types/models";
+
+// Ignora o erro chato do Expo Go no SDK 53 sobre Push Notifications,
+// já que só vamos usar Local Notifications.
+LogBox.ignoreLogs(["expo-notifications: Android Push notifications"]);
 
 // Importação lazy para não quebrar web build
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

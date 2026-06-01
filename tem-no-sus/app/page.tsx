@@ -7,10 +7,12 @@ import { TextRevealByWord } from "@/components/ui/text-reveal";
 import { Impact } from "@/components/impact";
 import { FinalCta } from "@/components/final-cta";
 import { SiteFooter } from "@/components/site-footer";
+import { PermissionPrimer } from "@/components/permission-primer";
 
 export default function Home() {
   return (
     <>
+      <PermissionPrimer />
       <SiteNav />
       <main>
         <Hero />

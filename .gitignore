@@ -1,0 +1,20 @@
+# ── Raiz do monorepo (reforço global; cada subprojeto tem o seu .gitignore) ──
+
+# Binários/artefatos redundantes (o código-fonte já está versionado)
+*.zip
+
+# Secrets — NUNCA versionar (.env.example pode ser commitado)
+**/.env
+**/.env.local
+
+# Dependências e builds (reforço; subprojetos já ignoram)
+**/node_modules/
+**/.expo/
+**/dist/
+**/.next/
+**/.playwright-screens/
+
+# Lixo de SO / editor
+.DS_Store
+Thumbs.db
+*.log

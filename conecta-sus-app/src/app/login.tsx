@@ -10,7 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import { Screen } from "@/components/screen";
-import { LogoMarca } from "@/components/logo-marca";
+import { LogoCompleta } from "@/components/logo-completa";
 import { Texto } from "@/components/texto";
 import { useTema } from "@/theme/tema";
 import { useAuth } from "@/stores/use-auth";
@@ -67,8 +67,8 @@ export default function LoginScreen() {
       >
         {/* CABEÇALHO HERO */}
         <View style={styles.heroBand}>
-          <LogoMarca size={72} />
-          <Texto style={styles.titulo}>Bem-vindo ao{"\n"}Tem no SUS!</Texto>
+          <LogoCompleta largura={232} cor="#ffffff" />
+          <Texto style={styles.titulo}>Bem-vindo de volta</Texto>
           <Texto style={styles.subtitulo}>
             Faça login para acessar seus serviços.
           </Texto>
