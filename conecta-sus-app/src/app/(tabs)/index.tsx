@@ -108,7 +108,7 @@ export default function BuscaScreen() {
         </View>
         {carregandoCidade && (
           <View style={styles.cidadeBanner}>
-            <ActivityIndicator size="small" color="#a8d5c4" />
+            <Pingo pose="icone" size={26} />
             <Texto style={styles.cidadeBannerTexto}>
               {importando ? "Carregando serviços da sua cidade…" : "Localizando você…"}
             </Texto>

@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 
 import { Screen } from "@/components/screen";
+import { Pingo } from "@/components/pingo";
 import { SavedCard } from "@/components/saved-card";
 import { Texto } from "@/components/texto";
 import { useFavoritos } from "@/stores/use-favoritos";
@@ -29,9 +29,7 @@ export default function SalvosScreen() {
 
       {itens.length === 0 ? (
         <View style={styles.empty}>
-          <View style={styles.iconWrap}>
-            <Ionicons name="bookmark-outline" size={32} color={cores.verde} />
-          </View>
+          <Pingo pose="apontando" size={104} />
           <Texto style={styles.emptyTitulo}>Nada salvo ainda</Texto>
           <Texto style={styles.emptyTexto}>
             Toque no marcador de um serviço para guardá-lo aqui e encontrar

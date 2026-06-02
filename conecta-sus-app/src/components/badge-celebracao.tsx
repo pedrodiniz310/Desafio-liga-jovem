@@ -10,7 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { Texto } from "@/components/texto";
-import { useTema } from "@/theme/tema";
+import { Pingo } from "@/components/pingo";
 
 interface Props {
   visivel: boolean;
@@ -66,12 +66,9 @@ export function BadgeCelebracao({
   visivel,
   titulo = "🏆 Badge conquistado!",
   badgeNome,
-  badgeIcone,
   badgeDescricao,
   onFechar,
 }: Props) {
-  const { cores } = useTema();
-
   const escala = useSharedValue(0);
   const opacidadeFundo = useSharedValue(0);
 
@@ -109,9 +106,7 @@ export function BadgeCelebracao({
         </View>
 
         <Animated.View style={[styles.card, estiloCard]}>
-          <View style={[styles.iconeWrap, { backgroundColor: cores.amber + "22" }]}>
-            <Ionicons name={badgeIcone as never} size={44} color={cores.amber} />
-          </View>
+          <Pingo pose="acenando" size={112} />
           <Texto style={styles.conquista}>{titulo}</Texto>
           <Texto style={styles.nome}>{badgeNome}</Texto>
           <Texto style={styles.descricao}>{badgeDescricao}</Texto>
@@ -154,11 +149,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 20,
     elevation: 12,
-  },
-  iconeWrap: {
-    width: 88, height: 88, borderRadius: 44,
-    alignItems: "center", justifyContent: "center",
-    marginBottom: 4,
   },
   conquista: { fontSize: 13, color: "#6b7c76", fontWeight: "600", letterSpacing: 0.5 },
   nome: { fontSize: 22, fontWeight: "800", color: "#16241f", textAlign: "center" },

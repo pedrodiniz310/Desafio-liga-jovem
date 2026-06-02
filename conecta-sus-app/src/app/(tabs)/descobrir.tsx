@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Texto } from "@/components/texto";
 import { Screen } from "@/components/screen";
+import { Pingo } from "@/components/pingo";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 import { useDescoberta } from "@/lib/queries/use-descoberta";
@@ -50,7 +51,7 @@ export default function DescobrirScreen() {
     return (
       <Screen>
         <View style={styles.loading}>
-          <Ionicons name="compass-outline" size={52} color={cores.inkFaint} />
+          <Pingo pose="apontando" size={104} />
           <Texto style={styles.loadingTexto}>
             Nenhuma descoberta disponível perto de você agora.
           </Texto>
