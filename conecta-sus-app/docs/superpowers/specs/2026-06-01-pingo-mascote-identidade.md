@@ -1,7 +1,7 @@
 # Pingo — Mascote do "Tem no SUS!" (identidade de marca)
 
 > Decidido em 01/06/2026 via brainstorming. Desafio Liga Jovem 2026.
-> Status: **IMPLEMENTADO** (01/06/2026) — asset gerado no Claude Design (4 poses SVG); componente `src/components/pingo.tsx` (SvgXml); seção "O que levar e como se preparar" no detalhe do serviço (`preparo-servico.ts`) + estado vazio da busca. Commit `6843298`. Fluxos extra (onboarding/loading/celebração) pendentes.
+> Status: **IMPLEMENTADO** (01/06/2026) — asset (4 poses SVG) + componente `src/components/pingo.tsx` (SvgXml). Aparece em: seção "O que levar e como se preparar" (detalhe), busca vazia, **salvos vazio, descobrir vazio, banner "carregando cidade", onboarding boas-vindas, modal de celebração**. Commits `6843298`, `4747ed2`. Poses extra possíveis (comemorando 🎉 / "ops") = futuro.
 
 ## Conceito
 
