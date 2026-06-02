@@ -4,6 +4,7 @@ import {
   Alert,
   Animated,
   Linking,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -55,8 +56,8 @@ export default function ServicoDetalhe() {
 
   const toastAnim = useRef(new Animated.Value(0)).current;
   const [toastVisivel, setToastVisivel] = useState(false);
-  const [mostraPicker, setMostraPicker] = useState(false);
-  const [tempoEsperaSelecionado, setTempoEsperaSelecionado] = useState<TempoEspera | null>(null);
+  const [sheetAberto, setSheetAberto] = useState(false);
+  const [acaoEmCurso, setAcaoEmCurso] = useState<StatusConfirmacao | null>(null);
   const [novoBadge, setNovoBadge] = useState<NovoBadge | null>(null);
   const [celebracaoGenerica, setCelebracaoGenerica] = useState(false);
   const [itensFeitos, setItensFeitos] = useState<number[]>([]);
@@ -129,10 +130,18 @@ export default function ServicoDetalhe() {
 
   function confirmar(status: StatusConfirmacao) {
     if (confirmarMutation.isPending) return;
-    if (status === "funciona" && !mostraPicker) {
-      setMostraPicker(true);
+    // "Funciona" abre o bottom sheet pra escolher o tempo de espera (1 toque).
+    if (status === "funciona") {
+      setAcaoEmCurso("funciona");
+      setSheetAberto(true);
       return;
     }
+    setAcaoEmCurso(status);
+    enviar(status, undefined);
+  }
+
+  function enviar(status: StatusConfirmacao, tempo: TempoEspera | undefined) {
+    if (confirmarMutation.isPending) return;
     const msg: Record<StatusConfirmacao, string> = {
       funciona: "Obrigado! Você ajudou a próxima pessoa.",
       fechou:   "Valeu pelo aviso. Vamos revisar este serviço.",
@@ -142,12 +151,12 @@ export default function ServicoDetalhe() {
       {
         estabelecimentoId: servicoId,
         status,
-        tempoEsperaMinutos: status === "funciona" ? (tempoEsperaSelecionado ?? undefined) : undefined,
+        tempoEsperaMinutos: status === "funciona" ? tempo : undefined,
       },
       {
         onSuccess: (resultado) => {
-          setMostraPicker(false);
-          setTempoEsperaSelecionado(null);
+          setSheetAberto(false);
+          setAcaoEmCurso(null);
 
           if (resultado) {
             // Ganhou um badge novo → modal de badge conquistado (+ toast de pontos)
@@ -161,11 +170,13 @@ export default function ServicoDetalhe() {
             Alert.alert("Tem no SUS!", msg[status]);
           }
         },
-        onError: () =>
+        onError: () => {
+          setAcaoEmCurso(null);
           Alert.alert(
             "Tem no SUS!",
             "Não foi possível registrar agora. Verifique a conexão e tente de novo."
-          ),
+          );
+        },
       }
     );
   }
@@ -313,62 +324,80 @@ export default function ServicoDetalhe() {
         </View>
         <View style={styles.validacao}>
           <ValidaBotao
-            icone="checkmark-circle-outline"
+            icone="checkmark-circle"
             rotulo="Funciona"
             cor={cores.verde}
+            ativo={acaoEmCurso === "funciona"}
+            carregando={confirmarMutation.isPending && acaoEmCurso === "funciona" && !sheetAberto}
             onPress={() => confirmar("funciona")}
           />
           <ValidaBotao
-            icone="close-circle-outline"
+            icone="close-circle"
             rotulo="Fechou"
             cor={cores.coral}
+            ativo={acaoEmCurso === "fechou"}
+            carregando={confirmarMutation.isPending && acaoEmCurso === "fechou"}
             onPress={() => confirmar("fechou")}
           />
           <ValidaBotao
-            icone="swap-horizontal-outline"
+            icone="swap-horizontal"
             rotulo="Mudou"
             cor={cores.amber}
+            ativo={acaoEmCurso === "mudou"}
+            carregando={confirmarMutation.isPending && acaoEmCurso === "mudou"}
             onPress={() => confirmar("mudou")}
           />
         </View>
+      </ScrollView>
 
-        {mostraPicker && (
-          <View style={styles.pickerWrap}>
-            <Texto style={styles.pickerTitulo}>Quanto tempo de espera?</Texto>
-            <View style={styles.pickerOpcoes}>
-              {([0, 30, 60, 120] as TempoEspera[]).map((t) => (
-                <Pressable
-                  key={t}
-                  onPress={() => setTempoEsperaSelecionado(t)}
-                  accessibilityRole="button"
-                  accessibilityLabel={tempoParaLabel(t)}
-                  style={({ pressed }) => [
-                    styles.pickerBtn,
-                    tempoEsperaSelecionado === t && styles.pickerBtnAtivo,
-                    pressed && { opacity: 0.8 },
-                  ]}
-                >
-                  <Texto style={[
-                    styles.pickerBtnTexto,
-                    tempoEsperaSelecionado === t && { color: cores.verdeDeep, fontWeight: "700" },
-                  ]}>
-                    {tempoParaLabel(t)}
-                  </Texto>
-                </Pressable>
-              ))}
-            </View>
+      {/* Bottom sheet: tempo de espera (sobe na frente; 1 toque confirma) */}
+      <Modal
+        visible={sheetAberto}
+        transparent
+        animationType="slide"
+        onRequestClose={() => {
+          setSheetAberto(false);
+          setAcaoEmCurso(null);
+        }}
+      >
+        <View style={styles.sheetRoot}>
+          <Pressable
+            style={styles.sheetBackdrop}
+            onPress={() => {
+              setSheetAberto(false);
+              setAcaoEmCurso(null);
+            }}
+            accessibilityLabel="Fechar"
+          />
+          <View style={styles.sheet}>
+            <View style={styles.sheetHandle} />
+            <Texto style={styles.sheetTitulo}>Como está a fila agora?</Texto>
+            <Texto style={styles.sheetSub}>Seu aviso ajuda quem chega depois de você.</Texto>
+            {([0, 30, 60, 120] as TempoEspera[]).map((t) => (
+              <Pressable
+                key={t}
+                onPress={() => enviar("funciona", t)}
+                disabled={confirmarMutation.isPending}
+                accessibilityRole="button"
+                accessibilityLabel={tempoParaLabel(t)}
+                style={({ pressed }) => [styles.sheetOpcao, pressed && { backgroundColor: cores.verdeWash }]}
+              >
+                <Texto style={styles.sheetOpcaoTexto}>{tempoParaLabel(t)}</Texto>
+                <Ionicons name="chevron-forward" size={18} color={cores.inkFaint} />
+              </Pressable>
+            ))}
             <Pressable
-              onPress={() => confirmar("funciona")}
+              onPress={() => enviar("funciona", undefined)}
+              disabled={confirmarMutation.isPending}
               accessibilityRole="button"
-              accessibilityLabel="Confirmar funcionamento"
-              style={({ pressed }) => [styles.pickerConfirmar, pressed && { opacity: 0.88 }]}
+              accessibilityLabel="Não sei dizer o tempo"
+              style={({ pressed }) => [styles.sheetPular, pressed && { opacity: 0.7 }]}
             >
-              <Ionicons name="checkmark-circle" size={18} color="#ffffff" />
-              <Texto style={styles.pickerConfirmarTexto}>Confirmar</Texto>
+              <Texto style={styles.sheetPularTexto}>Não sei dizer</Texto>
             </Pressable>
           </View>
-        )}
-      </ScrollView>
+        </View>
+      </Modal>
 
       <BadgeCelebracao
         visivel={novoBadge !== null}
@@ -484,21 +513,39 @@ function LinhaInfo({ icone, rotulo }: { icone: string; rotulo: string }) {
 }
 
 function ValidaBotao({
-  icone, rotulo, cor, onPress,
+  icone, rotulo, cor, ativo, carregando, onPress,
 }: {
-  icone: string; rotulo: string; cor: string; onPress: () => void;
+  icone: string; rotulo: string; cor: string;
+  ativo?: boolean; carregando?: boolean; onPress: () => void;
 }) {
   const { cores } = useTema();
   const styles = useMemo(() => makeStyles(cores), [cores]);
   return (
     <Pressable
       onPress={onPress}
+      disabled={carregando}
       accessibilityRole="button"
+      accessibilityState={{ selected: ativo, disabled: carregando }}
       accessibilityLabel={rotulo}
-      style={({ pressed }) => [styles.valida, pressed && { opacity: 0.8 }]}
+      style={({ pressed }) => [
+        styles.valida,
+        ativo && { backgroundColor: cor, borderColor: cor },
+        pressed && { transform: [{ scale: 0.96 }] },
+      ]}
     >
-      <Ionicons name={icone as never} size={22} color={cor} />
-      <Texto style={styles.validaTexto}>{rotulo}</Texto>
+      <View
+        style={[
+          styles.validaIcone,
+          { backgroundColor: ativo ? "rgba(255,255,255,0.22)" : cor + "18" },
+        ]}
+      >
+        {carregando ? (
+          <ActivityIndicator size="small" color={ativo ? "#ffffff" : cor} />
+        ) : (
+          <Ionicons name={icone as never} size={22} color={ativo ? "#ffffff" : cor} />
+        )}
+      </View>
+      <Texto style={[styles.validaTexto, ativo && { color: "#ffffff" }]}>{rotulo}</Texto>
     </Pressable>
   );
 }
@@ -599,11 +646,15 @@ const makeStyles = (cores: Cores) =>
     subSecao: { fontSize: 13, color: cores.inkSoft, marginTop: 2, lineHeight: 18 },
     validacao: { flexDirection: "row", gap: 10 },
     valida: {
-      flex: 1, alignItems: "center", gap: 6,
-      backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
-      borderRadius: 16, paddingVertical: 16,
+      flex: 1, alignItems: "center", gap: 8,
+      backgroundColor: cores.card, borderWidth: 1.5, borderColor: cores.line,
+      borderRadius: 18, paddingVertical: 14,
     },
-    validaTexto: { fontSize: 13, fontWeight: "600", color: cores.ink },
+    validaIcone: {
+      width: 40, height: 40, borderRadius: 20,
+      alignItems: "center", justifyContent: "center",
+    },
+    validaTexto: { fontSize: 13, fontWeight: "700", color: cores.ink },
     toast: {
       position: "absolute",
       bottom: 32,
@@ -622,22 +673,26 @@ const makeStyles = (cores: Cores) =>
       elevation: 8,
     },
     toastTexto: { fontSize: 14, fontWeight: "700", color: "#ffffff" },
-    pickerWrap: {
-      backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
-      borderRadius: 18, padding: 16, gap: 12,
+    sheetRoot: { flex: 1, justifyContent: "flex-end" },
+    sheetBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.45)" },
+    sheet: {
+      backgroundColor: cores.card,
+      borderTopLeftRadius: 24, borderTopRightRadius: 24,
+      paddingHorizontal: 20, paddingTop: 12, paddingBottom: 32,
     },
-    pickerTitulo: { fontSize: 14, fontWeight: "700", color: cores.ink },
-    pickerOpcoes: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-    pickerBtn: {
-      paddingHorizontal: 14, paddingVertical: 10,
-      backgroundColor: cores.paper, borderWidth: 1.5, borderColor: cores.line,
-      borderRadius: 20,
+    sheetHandle: {
+      width: 40, height: 5, borderRadius: 3, backgroundColor: cores.line,
+      alignSelf: "center", marginBottom: 14,
     },
-    pickerBtnAtivo: { borderColor: cores.verde, backgroundColor: cores.verdeWash },
-    pickerBtnTexto: { fontSize: 13, color: cores.inkSoft },
-    pickerConfirmar: {
-      flexDirection: "row", alignItems: "center", justifyContent: "center",
-      gap: 8, backgroundColor: cores.verde, borderRadius: 16, paddingVertical: 14,
+    sheetTitulo: { fontSize: 19, fontWeight: "800", color: cores.ink },
+    sheetSub: { fontSize: 13, color: cores.inkSoft, marginTop: 2, marginBottom: 6 },
+    sheetOpcao: {
+      flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+      paddingVertical: 16, paddingHorizontal: 16,
+      borderRadius: 14, borderWidth: 1, borderColor: cores.line,
+      marginTop: 8,
     },
-    pickerConfirmarTexto: { fontSize: 15, fontWeight: "700", color: "#ffffff" },
+    sheetOpcaoTexto: { fontSize: 16, fontWeight: "600", color: cores.ink },
+    sheetPular: { alignItems: "center", paddingVertical: 16, marginTop: 4 },
+    sheetPularTexto: { fontSize: 14, color: cores.inkFaint, fontWeight: "600" },
   });
