@@ -14,6 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Texto } from "@/components/texto";
 import { BadgeCelebracao } from "@/components/badge-celebracao";
+import { Pingo } from "@/components/pingo";
+import { preparoParaServico } from "@/lib/preparo-servico";
 import { useTema } from "@/theme/tema";
 import type { Cores } from "@/theme/colors";
 import { useServico } from "@/lib/queries/use-servico";
@@ -57,6 +59,7 @@ export default function ServicoDetalhe() {
   const [tempoEsperaSelecionado, setTempoEsperaSelecionado] = useState<TempoEspera | null>(null);
   const [novoBadge, setNovoBadge] = useState<NovoBadge | null>(null);
   const [celebracaoGenerica, setCelebracaoGenerica] = useState(false);
+  const [itensFeitos, setItensFeitos] = useState<number[]>([]);
 
   function mostrarToast() {
     setToastVisivel(true);
@@ -167,6 +170,8 @@ export default function ServicoDetalhe() {
     );
   }
 
+  const preparo = preparoParaServico(servico.tipo, servico.nome);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -245,6 +250,54 @@ export default function ServicoDetalhe() {
             <LinhaInfo icone="call-outline" rotulo={servico.telefone} />
           ) : null}
           <LinhaInfo icone="shield-checkmark-outline" rotulo={formatarFonte(servico)} />
+        </View>
+
+        {/* ── O que levar e como se preparar (Pingo) ── */}
+        <View style={styles.preparoCard}>
+          <View style={styles.preparoTopo}>
+            <Pingo pose="checklist" size={64} />
+            <View style={styles.preparoFalaWrap}>
+              <Texto style={styles.preparoTitulo}>O que levar e como se preparar</Texto>
+              <Texto style={styles.preparoFala}>{preparo.fala}</Texto>
+            </View>
+          </View>
+
+          <View style={styles.preparoLista}>
+            {preparo.itens.map((item, i) => {
+              const feito = itensFeitos.includes(i);
+              return (
+                <Pressable
+                  key={i}
+                  onPress={() =>
+                    setItensFeitos((prev) =>
+                      prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]
+                    )
+                  }
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: feito }}
+                  accessibilityLabel={item.texto}
+                  style={({ pressed }) => [styles.preparoItem, pressed && { opacity: 0.7 }]}
+                >
+                  <View style={[styles.preparoCheck, feito && styles.preparoCheckOn]}>
+                    {feito && <Ionicons name="checkmark" size={15} color="#ffffff" />}
+                  </View>
+                  <Texto
+                    style={[styles.preparoItemTexto, feito && styles.preparoItemFeito]}
+                  >
+                    {item.texto}
+                    {item.opcional ? <Texto style={styles.preparoOpcional}>  · se tiver</Texto> : null}
+                  </Texto>
+                </Pressable>
+              );
+            })}
+          </View>
+
+          {preparo.dica ? (
+            <View style={styles.preparoDica}>
+              <Ionicons name="bulb-outline" size={15} color={cores.verdeDeep} />
+              <Texto style={styles.preparoDicaTexto}>{preparo.dica}</Texto>
+            </View>
+          ) : null}
         </View>
 
         {/* ── Validação comunitária ── */}
@@ -492,6 +545,46 @@ const makeStyles = (cores: Cores) =>
       backgroundColor: cores.card, borderWidth: 1, borderColor: cores.line,
       borderRadius: 18, overflow: "hidden",
     },
+    preparoCard: {
+      backgroundColor: cores.verdeWash,
+      borderRadius: 18,
+      padding: 16,
+      gap: 14,
+    },
+    preparoTopo: { flexDirection: "row", alignItems: "center", gap: 12 },
+    preparoFalaWrap: { flex: 1, gap: 3 },
+    preparoTitulo: { fontSize: 15, fontWeight: "800", color: cores.verdeDeep },
+    preparoFala: { fontSize: 13, color: cores.inkSoft, lineHeight: 18 },
+    preparoLista: { gap: 4 },
+    preparoItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      paddingVertical: 9,
+    },
+    preparoCheck: {
+      width: 24,
+      height: 24,
+      borderRadius: 8,
+      borderWidth: 2,
+      borderColor: cores.verde,
+      backgroundColor: cores.card,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    preparoCheckOn: { backgroundColor: cores.verde, borderColor: cores.verde },
+    preparoItemTexto: { flex: 1, fontSize: 15, color: cores.ink },
+    preparoItemFeito: { color: cores.inkFaint, textDecorationLine: "line-through" },
+    preparoOpcional: { fontSize: 12, color: cores.inkFaint, fontWeight: "400" },
+    preparoDica: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 8,
+      backgroundColor: cores.card,
+      borderRadius: 12,
+      padding: 12,
+    },
+    preparoDicaTexto: { flex: 1, fontSize: 13, color: cores.inkSoft, lineHeight: 18 },
     linha: {
       flexDirection: "row", alignItems: "center", gap: 14,
       paddingHorizontal: 16, paddingVertical: 16,

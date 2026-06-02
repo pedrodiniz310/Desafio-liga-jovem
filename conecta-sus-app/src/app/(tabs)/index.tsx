@@ -16,6 +16,7 @@ import * as Location from "expo-location";
 import { Screen } from "@/components/screen";
 import { LogoMarca } from "@/components/logo-marca";
 import { MapaResultados } from "@/components/mapa-resultados";
+import { Pingo } from "@/components/pingo";
 import { NeedChip } from "@/components/need-chip";
 import { ServiceCard } from "@/components/service-card";
 import { Texto } from "@/components/texto";
@@ -279,7 +280,7 @@ function Resultados({
     );
     return (
       <View style={styles.estado}>
-        <Ionicons name="search-outline" size={36} color={cores.inkFaint} />
+        <Pingo pose="apontando" size={92} />
         <Texto style={styles.estadoTexto}>
           Nenhum serviço encontrado num raio de {raioKm} km.
         </Texto>
