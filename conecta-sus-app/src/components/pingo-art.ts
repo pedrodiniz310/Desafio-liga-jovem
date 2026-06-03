@@ -1,17 +1,17 @@
 // Arte do mascote Pingo (SVG inline, renderizado via react-native-svg SvgXml).
 // 4 poses geradas no Claude Design. Mantém o viewBox original de cada uma.
 
-export type PingoPose = "acenando" | "apontando" | "checklist" | "icone";
+export type PingoSvgPose = "acenando" | "apontando" | "checklist" | "icone";
 
 /** Proporção altura/largura de cada pose (do viewBox), p/ escalar sem distorcer. */
-export const PINGO_RATIO: Record<PingoPose, number> = {
+export const PINGO_RATIO: Record<PingoSvgPose, number> = {
   acenando: 470 / 400,
   apontando: 470 / 460,
   checklist: 470 / 400,
   icone: 410 / 296,
 };
 
-export const PINGO_ART: Record<PingoPose, string> = {
+export const PINGO_ART: Record<PingoSvgPose, string> = {
   acenando: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 470" role="img" aria-label="Pingo acenando">
   <clipPath id="pg_acen"><path d="M200,432 L306.5,225.4 A120,120 0 1 0 93.5,225.4 Z"/></clipPath>
   <path d="M200,432 L306.5,225.4 A120,120 0 1 0 93.5,225.4 Z" fill="#F2683C"/>
