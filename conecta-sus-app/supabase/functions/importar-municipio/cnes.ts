@@ -106,20 +106,22 @@ export function inferServicos(e: EstabNormalizado): string[] {
       || /\bCAPS\b|PSICOSSOCIAL|SAUDE MENTAL/.test(textoNome)) {
     servicos.add("saude_mental");
   }
-  if (/\bFARMAC/.test(tipoDesc) || /\bFARMAC/.test(textoNome)) {
+  // Sinal honesto de "gratuito pelo SUS": natureza juridica 1xxx = Administracao
+  // Publica. O campo "descricao_natureza_juridica_estabelecimento" guarda o CODIGO
+  // (ex.: "1244" publico vs "2062"/"4000" privado — verificado na API CNES); ausente
+  // => tratado como privado (fail-closed). O NOME nao prova SUS (uma clinica privada
+  // pode ter "SUS"/"MUNICIPAL" no nome), entao foi removido do gate de honestidade.
+  const ehSus = /^1/.test(
+    String(e._raw?.descricao_natureza_juridica_estabelecimento ?? "").trim(),
+  );
+
+  // Farmacia: por TIPO oficial sempre; por NOME so se publica (evita drogaria privada
+  // chamada "farmacia" ser exibida como gratuita).
+  if (/\bFARMAC/.test(tipoDesc) || (ehSus && /\bFARMAC/.test(textoNome))) {
     servicos.add("farmacia");
   }
 
-  // ── 2) Especialidade por NOME, com gate PÚBLICO honesto ──
-  // atende_sus=SIM NÃO discrimina (clínica privada credenciada também marca SIM).
-  // O sinal real é a natureza jurídica: códigos 1xxx = Administração Pública
-  // (município/estado/união) = serviço gratuito. 2xxx/3xxx/4xxx = privado/empresa
-  // -> fica de fora (app é SUS gratuito; honestidade > recall).
-  const naturezaPublica = /^1/.test(
-    String(e._raw?.descricao_natureza_juridica_estabelecimento ?? "").trim(),
-  );
-  const nomePublico = /\b(MUNICIPAL|PREFEITURA|SECRETARIA|ESTADUAL|FEDERAL|SUS)\b/.test(textoNome);
-  const ehSus = naturezaPublica || nomePublico;
+  // ── 2) Especialidade por NOME, SO com natureza publica (honestidade > recall) ──
 
   if (ehSus && /\b(ODONTO|SAUDE BUCAL|CEO)\b/.test(textoNome)) servicos.add("odonto_esp");
   if (ehSus && /\b(FONO|FONOAUDIO)\b/.test(textoNome)) servicos.add("fono");

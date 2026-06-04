@@ -248,7 +248,7 @@ function buildVinculacoes(estabelecimentos) {
   return links;
 }
 
-function inferServicos(estabelecimento) {
+export function inferServicos(estabelecimento) {
   const servicos = new Set(SERVICOS_POR_TIPO.get(estabelecimento._codigoTipoUnidade) ?? []);
 
   const tipoDesc = normalizeText(estabelecimento.tipo);
@@ -271,17 +271,20 @@ function inferServicos(estabelecimento) {
       || /\bCAPS\b|PSICOSSOCIAL|SAUDE MENTAL/.test(textoNome)) {
     servicos.add("saude_mental");
   }
-  if (/\bFARMAC/.test(tipoDesc) || /\bFARMAC/.test(textoNome)) {
+  // Honestidade: SO natureza juridica 1xxx (Adm. Publica) prova SUS gratuito. O campo
+  // "descricao_natureza_juridica_estabelecimento" guarda o CODIGO ("1244" publico vs
+  // "2062"/"4000" privado, verificado na API CNES); ausente => privado (fail-closed).
+  // O NOME nao prova SUS (privada pode ter "SUS"/"MUNICIPAL" no nome) -> fora do gate.
+  const ehSus = /^1/.test(
+    String(estabelecimento._raw?.descricao_natureza_juridica_estabelecimento ?? "").trim(),
+  );
+
+  // Farmacia: por TIPO oficial sempre; por NOME so se publica (evita drogaria privada).
+  if (/\bFARMAC/.test(tipoDesc) || (ehSus && /\bFARMAC/.test(textoNome))) {
     servicos.add("farmacia");
   }
 
-  // 2) Especialidade por NOME com gate PUBLICO (natureza juridica 1xxx = Adm. Publica)
-  // atende_sus=SIM nao discrimina (privada credenciada tambem marca SIM).
-  const naturezaPublica = /^1/.test(
-    String(estabelecimento._raw?.descricao_natureza_juridica_estabelecimento ?? "").trim(),
-  );
-  const nomePublico = /\b(MUNICIPAL|PREFEITURA|SECRETARIA|ESTADUAL|FEDERAL|SUS)\b/.test(textoNome);
-  const ehSus = naturezaPublica || nomePublico;
+  // 2) Especialidade por NOME, SO com natureza publica (honestidade > recall)
 
   if (ehSus && /\b(ODONTO|SAUDE BUCAL|CEO)\b/.test(textoNome)) servicos.add("odonto_esp");
   if (ehSus && /\b(FONO|FONOAUDIO)\b/.test(textoNome)) servicos.add("fono");
