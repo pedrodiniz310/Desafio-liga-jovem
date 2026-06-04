@@ -26,11 +26,15 @@ Deno.serve(async (req: Request) => {
       { auth: { persistSession: false, autoRefreshToken: false } },
     );
 
-    // Cache: ja importado nas ultimas CACHE_HORAS?
+    // Guard: so ingere municipios ja cadastrados (seed dos 5.571 do IBGE). Bloqueia
+    // enumeracao/DoS com codigos falsos e impede criar municipio "lixo" (IBGE xxx / BR).
     const { data: muni } = await supabase
       .from("municipios").select("id, nome, uf, importado_em")
       .eq("codigo_ibge", ibge).maybeSingle();
-    if (muni?.importado_em) {
+    if (!muni) return json({ erro: "municipio nao cadastrado", codigo_ibge: ibge }, 404);
+
+    // Cache: ja importado nas ultimas CACHE_HORAS?
+    if (muni.importado_em) {
       const horas = (Date.now() - new Date(muni.importado_em).getTime()) / 3.6e6;
       if (horas < CACHE_HORAS) return json({ status: "cache", codigo_ibge: ibge, importados: 0 }, 200);
     }
@@ -49,13 +53,8 @@ Deno.serve(async (req: Request) => {
         .map((r: any) => normalizeEstabelecimento(r, tiposPorCodigo)),
     );
 
-    // municipio_id (upsert garante existencia mesmo se centroide ainda nao semeado)
-    const { data: muniUp, error: muniErr } = await supabase
-      .from("municipios")
-      .upsert({ codigo_ibge: ibge, nome: muni?.nome ?? `IBGE ${ibge}`, uf: muni?.uf ?? "BR" }, { onConflict: "codigo_ibge" })
-      .select("id").single();
-    if (muniErr) throw muniErr;
-    const municipioId = muniUp.id;
+    // municipio garantido pelo guard acima -> usa o id direto (sem upsert de lixo).
+    const municipioId = muni.id;
 
     const rows = estabs.map((e) => ({
       cnes_id: e.cnes_id, nome: e.nome, nome_fantasia: e.nome_fantasia, tipo: e.tipo,
