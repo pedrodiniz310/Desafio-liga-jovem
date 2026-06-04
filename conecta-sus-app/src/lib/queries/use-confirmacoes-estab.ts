@@ -10,43 +10,40 @@ export function useConfirmacoesEstab(estabelecimentoId: number) {
   return useQuery({
     queryKey: ["confirmacoes", estabelecimentoId],
     queryFn: async (): Promise<EstatConfirmacoesComFila> => {
-      const seisHorasAtras = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
-
-      const { data, error } = await supabase
-        .from("confirmacoes")
-        .select("status, tempo_espera_minutos")
-        .eq("estabelecimento_id", estabelecimentoId)
-        .gte("criado_em", seisHorasAtras);
-
+      // Estatisticas da comunidade via RPC agregada (SECURITY DEFINER): nao expoe
+      // usuario_id nem linhas individuais (privacidade) — ver migration 0015.
+      const { data, error } = await supabase.rpc("estatisticas_confirmacoes", {
+        p_estab: estabelecimentoId,
+      });
       if (error) throw error;
 
-      const rows = data ?? [];
-      const counts = { funciona: 0, fechou: 0, mudou: 0 };
-      const tempos: number[] = [];
+      const r = (Array.isArray(data) ? data[0] : data) as
+        | {
+            total: number;
+            funciona: number;
+            fechou: number;
+            mudou: number;
+            status_dominante: StatusConfirmacao | null;
+            tempo_espera_recente: number | null;
+          }
+        | undefined;
 
-      for (const c of rows) {
-        counts[c.status as StatusConfirmacao]++;
-        if (c.tempo_espera_minutos !== null && c.tempo_espera_minutos !== undefined) {
-          tempos.push(c.tempo_espera_minutos as number);
-        }
+      if (!r) {
+        return {
+          total: 0, funciona: 0, fechou: 0, mudou: 0,
+          status_dominante: null, tempo_espera_recente: null,
+        };
       }
 
-      const total = counts.funciona + counts.fechou + counts.mudou;
-
-      let status_dominante: StatusConfirmacao | null = null;
-      if (total > 0) {
-        status_dominante = (
-          Object.entries(counts) as [StatusConfirmacao, number][]
-        ).reduce((a, b) => (a[1] >= b[1] ? a : b))[0];
-      }
-
-      let tempo_espera_recente: number | null = null;
-      if (tempos.length > 0) {
-        const sorted = [...tempos].sort((a, b) => a - b);
-        tempo_espera_recente = sorted[Math.floor(sorted.length / 2)];
-      }
-
-      return { total, ...counts, status_dominante, tempo_espera_recente };
+      return {
+        total: Number(r.total),
+        funciona: Number(r.funciona),
+        fechou: Number(r.fechou),
+        mudou: Number(r.mudou),
+        status_dominante: r.status_dominante,
+        tempo_espera_recente:
+          r.tempo_espera_recente === null ? null : Number(r.tempo_espera_recente),
+      };
     },
   });
 }
