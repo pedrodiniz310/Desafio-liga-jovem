@@ -24,7 +24,14 @@ interface PinMapa {
 }
 
 function gerarHtml(pins: PinMapa[], uLat: number, uLng: number): string {
-  const pinsJson = JSON.stringify(pins);
+  // Serializa seguro p/ embutir em <script>: escapa <, >, & e separadores de linha
+  // unicode — evita que um nome do CNES com "</script>" quebre/injete no documento.
+  const pinsJson = JSON.stringify(pins)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -50,6 +57,7 @@ html,body,#map{width:100%;height:100%;overflow:hidden}
 <body>
 <div id="map"></div>
 <script>
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function verDetalhes(id){window.ReactNativeWebView.postMessage(JSON.stringify({id:id}))}
 var pins=${pinsJson};
 var map=L.map('map',{zoomControl:true});
@@ -60,7 +68,7 @@ var bounds=[[${uLat},${uLng}]];
 pins.forEach(function(p,i){
   var ic=L.divIcon({className:'',html:'<div class="pn">'+(i+1)+'</div>',iconSize:[32,32],iconAnchor:[16,16]});
   L.marker([p.lat,p.lng],{icon:ic}).addTo(map)
-   .bindPopup('<div class="pm-nome">'+p.nome+'</div><div class="pm-dist">'+p.dist+'</div><button class="pm-btn" onclick="verDetalhes('+p.id+')">Ver detalhes ›</button>');
+   .bindPopup('<div class="pm-nome">'+esc(p.nome)+'</div><div class="pm-dist">'+esc(p.dist)+'</div><button class="pm-btn" onclick="verDetalhes('+p.id+')">Ver detalhes ›</button>');
   bounds.push([p.lat,p.lng]);
 });
 map.fitBounds(bounds,{padding:[40,40]});
