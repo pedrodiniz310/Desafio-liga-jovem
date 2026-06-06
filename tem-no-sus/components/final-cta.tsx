@@ -1,5 +1,6 @@
 import { ArrowRight, Smartphone, Clock } from "lucide-react";
 import { Reveal } from "./reveal";
+import { SplitText } from "./ui/split-text";
 
 const APK_URL = "https://expo.dev/artifacts/eas/egc6KDzzZWs4eqb2hQgvtC.apk";
 
@@ -7,7 +8,7 @@ export function FinalCta() {
   return (
     <section id="baixar" className="px-5 pb-20 sm:px-8 sm:pb-28">
       <Reveal>
-        <div className="grain relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-verde-deep px-7 py-16 text-paper-soft sm:px-16 sm:py-20">
+        <div className="grain-dark relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-verde-deep px-7 py-16 text-paper-soft sm:px-16 sm:py-20">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -top-24 -left-20 h-80 w-80 rounded-full bg-verde/40 blur-3xl"
@@ -19,7 +20,7 @@ export function FinalCta() {
 
           <div className="relative mx-auto max-w-2xl text-center">
             <h2 className="font-display text-3xl leading-[1.08] font-semibold tracking-tight sm:text-5xl">
-              O SUS que você não sabia que tinha.
+              <SplitText text="O SUS que você não sabia que tinha." delay={0.1} />
             </h2>
             <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-paper-soft/80">
               Encontre, em menos de um minuto, o serviço gratuito que você

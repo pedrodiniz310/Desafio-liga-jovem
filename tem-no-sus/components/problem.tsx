@@ -2,13 +2,16 @@ import { PhoneOff, Map, FileQuestion } from "lucide-react";
 import { Reveal } from "./reveal";
 import { NumberTicker } from "./ui/number-ticker";
 import { DotPattern } from "./ui/dot-pattern";
+import { SplitText } from "./ui/split-text";
+import { CursorSpotlight } from "./ui/cursor-spotlight";
 
 export function Problem() {
   return (
     <section
       id="problema"
-      className="relative overflow-hidden bg-verde-deep py-20 text-paper-soft sm:py-28"
+      className="grain-dark relative overflow-hidden bg-verde-deep py-20 text-paper-soft sm:py-28"
     >
+      <CursorSpotlight colorRgb="24, 168, 120" radius={580} opacity={0.14} />
       <DotPattern
         width={24}
         height={24}
@@ -26,8 +29,12 @@ export function Problem() {
             O problema
           </p>
           <h2 className="font-display mt-4 max-w-3xl text-3xl leading-[1.1] font-semibold tracking-tight sm:text-5xl">
-            Todo dia, alguém desiste de um direito que{" "}
-            <span className="text-coral-bright">já é seu</span>.
+            <SplitText
+              text="Todo dia, alguém desiste de um direito que já é seu."
+              accentTailWords={4}
+              accentClassName="text-coral-bright"
+              delay={0.05}
+            />
           </h2>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-paper-soft/75">
             O SUS é a maior rede pública de saúde do mundo. Mas conhecer a UBS do

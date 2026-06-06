@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { SmoothScroll } from "@/components/smooth-scroll";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -57,7 +58,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${fraunces.variable} ${inter.variable} h-full`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

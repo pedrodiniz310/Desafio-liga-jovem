@@ -1,7 +1,8 @@
-import { Timer, Frown, Smile, Users2, MapPinned, Languages } from "lucide-react";
+import { Timer, Users2, MapPinned, Languages } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Reveal } from "./reveal";
 import { NumberTicker } from "./ui/number-ticker";
+import { SplitText } from "./ui/split-text";
 
 type Metrica = {
   icon: LucideIcon;
@@ -39,71 +40,74 @@ export function Impact() {
               Por que muda tudo
             </p>
             <h2 className="font-display mt-4 text-3xl leading-[1.1] font-semibold tracking-tight text-ink sm:text-5xl">
-              De uma maratona de ligações a 45 segundos na tela.
+              <SplitText
+                text="De uma maratona de ligações a 45 segundos na tela."
+                accentTailWords={4}
+                accentClassName="text-verde"
+                delay={0.05}
+              />
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-              Hoje, achar um serviço gratuito do SUS pode virar uma sequência de
-              ligações e becos sem saída. O Tem no SUS! foi desenhado para
-              resolver logo na primeira busca.
-            </p>
           </div>
         </Reveal>
 
-        <div className="mt-12 grid gap-4 lg:grid-cols-5">
-          {/* antes */}
-          <Reveal className="lg:col-span-2">
-            <div className="flex h-full flex-col justify-between rounded-3xl border border-line bg-paper-soft p-8">
-              <div className="flex items-center gap-2 text-ink-faint">
-                <Frown className="h-5 w-5" aria-hidden="true" />
-                <span className="text-sm font-semibold tracking-wide uppercase">
-                  Do jeito de hoje
-                </span>
-              </div>
-              <div className="mt-10">
-                <p className="font-display text-6xl font-semibold text-ink-soft sm:text-7xl">
-                  <NumberTicker value={8} />
-                  &nbsp;min
+        {/* antes/depois — números gigantes */}
+        <Reveal delay={0.08}>
+          <div className="mt-14 grid gap-0 overflow-hidden rounded-3xl border border-line lg:grid-cols-2">
+            {/* antes */}
+            <div className="relative flex flex-col justify-between border-b border-line bg-paper-soft p-10 lg:border-b-0 lg:border-r">
+              <p className="text-xs font-bold tracking-[0.2em] text-ink-faint uppercase">
+                Do jeito de hoje
+              </p>
+              <div className="mt-6">
+                <p
+                  className="font-display leading-none font-semibold text-ink/20 select-none"
+                  style={{ fontSize: "clamp(6rem, 18vw, 11rem)" }}
+                  aria-hidden="true"
+                >
+                  8
                 </p>
-                <p className="mt-3 max-w-xs text-ink-soft">
-                  perdidos no telefone — e muita gente desiste antes de achar.
+                <p className="font-display -mt-4 text-5xl font-semibold text-ink-soft sm:text-6xl">
+                  <NumberTicker value={8} />&nbsp;
+                  <span className="text-3xl sm:text-4xl">min</span>
+                </p>
+                <p className="mt-4 max-w-xs text-base leading-relaxed text-ink-soft">
+                  perdidos no telefone — e muita gente desiste antes de achar o serviço certo.
                 </p>
               </div>
             </div>
-          </Reveal>
 
-          {/* depois — destaque */}
-          <Reveal className="lg:col-span-3" delay={0.1}>
-            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-3xl bg-verde p-8 text-paper-soft">
+            {/* depois */}
+            <div className="relative flex flex-col justify-between overflow-hidden bg-verde p-10 text-paper-soft">
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-verde-bright/30 blur-2xl"
+                className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-verde-bright/25 blur-3xl"
               />
-              <div className="relative flex items-center gap-2 text-paper-soft/80">
-                <Smile className="h-5 w-5" aria-hidden="true" />
-                <span className="text-sm font-semibold tracking-wide uppercase">
-                  Com o Tem no SUS!
+              <p className="relative text-xs font-bold tracking-[0.2em] text-paper-soft/60 uppercase">
+                Com o Tem no SUS!
+              </p>
+              <div className="relative mt-6">
+                <p
+                  className="font-display leading-none font-semibold text-paper-soft/15 select-none"
+                  style={{ fontSize: "clamp(6rem, 18vw, 11rem)" }}
+                  aria-hidden="true"
+                >
+                  45
+                </p>
+                <p className="font-display -mt-4 text-5xl font-semibold sm:text-6xl">
+                  <NumberTicker value={45} />&nbsp;
+                  <span className="text-3xl sm:text-4xl">seg</span>
+                </p>
+                <p className="mt-4 max-w-xs text-base leading-relaxed text-paper-soft/75">
+                  para encontrar o serviço, com endereço e horário na tela.
+                </p>
+                <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-paper-soft/15 px-4 py-2 text-sm font-semibold">
+                  <Timer className="h-4 w-4" aria-hidden="true" />
+                  <NumberTicker value={10} />× mais rápido
                 </span>
               </div>
-              <div className="relative mt-10 flex flex-wrap items-end gap-x-8 gap-y-4">
-                <div>
-                  <p className="font-display text-6xl font-semibold sm:text-8xl">
-                    <NumberTicker value={45} />
-                    &nbsp;seg
-                  </p>
-                  <p className="mt-3 max-w-xs text-paper-soft/80">
-                    para encontrar o serviço, com endereço e horário na tela.
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 rounded-full bg-paper-soft/15 px-4 py-2">
-                  <Timer className="h-5 w-5" aria-hidden="true" />
-                  <span className="text-sm font-medium">
-                    <NumberTicker value={10} />× mais rápido
-                  </span>
-                </div>
-              </div>
             </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
 
         {/* métricas de contexto */}
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
