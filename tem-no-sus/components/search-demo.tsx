@@ -2,7 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Brain, MapPin, Pill, Stethoscope, Clock } from "lucide-react";
+import {
+  Brain,
+  MapPin,
+  Pill,
+  Stethoscope,
+  Clock,
+  Search,
+  Map,
+  Heart,
+  User,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type Resultado = {
@@ -64,6 +74,13 @@ const BUSCAS: Busca[] = [
   },
 ];
 
+const NAV = [
+  { icon: Search, label: "Buscar", active: true },
+  { icon: Map, label: "Mapa", active: false },
+  { icon: Heart, label: "Salvos", active: false },
+  { icon: User, label: "Perfil", active: false },
+] as const;
+
 const TYPE_MS = 55;
 const HOLD_MS = 2600;
 const CLEAR_MS = 28;
@@ -112,27 +129,23 @@ export function SearchDemo() {
   const mostrarResultados = fase === "mostrando";
 
   return (
-    <div className="w-full rounded-[26px] border border-line bg-card p-3 shadow-lift sm:p-4">
-      {/* barra superior do "app" */}
-      <div className="mb-3 flex items-center justify-between px-1">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-coral/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-verde-bright/70" />
-        </div>
-        <span className="text-[0.7rem] font-medium tracking-wide text-ink-faint">
-          conecta sus
-        </span>
-        <span className="relative inline-flex h-2.5 w-2.5">
-          <span className="pulse-ring absolute inline-flex h-full w-full rounded-full" />
-          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-coral" />
+    <div className="flex h-full flex-col bg-paper-soft px-4 pt-5">
+      {/* header do app */}
+      <div className="flex items-center justify-between">
+        {/* lockup oficial (ícone + wordmark com a tipografia e o "!" coral
+            corretos). eslint-disable: SVG estático dimensionado por altura. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-wordmark.svg" alt="Tem no SUS!" className="h-[26px] w-auto" />
+        <span className="inline-flex items-center gap-1 text-[0.7rem] font-medium text-ink-soft">
+          <MapPin className="h-3.5 w-3.5 text-verde" aria-hidden="true" />
+          Joaçaba · SC
         </span>
       </div>
 
       {/* campo de busca */}
-      <div className="flex items-center gap-3 rounded-2xl border border-line bg-paper-soft px-4 py-3.5">
-        <MapPin className="h-5 w-5 shrink-0 text-verde" aria-hidden="true" />
-        <p className="text-[0.95rem] text-ink sm:text-base">
+      <div className="mt-4 flex items-center gap-2.5 rounded-2xl border border-line bg-card px-4 py-3.5 shadow-soft">
+        <Search className="h-5 w-5 shrink-0 text-verde" aria-hidden="true" />
+        <p className="text-[0.95rem] text-ink">
           {texto}
           <span className="caret ml-0.5 inline-block w-[2px] -translate-y-0.5 align-middle text-verde">
             |
@@ -140,14 +153,8 @@ export function SearchDemo() {
         </p>
       </div>
 
-      {/* localidade detectada */}
-      <p className="mt-2 px-1 text-[0.72rem] text-ink-faint">
-        Mostrando serviços em{" "}
-        <span className="font-medium text-ink-soft">Joaçaba · SC</span>
-      </p>
-
       {/* resultados */}
-      <div className="mt-3 min-h-[188px]">
+      <div className="mt-3 min-h-[200px] flex-1">
         <AnimatePresence mode="wait">
           {mostrarResultados && (
             <motion.ul
@@ -170,7 +177,7 @@ export function SearchDemo() {
                       visible: { opacity: 1, y: 0 },
                     }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex gap-3 rounded-2xl border border-line bg-paper-soft p-3.5"
+                    className="flex gap-3 rounded-2xl border border-line bg-card p-3.5 shadow-soft"
                   >
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-verde-wash text-verde">
                       <Icon className="h-5 w-5" aria-hidden="true" />
@@ -200,6 +207,21 @@ export function SearchDemo() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* bottom nav do app — ancora o rodapé e vende o "isto é um app" */}
+      <nav className="-mx-4 flex items-center justify-around border-t border-line bg-card/70 px-2 py-2.5">
+        {NAV.map(({ icon: Icon, label, active }) => (
+          <span
+            key={label}
+            className={`flex flex-col items-center gap-1 text-[0.6rem] font-medium ${
+              active ? "text-verde" : "text-ink-faint"
+            }`}
+          >
+            <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+            {label}
+          </span>
+        ))}
+      </nav>
     </div>
   );
 }
