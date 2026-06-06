@@ -2,6 +2,8 @@
 
 > Decidido em 01/06/2026 via brainstorming. Desafio Liga Jovem 2026.
 > Status: **IMPLEMENTADO** (01/06/2026) — asset (4 poses SVG) + componente `src/components/pingo.tsx` (SvgXml). Aparece em: seção "O que levar e como se preparar" (detalhe), busca vazia, **salvos vazio, descobrir vazio, banner "carregando cidade", onboarding boas-vindas, modal de celebração**. Commits `6843298`, `4747ed2`. Poses extra possíveis (comemorando 🎉 / "ops") = futuro.
+>
+> **ANIMADO (02/06/2026)** — 5 animações **Lottie** (acenando, por-aqui, checklist, flutuando, chegando) em `src/components/mascote/lottie/`. `pingo.tsx` faz Platform-split: **Lottie no nativo** (`lottie-react-native`), **SVG no web** (fallback, pois Lottie no RN-web quebra o bundle). Mesma API `<Pingo pose size/>` → os 7 placements animam de graça. Animação real só no device (precisa de APK v4). Commit `b23a2c8`.
 
 ## Conceito
 
