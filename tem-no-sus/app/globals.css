@@ -18,7 +18,7 @@
   /* tinta */
   --color-ink: #14211c;
   --color-ink-soft: #4c5a53;
-  --color-ink-faint: #76837b;
+  --color-ink-faint: #506059; /* darkened: #76837b falhava AA 4.5:1 em tamanhos <18px */
 
   /* verde — cor de marca */
   --color-verde: #0d6a51;
@@ -48,7 +48,8 @@
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
+  /* suavidade do scroll é controlada pelo Lenis (ver SmoothScroll); sob
+     prefers-reduced-motion o Lenis não monta e o scroll fica nativo/auto */
   /* clip (não hidden) corta o sangramento dos elementos decorativos
      sem criar scroll container — assim o `sticky` do text-reveal segue ok */
   overflow-x: clip;
@@ -100,6 +101,18 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
 }
 
+/* grão para fundos escuros — screen deixa o ruído visível no dark */
+.grain-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+}
+
 /* cursor piscando na demo de busca */
 @keyframes caret {
   0%, 49% { opacity: 1; }
@@ -122,24 +135,99 @@ body {
 }
 
 /* ============================================================
-   Fundo vivo do hero — manchas orgânicas que flutuam devagar
+   Fundo do hero — partículas verdes + linhas-guia que se desenham
+   (adaptado do "minimal hero" do 21st.dev para a paleta creme).
+   Ver components/ui/hero-field.tsx
    ============================================================ */
-.blob-drift-a { animation: drift-a 24s ease-in-out infinite; will-change: transform; }
-.blob-drift-b { animation: drift-b 29s ease-in-out infinite; will-change: transform; }
-.blob-drift-c { animation: drift-c 34s ease-in-out infinite; will-change: transform; }
 
-@keyframes drift-a {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-46px, 34px) scale(1.1); }
+/* canvas das partículas: multiply escurece o creme em vez de clarear */
+.hf-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
 }
-@keyframes drift-b {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, -30px) scale(1.08); }
+
+.hf-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
-@keyframes drift-c {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(38px, 26px) scale(1.12); }
-  66% { transform: translate(-30px, -22px) scale(0.94); }
+
+/* linhas-guia: base verde bem sutil sobre o creme */
+.hf-h,
+.hf-v {
+  position: absolute;
+  background: rgba(13, 106, 81, 0.16);
+  will-change: transform, opacity;
+}
+
+/* horizontais — desenham da esquerda/direita pro centro */
+.hf-h {
+  height: 1px;
+  left: 0;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: 50% 50%;
+  animation: hf-draw-x 800ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.hf-h:nth-child(1) { top: 20%; animation-delay: 150ms; }
+.hf-h:nth-child(2) { top: 50%; animation-delay: 280ms; }
+.hf-h:nth-child(3) { top: 80%; animation-delay: 410ms; }
+
+/* verticais — desenham de cima pra baixo */
+.hf-v {
+  width: 1px;
+  top: 0;
+  bottom: 0;
+  transform: scaleY(0);
+  transform-origin: 50% 0%;
+  animation: hf-draw-y 900ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.hf-v:nth-child(4) { left: 20%; animation-delay: 520ms; }
+.hf-v:nth-child(5) { left: 50%; animation-delay: 640ms; }
+.hf-v:nth-child(6) { left: 80%; animation-delay: 760ms; }
+
+/* shimmer verde-bright que varre a linha enquanto ela aparece */
+.hf-h::after,
+.hf-v::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(24, 168, 120, 0.35),
+    transparent
+  );
+  opacity: 0;
+  animation: hf-shimmer 900ms ease-out forwards;
+}
+.hf-h:nth-child(1)::after { animation-delay: 150ms; }
+.hf-h:nth-child(2)::after { animation-delay: 280ms; }
+.hf-h:nth-child(3)::after { animation-delay: 410ms; }
+.hf-v:nth-child(4)::after { animation-delay: 520ms; }
+.hf-v:nth-child(5)::after { animation-delay: 640ms; }
+.hf-v:nth-child(6)::after { animation-delay: 760ms; }
+
+@keyframes hf-draw-x {
+  0%   { transform: scaleX(0); opacity: 0; }
+  60%  { opacity: 0.9; }
+  100% { transform: scaleX(1); opacity: 0.6; }
+}
+@keyframes hf-draw-y {
+  0%   { transform: scaleY(0); opacity: 0; }
+  60%  { opacity: 0.9; }
+  100% { transform: scaleY(1); opacity: 0.6; }
+}
+@keyframes hf-shimmer {
+  0%   { opacity: 0; }
+  30%  { opacity: 0.35; }
+  100% { opacity: 0; }
 }
 
 /* ============================================================

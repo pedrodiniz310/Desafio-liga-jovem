@@ -6,20 +6,16 @@ import { SearchDemo } from "./search-demo";
 import { MorphingText } from "./ui/liquid-text";
 import { CtaButton } from "./ui/cta-button";
 import { Marquee } from "./ui/marquee";
+import { PhoneMockup } from "./ui/phone-mockup";
+import { TiltCard } from "./ui/tilt-card";
+import { HeroField } from "./ui/hero-field";
 
 const NEEDS = [
   "psicólogo",
   "dentista",
-  "remédio de graça",
+  "remédio",
   "fono",
   "reabilitação",
-] as const;
-
-const CHIPS = [
-  { label: "CAPS · saúde mental", top: "6%", left: "-7%", delay: 0 },
-  { label: "Farmácia Popular", top: "30%", right: "-9%", delay: 0.6 },
-  { label: "Banco de Leite", bottom: "16%", left: "-6%", delay: 1.1 },
-  { label: "Reabilitação · CER", bottom: "-3%", right: "4%", delay: 1.6 },
 ] as const;
 
 const LINHA_1 = [
@@ -65,26 +61,9 @@ export function Hero() {
       className="grain relative pt-28 pb-14 sm:pt-32 sm:pb-20"
       style={{ overflowX: "clip" }}
     >
-      {/* fundo vivo — manchas orgânicas que flutuam devagar */}
-      <div
-        aria-hidden="true"
-        className="blob-drift-a pointer-events-none absolute -top-36 -right-28 h-[29rem] w-[29rem] rounded-full bg-verde-wash blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="blob-drift-b pointer-events-none absolute -left-40 h-[32rem] w-[32rem] rounded-full bg-coral-wash blur-3xl"
-        style={{ bottom: "-6rem" }}
-      />
-      <div
-        aria-hidden="true"
-        className="blob-drift-c pointer-events-none absolute top-[38%] left-[46%] h-[21rem] w-[21rem] rounded-full bg-verde-bright/25 opacity-50 blur-3xl"
-      />
-
-      {/* malha de pontos sutil */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(13,106,81,0.1)_1px,transparent_1.4px)] [background-size:26px_26px] [mask-image:radial-gradient(640px_460px_at_80%_6%,#000,transparent_75%)]"
-      />
+      {/* fundo do hero — partículas verdes subindo + linhas-guia que se
+          desenham no mount (adaptado do "minimal hero" do 21st.dev) */}
+      <HeroField />
 
       {/* — hero grid — */}
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8">
@@ -109,7 +88,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.08 }}
             role="heading"
             aria-level={1}
-            className="font-display mt-6 text-[2.7rem] leading-[1.05] font-semibold tracking-tight text-ink sm:text-6xl"
+            className="font-display mt-6 text-[3.4rem] leading-[1.0] font-semibold tracking-tight text-ink sm:text-7xl lg:text-[5.5rem]"
           >
             <span className="sr-only">
               Encontre os serviços gratuitos do SUS perto de você.
@@ -118,7 +97,7 @@ export function Hero() {
             <MorphingText
               texts={[...NEEDS]}
               aria-hidden="true"
-              className="mx-0 h-[2.9rem] max-w-none text-left font-display text-[2.7rem] leading-[1.05] font-semibold tracking-tight text-coral italic sm:h-[4rem] sm:text-6xl md:h-[4rem] lg:text-6xl"
+              className="mx-0 h-[3.4rem] max-w-none text-left font-display text-[3.4rem] leading-[1.0] font-semibold tracking-tight text-coral italic sm:h-[4.5rem] sm:text-7xl lg:h-[5.5rem] lg:text-[5.5rem]"
             />
             <span aria-hidden="true" className="block">perto de você.</span>
           </motion.div>
@@ -168,38 +147,19 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* coluna da demo */}
+        {/* coluna da demo — telefone com tilt reativo ao cursor */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full max-w-md lg:max-w-none"
+          className="relative mx-auto flex w-full justify-center"
+          style={{ perspective: 1200 }}
         >
-          <SearchDemo />
-
-          {/* chips flutuantes — só no desktop */}
-          {CHIPS.map((chip) => (
-            <motion.span
-              key={chip.label}
-              aria-hidden="true"
-              className="absolute hidden rounded-full border border-line bg-card px-3.5 py-2 text-xs font-medium text-ink-soft shadow-soft lg:inline-flex"
-              style={{
-                top: "top" in chip ? chip.top : undefined,
-                bottom: "bottom" in chip ? chip.bottom : undefined,
-                left: "left" in chip ? chip.left : undefined,
-                right: "right" in chip ? chip.right : undefined,
-              }}
-              animate={{ y: [0, -9, 0] }}
-              transition={{
-                duration: 4.5,
-                delay: chip.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              {chip.label}
-            </motion.span>
-          ))}
+          <TiltCard maxTilt={10} baseRotateX={6} baseRotateY={-13}>
+            <PhoneMockup>
+              <SearchDemo />
+            </PhoneMockup>
+          </TiltCard>
         </motion.div>
       </div>
 
