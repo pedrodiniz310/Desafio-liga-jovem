@@ -1,8 +1,7 @@
+import Link from "next/link";
 import { ArrowRight, Smartphone, Clock } from "lucide-react";
 import { Reveal } from "./reveal";
 import { SplitText } from "./ui/split-text";
-
-const APK_URL = "https://expo.dev/artifacts/eas/egc6KDzzZWs4eqb2hQgvtC.apk";
 
 export function FinalCta() {
   return (
@@ -36,14 +35,13 @@ export function FinalCta() {
                 <Clock className="h-5 w-5" aria-hidden="true" />
                 iPhone — em breve
               </span>
-              <a
-                href={APK_URL}
-                download
+              <Link
+                href="/baixar"
                 className="inline-flex h-[52px] w-full items-center justify-center gap-2.5 rounded-full bg-paper-soft px-6 text-base font-semibold text-verde-deep transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
               >
                 <Smartphone className="h-5 w-5" aria-hidden="true" />
                 Baixar para Android
-              </a>
+              </Link>
             </div>
 
             <a
