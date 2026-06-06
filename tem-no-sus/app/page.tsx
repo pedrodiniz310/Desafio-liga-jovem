@@ -1,5 +1,6 @@
 import { SiteNav } from "@/components/site-nav";
 import { Hero } from "@/components/hero";
+import { ServiceStrip } from "@/components/service-strip";
 import { Problem } from "@/components/problem";
 import { HowItWorks } from "@/components/how-it-works";
 import { Differentiators } from "@/components/differentiators";
@@ -16,6 +17,7 @@ export default function Home() {
       <SiteNav />
       <main>
         <Hero />
+        <ServiceStrip />
         <Problem />
         <HowItWorks />
         <Differentiators />
